@@ -3,7 +3,7 @@
 
 
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <table id="myTable"class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
@@ -178,4 +178,21 @@
 
 </div>
 
+@endsection
+<!-- added pagination and search-->
+@section('page_scripts')
+<!-- Include DataTables JS file -->
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#myTable').DataTable({
+            paging: true, // Enable pagination
+            lengthMenu: [2, 10, 20, 50, -1], // Set entries per page to 6
+            pageLength: 2,
+            responsive: true
+        });
+    });
+</script>
 @endsection
