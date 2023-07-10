@@ -3,8 +3,8 @@
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <script src="{{asset('dash/vendors/chart.js/Chart.min.js')}}"></script>
-<script src="{{asset('dash/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
-<script src="{{asset('dash/vendors/progressbar.js/progressbar.min.js')}}"></script>
+{{-- <script src="{{asset('dash/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
+<script src="{{asset('dash/vendors/progressbar.js/progressbar.min.js')}}"></script> --}}
 
 <!-- End plugin js for this page -->
 <!-- inject:js -->
