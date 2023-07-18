@@ -19,12 +19,11 @@ class FarmController extends Controller
      */
     public function index(Request $request)
     {        
-        $perPage = 25;
        
         $farmers = Farmer::all();
 
         //return $farmers;
-        $farm = Farm::latest()->paginate($perPage);
+        $farm = Farm::all();
 
         return view('admin.farm.index', compact('farm','farmers'));
     }
