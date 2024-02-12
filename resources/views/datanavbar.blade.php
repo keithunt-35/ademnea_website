@@ -38,6 +38,10 @@
                 <a href="{{ url('/hive_data/tempHumidity_data_default/' . $hive_id) }}"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">TemperatureHumidity</a>
             </li>
+            <li>
+                <a href="{{ url('/hive_data/vibration_data_default/' . $hive_id) }}"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Hive Vibration</a>
+            </li>
         </ul>
     </div>
 

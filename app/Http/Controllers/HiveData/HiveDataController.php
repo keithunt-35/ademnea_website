@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use League\Csv\Reader;
 
 class HiveDataController extends Controller
 {   
@@ -31,6 +32,7 @@ class HiveDataController extends Controller
     {
         $start = $request->query('start');
         $end = $request->query('end');
+
 
         // Ensure the dates are in a valid format
         $start = Carbon::parse($start);
@@ -285,6 +287,8 @@ class HiveDataController extends Controller
         $start = $request->query('start');
         $end = $request->query('end');
 
+       // dd($end);
+
         // Ensure the dates are in a valid format
         $start = Carbon::parse($start);
         $end = Carbon::parse($end);
@@ -322,4 +326,126 @@ class HiveDataController extends Controller
         ]);
     }
    
+
+
+
+//-------------------------------HIVE VIBRATION CODE----------------------------
+ 
+        //get vibration for plotting.
+    public function vibrationdefault(Request $request, $id)
+    {
+      // dd($id);
+
+
+        // lets return requests from ajax.
+
+        $start = $request->start;
+        $end = $request->end;
+
+
+        // Path to your CSV file
+        $csvFilePath = 'vibration_csv/vibr.csv';
+
+      
+        // Read the CSV file
+        $reader = Reader::createFromPath($csvFilePath, 'r');
+        $reader->setHeaderOffset(0); // Assuming the first row contains headers
+
+
+       // dd($reader);
+
+            // Parse CSV data
+            $vibrationData = [];
+            foreach ($reader as $row) {
+                // Assuming your CSV has columns named 'data1', 'data2', 'data3', and 'data4'
+               // if ($row['data1'] == $id && strtotime($row['data4']) >= strtotime($start) && strtotime($row['data4']) <= strtotime($end)) {
+                    $vibrationData[] = [
+                        'data1' => $row['data'],
+                        'data2' => $row['data1'],
+                        'data3' => $row['data2'],
+                        'data4' => $row['data3'],
+                    ];
+               // }
+            }
+
+
+
+        //lets put this variable on a session.
+        session(['hive_id' => $id]);
+
+        // Get the hive data and also the related farm data.
+        $hive = DB::table('hives')->where('id', $id)->first();
+        $farm = DB::table('farms')->where('id', $hive->farm_id)->first();
+
+        // Pass the hive id and the farm name to the view.
+        return view('admin.hivegraphs.vibration', ['hive_id' => $id, 'farm_name' => $farm->name]);
+    }
+
+
+
+
+      //the folowing displays vibration data and as of now, its unneessary to show vibration values.
+    public function getvibrationdata(Request $request, $hive)
+    {
+
+
+                // lets return requests from ajax.
+
+                $start = $request->start;
+                $end = $request->end;
+        
+        
+                // Path to your CSV file
+                $csvFilePath = 'vibration_csv/vibr.csv';
+        
+              
+                // Read the CSV file
+                $reader = Reader::createFromPath($csvFilePath, 'r');
+                $reader->setHeaderOffset(0); // Assuming the first row contains headers
+        
+        
+               // dd($reader);
+        
+                    // Parse CSV data
+                    $vibrationData = [];
+                    foreach ($reader as $row) {
+                        // Assuming your CSV has columns named 'data1', 'data2', 'data3', and 'data4'
+                       // if ($row['data1'] == $id && strtotime($row['data4']) >= strtotime($start) && strtotime($row['data4']) <= strtotime($end)) {
+                            $vibrationData[] = [
+                                'data1' => $row['data'],
+                                'data2' => $row['data1'],
+                                'data3' => $row['data2'],
+                                'data4' => $row['data3'],
+                            ];
+                       // }
+                    }
+        
+
+
+        
+        // Return the data as a JSON response
+        return response()->json([
+            'data' => $row['data'],
+            'data1' => $row['data1'],
+            'data2' => $row['data2'],
+            'data3' => $row['data3'],
+        ]);
+
+        
+
+   
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

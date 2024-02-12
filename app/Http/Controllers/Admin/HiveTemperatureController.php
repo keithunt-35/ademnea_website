@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
@@ -20,34 +20,32 @@ class HiveTemperatureController extends Controller
     {      
 
         $hiveId = $request->query('hive_id');
+        $start = $request->query('startDate');
+        $end = $request->query('endDate');
 
-        //ajax to be used by the graphs. we need one more condition, 
-        //to see that the temperture data page sent the request instead
-        
-        if($request->ajax())
-        {
+    //   dd($start);
+        // // Ensure the dates are in a valid format
+        // $start = Carbon::parse($start);
+        // $end = Carbon::parse($end);
+        // $tableName = $request->query('table');
 
-            $data = HiveTemperature::select('*');
-            if($request->filled('from_date') && $request->filled('to_date'))
-            {
-                $data = $data->whereBetween('created_at', [$request->from_date, $request->to_date]);
-                $temperatures = $data->whereBetween('created_at', [$request->from_date, $request->to_date]);
-            }
-
-            return DataTables::of($data)->addIndexColumn()->make(true);
-        }
-
-    else{
+        // // Fetch the data from the database
+        // $temperatures = DB::table($tableName)
+        //     ->where('hive_id', $hiveId)
+        //     ->whereBetween('created_at', [$start, $end])
+        //     ->get();
+ 
 
     $temperatures = HiveTemperature::where('hive_id', $hiveId)
     ->latest() // This orders the records by the created_at column in descending order (latest first).
     ->limit(100) // This limits the result to the latest 100 entries.
     ->get();
 
-    }
+
 
         return view('admin.hivedata.temperatures', compact('temperatures'));
-    }
+
 
    
+}
 }

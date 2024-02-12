@@ -67,7 +67,8 @@
     <div class="relative w-full max-w-2xl max-h-full">
         <!-- Modal content -->
         <form action="{{ url('/post_events') }}" method="POST" class="relative bg-white rounded-lg shadow dark:bg-gray-700" accept-charset="UTF-8" enctype="multipart/form-data">
-                         {{ csrf_field() }}
+      {{ csrf_field() }}
+        @csrf
 
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
@@ -127,6 +128,7 @@
            <!-- Modal content -->
            <form action="/admin/event?id={{ $item[0]->id }}" method="POST" class="relative bg-white rounded-lg shadow dark:bg-gray-700" accept-charset="UTF-8" enctype="multipart/form-data">
              {{ csrf_field() }}
+             @csrf
 
                <!-- Modal header -->
                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
@@ -247,6 +249,7 @@
            <form id="delete-user-form-{{ $item[0]->id}}" method="POST" action="{{ url('admin/event' . '/' . $item[0]->id) }}" accept-charset="UTF-8" style="display:inline">
             {{ method_field('DELETE') }}
             {{ csrf_field() }}
+            @csrf
             <button id="delete-user-btn" data-modal-hide="popup-modal" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                 Yes, I'm sure
             </button>

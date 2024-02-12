@@ -94,6 +94,11 @@ Route::get('/hive_data/tempHumidity_data_default/{hive}', [App\Http\Controllers\
 Route::get('/hive_data/tempHumidity_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getTempHumidity']);
 
 
+/* ------------HIVE VIBRATION------------------*/
+Route::get('/hive_data/vibration_data_default/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'vibrationdefault']);
+Route::get('/hive_data/vibration_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getvibrationdata']);
+
+
 Route::get('/individual_newsletter/{id}', [App\Http\Controllers\DisplayIndividualNewsletterController::class, 'show']);
 
 Route::get('displaynewsletter', [App\Http\Controllers\DisplayNewsletterController::class, 'displayNewsletter']);
@@ -121,7 +126,7 @@ Route::get('/workpackages-wp2', [App\Http\Controllers\WebsiteController::class, 
 Route::get('/workpackages-wp3', [App\Http\Controllers\WebsiteController::class, 'wp3'])->name('workpackages-wp3');
 Route::get('/workpackages-wp4', [App\Http\Controllers\WebsiteController::class, 'wp4'])->name('workpackages-wp4');
 
-Route::get('/gallery', [App\Http\Controllers\GalleryController::class, 'index'])->name('gallery');
+Route::get('/gallery', [App\Http\Controllers\Admin\GalleryController::class, 'index'])->name('gallery');
 Route::get('/admin/tasks/create/{id}', [App\Http\Controllers\Admin\TaskController::class, 'create']);
 
 Route::get('/article/{id}', [App\Http\Controllers\ArticleController::class, 'index']);
