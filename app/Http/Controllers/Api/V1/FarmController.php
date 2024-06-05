@@ -8,6 +8,7 @@ use App\Models\HiveTemperature;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
 class FarmController extends Controller
@@ -182,36 +183,36 @@ class FarmController extends Controller
     public function getMostProductiveFarm(Request $request)
     {
         $user = $request->user();
-    
+
         $farmer = $user->farmer;
-    
+
         $farms = $farmer->farms;
-    
+
         $maxAverageWeight = 0;
         $mostProductiveFarm = null;
-    
+
         foreach ($farms as $farm) {
             $averageWeightResponse = $this->getFarmAverageWeight($farm->id);
             $averageWeightData = json_decode($averageWeightResponse->getContent(), true);
-    
+
             if (!isset($averageWeightData['average_weight'])) {
                 continue;
             }
-    
+
             $averageWeight = $averageWeightData['average_weight'];
-    
+
             if ($averageWeight > $maxAverageWeight) {
                 $maxAverageWeight = $averageWeight;
                 $mostProductiveFarm = $farm;
             }
         }
-    
+
         if (!$mostProductiveFarm) {
             return response()->json(['error' => 'No productive farm found'], 404);
         }
-    
+
         $averageHoneyPercentage = (new HiveController)->getHiveHoneyPercentage($maxAverageWeight);
-    
+
         return response()->json([
             'most_productive_farm' => $mostProductiveFarm,
             'average_weight' => $maxAverageWeight,
@@ -385,10 +386,10 @@ class FarmController extends Controller
 
         $interiorTemps = [];
         $exteriorTemps = [];
-        $highestInteriorTempHive = null;
-        $lowestInteriorTempHive = null;
-        $highestExteriorTempHive = null;
-        $lowestExteriorTempHive = null;
+
+        if ($farm instanceof JsonResponse) {
+            return $farm;
+        }        
 
         foreach ($farm->hives as $hive) {
             $temperatureData = HiveTemperature::where('hive_id', $hive->id)
@@ -413,26 +414,10 @@ class FarmController extends Controller
 
                 if ($interiorTemp !== null) {
                     $interiorTemps[] = $interiorTemp;
-
-                    if ($highestInteriorTempHive === null || $interiorTemp > $highestInteriorTempHive['temperature']) {
-                        $highestInteriorTempHive = ['hive' => $hive->id, 'temperature' => $interiorTemp];
-                    }
-
-                    if ($lowestInteriorTempHive === null || $interiorTemp < $lowestInteriorTempHive['temperature']) {
-                        $lowestInteriorTempHive = ['hive' => $hive->id, 'temperature' => $interiorTemp];
-                    }
                 }
 
                 if ($exteriorTemp !== null) {
                     $exteriorTemps[] = $exteriorTemp;
-
-                    if ($highestExteriorTempHive === null || $exteriorTemp > $highestExteriorTempHive['temperature']) {
-                        $highestExteriorTempHive = ['hive' => $hive->id, 'temperature' => $exteriorTemp];
-                    }
-
-                    if ($lowestExteriorTempHive === null || $exteriorTemp < $lowestExteriorTempHive['temperature']) {
-                        $lowestExteriorTempHive = ['hive' => $hive->id, 'temperature' => $exteriorTemp];
-                    }
                 }
             }
         }
@@ -442,47 +427,60 @@ class FarmController extends Controller
             'highest' => max($interiorTemps),
             'lowest' => min($interiorTemps),
             'average' => round(array_sum($interiorTemps) / count($interiorTemps), 1),
-            'highestInteriorTempHive' => $highestInteriorTempHive,
-            'lowestInteriorTempHive' => $lowestInteriorTempHive,
         ] : ['error' => 'No interior temperature records found for the given date range'];
 
         $exteriorTempStats = !empty($exteriorTemps) ? [
             'highest' => max($exteriorTemps),
             'lowest' => min($exteriorTemps),
             'average' => round(array_sum($exteriorTemps) / count($exteriorTemps), 1),
-            'highestExteriorTempHive' => $highestExteriorTempHive,
-            'lowestExteriorTempHive' => $lowestExteriorTempHive,
         ] : ['error' => 'No exterior temperature records found for the given date range'];
-
-
-        // Get the latest 10 temperature records for the hive with the highest interior temperature
-        $latestTenRecords = HiveTemperature::where('hive_id', $highestInteriorTempHive)
-            ->orderBy('created_at', 'desc')
-            ->select('record', 'created_at')
-            ->take(10)
-            ->get();
-
-        // Extract the interior temperatures from the records
-        $latestTenInteriorTemps = [];
-        foreach ($latestTenRecords as $record) {
-            $tempData = explode('*', $record->record);
-            if (count($tempData) !== 3) {
-                continue; // Skip if the record format is incorrect
-            }
-            $interiorTemp = $tempData[0] == 2 ? null : (float) $tempData[0];
-            if ($interiorTemp !== null) {
-                $latestTenInteriorTemps[] = ['temperature' => $interiorTemp, 'date' => $record->created_at];
-            }
-        }
 
         // Return the data as a JSON response
         return response()->json([
             'interiorTemperatureStats' => $interiorTempStats,
             'exteriorTemperatureStats' => $exteriorTempStats,
-            'latestTenInteriorTemps' => $latestTenInteriorTemps,
         ]);
     }
 
+    /**
+     * Display farms that require supplementary feeding.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getFarmsRequiringSupplementaryFeeding(Request $request)
+    {
+        $farms = Farm::all();
+        $farmsRequiringSupplementaryFeeding = [];
+
+        foreach ($farms as $farm) {
+            $request->merge([
+                'from_date' => Carbon::now()->subDays(7)->toDateString(),
+                'to_date' => Carbon::now()->toDateString(),
+            ]);
+
+            $temperatureStats = $this->getFarmTemperatureStats($request, $farm->id);
+
+            if ($temperatureStats->getStatusCode() !== 200) {
+                continue; // Skip if there was an error getting the temperature stats
+            }
+
+            $temperatureStatsData = json_decode($temperatureStats->getContent(), true);
+
+            if (!isset($temperatureStatsData['interiorTemperatureStats']['average'])) {
+                continue; // Skip if there was no average interior temperature
+            }
+
+            $averageInteriorTemperature = $temperatureStatsData['interiorTemperatureStats']['average'];
+
+            if ($averageInteriorTemperature > 28) {
+                $farm->setAttribute('averageTemperatureLast7Days', $averageInteriorTemperature);
+                $farmsRequiringSupplementaryFeeding[] = $farm;
+            }
+        }
+
+        return response()->json($farmsRequiringSupplementaryFeeding);
+    }
 
     /**
      * Display humidity stats of a farm given the start date and end date.
