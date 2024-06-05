@@ -1,16 +1,34 @@
 @extends('layouts.app')
 @section('content')
+<?php
+// Assuming that $hive[0]->id is available here
+$farm_name = DB::select(
+    "SELECT farms.name as 'farm'
+    FROM hives INNER JOIN farms
+    ON hives.farm_id = farms.id
+    WHERE hives.id = ?",
+    [$hive[0]->id],
+);
+
+// Store the farm name in a variable
+$farmName = $farm_name[0]->farm;
+?>
+
+
     <div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
         <button type="button" data-modal-target="addHive" data-modal-show="addHive"
             class="text-white ml-4 mt-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add
             New Hive</button>
 
+    <!-- Display the farm name below the "Add New Hive" button and align it to the left -->
+    <h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-top: 20px; margin-bottom: 20px; color: green;">Farm Name: <?php echo $farmName; ?></h1>
+
         <table id="myTable"class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3">
+                    <!-- <th scope="col" class="px-6 py-3">
                         Farm
-                    </th>
+                    </th> -->
                     <th scope="col" class="px-6 py-3">
                         Hive No
                     </th>
@@ -29,7 +47,7 @@
                 @foreach ($hive as $item)
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <!-- <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             <?php #Displaying the owner's full name for each farm
                             
                             $farm_name = DB::select(
@@ -43,7 +61,7 @@
                             echo $farm_name[0]->farm;
                             
                             ?>
-                        </th>
+                        </th> -->
                         <td class="px-6 py-4">
                             {{ $item->id }}
                         </td>

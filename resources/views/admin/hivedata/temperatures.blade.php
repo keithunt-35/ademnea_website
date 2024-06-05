@@ -14,7 +14,14 @@
     $hive_id = session('hive_id');
 @endphp
 
+
 @include('datanavbar')
+
+<div style="text-align: right;">
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search ..">
+</div>
+<!-- Display the hive_id at the top of the page -->
+<h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-bottom: 20px; color: green;">Hive ID: {{ $hive_id }}</h1>
 
 <div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
 
@@ -72,9 +79,9 @@
                 <th scope="col" class="px-6 py-3">
                     #
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <!-- <th scope="col" class="px-6 py-3">
                     Hive ID
-                </th>
+                </th> -->
                 <th scope="col" class="px-6 py-3">
                  Interior (°C)
                 </th>
@@ -189,4 +196,29 @@
         cb(start, end);
         });
         </script>
+
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+$(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
 @endsection

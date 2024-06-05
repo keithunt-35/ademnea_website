@@ -11,10 +11,14 @@
 @php
     $hive_id = session('hive_id');
 @endphp
+>
 
 @include('datanavbar')
 
 <div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
+
+<!-- Display the hive_id at the top of the page -->
+<h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-bottom: 20px; color: green;">Hive ID: {{ $hive_id }}</h1>
 
     <table id="myTable"class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -22,9 +26,9 @@
                 <th scope="col" class="px-6 py-3">
                     #
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <!-- <th scope="col" class="px-6 py-3">
                     Hive ID
-                </th>
+                </th> -->
                 <th scope="col" class="px-6 py-3">
                     Photo
                 </th>
