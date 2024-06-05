@@ -22,13 +22,30 @@ class FarmController extends Controller
     public function index(Request $request)
     {
         $farmer = $this->getAuthenticatedFarmer($request);
-
+    
         if ($farmer instanceof \Illuminate\Http\JsonResponse) {
             return $farmer;
         }
-
+    
         $farms = $farmer->farms;
-
+    
+        foreach ($farms as $farm) {
+            $averageTemperature = $this->getFarmAverageTemperature($request, $farm->id);
+            $averageWeight = (new HiveController)->getFarmAverageWeight($farm->id);
+    
+            if ($averageTemperature instanceof \Illuminate\Http\JsonResponse) {
+                $averageTemperature = $averageTemperature->getData()->average_temperature ?? null;
+            }
+    
+            if ($averageWeight instanceof \Illuminate\Http\JsonResponse) {
+                $averageWeightData = $averageWeight->getData();
+                $farm->average_weight = $averageWeightData->average_weight ?? null;
+                $farm->average_honey_percentage = $averageWeightData->average_honey_percentage ?? null;
+            }
+    
+            $farm->average_temperature = $averageTemperature;
+        }
+    
         return response()->json($farms);
     }
 

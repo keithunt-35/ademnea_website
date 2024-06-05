@@ -173,12 +173,47 @@ class HiveController extends Controller
         }
 
         $averageWeight = $totalWeight / $hiveCount;
-        $averageHoneyPercentage = $totalHoneyPercentage / $hiveCount;
+        $averageHoneyPercentage = $this->getHiveHoneyPercentage($averageWeight);
 
         return response()->json([
             'average_weight' => $averageWeight,
             'average_honey_percentage' => $averageHoneyPercentage,
         ]);
+    }
+
+    /**
+     * Get the most productive farm currently.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMostProductiveFarm(Request $request)
+    {
+        // Get the currently authenticated user
+        $user = $request->user();
+
+        // Get the farmer associated with the user
+        $farmer = $user->farmer;
+
+        // Get all farms of the farmer
+        $farms = $farmer->farms;
+
+        $maxAverageWeight = 0;
+        $mostProductiveFarm = null;
+
+        foreach ($farms as $farm) {
+            $averageWeight = $this->getFarmAverageWeight($farm->id)->original['average_weight'];
+
+            if ($averageWeight > $maxAverageWeight) {
+                $maxAverageWeight = $averageWeight;
+                $mostProductiveFarm = $farm;
+            }
+        }
+
+        if (!$mostProductiveFarm) {
+            return response()->json(['error' => 'No productive farm found'], 404);
+        }
+
+        return response()->json($mostProductiveFarm);
     }
 
 
