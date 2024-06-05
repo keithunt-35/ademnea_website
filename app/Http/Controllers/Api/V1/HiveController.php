@@ -85,7 +85,7 @@ class HiveController extends Controller
      * @return float
      * 
      */
-    private function getHiveHoneyPercentage($hiveWeight)
+    public function getHiveHoneyPercentage($hiveWeight)
     {
         $emptyHiveWeight = 18.0;
         $hiveWithColonyWeight = 30.0;
@@ -137,85 +137,6 @@ class HiveController extends Controller
             'date_collected' => $latestWeight->date_collected ?? null,
         ]);
     }
-
-    /**
-     * Get the current average weight of a farm
-     *
-     * @param  int  $farm_id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getFarmAverageWeight($farm_id)
-    {
-        $farm = Farm::find($farm_id);
-
-        if (!$farm) {
-            return response()->json(['error' => 'Farm not found'], 404);
-        }
-
-        $hives = $farm->hives;
-
-        $totalWeight = 0;
-        $totalHoneyPercentage = 0;
-        $hiveCount = 0;
-
-        foreach ($hives as $hive) {
-            $latestWeight = $this->getLatestWeight($hive->id)->original;
-
-            if ($latestWeight['record'] !== null && $latestWeight['honey_percentage'] !== null) {
-                $totalWeight += $latestWeight['record'];
-                $totalHoneyPercentage += $latestWeight['honey_percentage'];
-                $hiveCount++;
-            }
-        }
-
-        if ($hiveCount === 0) {
-            return response()->json(['error' => 'No weight data available'], 404);
-        }
-
-        $averageWeight = $totalWeight / $hiveCount;
-        $averageHoneyPercentage = $this->getHiveHoneyPercentage($averageWeight);
-
-        return response()->json([
-            'average_weight' => $averageWeight,
-            'average_honey_percentage' => $averageHoneyPercentage,
-        ]);
-    }
-
-    /**
-     * Get the most productive farm currently.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getMostProductiveFarm(Request $request)
-    {
-        // Get the currently authenticated user
-        $user = $request->user();
-
-        // Get the farmer associated with the user
-        $farmer = $user->farmer;
-
-        // Get all farms of the farmer
-        $farms = $farmer->farms;
-
-        $maxAverageWeight = 0;
-        $mostProductiveFarm = null;
-
-        foreach ($farms as $farm) {
-            $averageWeight = $this->getFarmAverageWeight($farm->id)->original['average_weight'];
-
-            if ($averageWeight > $maxAverageWeight) {
-                $maxAverageWeight = $averageWeight;
-                $mostProductiveFarm = $farm;
-            }
-        }
-
-        if (!$mostProductiveFarm) {
-            return response()->json(['error' => 'No productive farm found'], 404);
-        }
-
-        return response()->json($mostProductiveFarm);
-    }
-
 
     /**
      * Get the most recent temperature of a hive.

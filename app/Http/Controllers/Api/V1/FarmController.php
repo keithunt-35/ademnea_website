@@ -22,30 +22,30 @@ class FarmController extends Controller
     public function index(Request $request)
     {
         $farmer = $this->getAuthenticatedFarmer($request);
-    
+
         if ($farmer instanceof \Illuminate\Http\JsonResponse) {
             return $farmer;
         }
-    
+
         $farms = $farmer->farms;
-    
+
         foreach ($farms as $farm) {
             $averageTemperature = $this->getFarmAverageTemperature($request, $farm->id);
-            $averageWeight = (new HiveController)->getFarmAverageWeight($farm->id);
-    
+            $averageWeight = $this->getFarmAverageWeight($farm->id);
+
             if ($averageTemperature instanceof \Illuminate\Http\JsonResponse) {
                 $averageTemperature = $averageTemperature->getData()->average_temperature ?? null;
             }
-    
+
             if ($averageWeight instanceof \Illuminate\Http\JsonResponse) {
                 $averageWeightData = $averageWeight->getData();
                 $farm->average_weight = $averageWeightData->average_weight ?? null;
                 $farm->average_honey_percentage = $averageWeightData->average_honey_percentage ?? null;
             }
-    
+
             $farm->average_temperature = $averageTemperature;
         }
-    
+
         return response()->json($farms);
     }
 
@@ -130,6 +130,94 @@ class FarmController extends Controller
         return response()->json(['average_temperature' => $averageFarmTemperature]);
     }
 
+
+    /**
+     * Get the current average weight of a farm
+     *
+     * @param  int  $farm_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFarmAverageWeight($farm_id)
+    {
+        $farm = Farm::find($farm_id);
+
+        if (!$farm) {
+            return response()->json(['error' => 'Farm not found'], 404);
+        }
+
+        $hives = $farm->hives;
+
+        $totalWeight = 0;
+        $totalHoneyPercentage = 0;
+        $hiveCount = 0;
+
+        foreach ($hives as $hive) {
+            $latestWeight = (new HiveController)->getLatestWeight($hive->id)->original;
+
+            if ($latestWeight['record'] !== null && $latestWeight['honey_percentage'] !== null) {
+                $totalWeight += $latestWeight['record'];
+                $totalHoneyPercentage += $latestWeight['honey_percentage'];
+                $hiveCount++;
+            }
+        }
+
+        if ($hiveCount === 0) {
+            return response()->json(['error' => 'No weight data available'], 404);
+        }
+
+        $averageWeight = $totalWeight / $hiveCount;
+        $averageHoneyPercentage = (new HiveController)->getHiveHoneyPercentage($averageWeight);
+
+        return response()->json([
+            'average_weight' => $averageWeight,
+            'average_honey_percentage' => $averageHoneyPercentage,
+        ]);
+    }
+
+    /**
+     * Get the most productive farm currently for a farmer
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMostProductiveFarm(Request $request)
+    {
+        $user = $request->user();
+    
+        $farmer = $user->farmer;
+    
+        $farms = $farmer->farms;
+    
+        $maxAverageWeight = 0;
+        $mostProductiveFarm = null;
+    
+        foreach ($farms as $farm) {
+            $averageWeightResponse = $this->getFarmAverageWeight($farm->id);
+            $averageWeightData = json_decode($averageWeightResponse->getContent(), true);
+    
+            if (!isset($averageWeightData['average_weight'])) {
+                continue;
+            }
+    
+            $averageWeight = $averageWeightData['average_weight'];
+    
+            if ($averageWeight > $maxAverageWeight) {
+                $maxAverageWeight = $averageWeight;
+                $mostProductiveFarm = $farm;
+            }
+        }
+    
+        if (!$mostProductiveFarm) {
+            return response()->json(['error' => 'No productive farm found'], 404);
+        }
+    
+        $averageHoneyPercentage = (new HiveController)->getHiveHoneyPercentage($maxAverageWeight);
+    
+        return response()->json([
+            'most_productive_farm' => $mostProductiveFarm,
+            'average_weight' => $maxAverageWeight,
+            'average_honey_percentage' => $averageHoneyPercentage,
+        ]);
+    }
 
     /**
      * Display the total number of farms owned by the authenticated farmer.
