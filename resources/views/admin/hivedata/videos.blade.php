@@ -1,14 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
-@php
-    $hive_id = session('hive_id');
+ @php
+  $hive_id = session('hive_id');
 @endphp
 
 
@@ -68,18 +62,28 @@
     </table>
 </div>
 
-@endsection
-<!-- added pagination and search-->
-@section('page_scripts')
-<!-- Include DataTables JS file -->
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 
 <script>
-  $(document).ready(function() {
-   $('#myTable').DataTable({
-      responsive: true
-   });
-});
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM content loaded.");
+        
+        const playlistItems = document.querySelectorAll('.playlist-item');
+
+        playlistItems.forEach(function(item) {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                const videoSource = this.getAttribute('data-video');
+                console.log(videoSource);
+                document.getElementById('mainVideo').src = "{{ URL('hivevideo') }}/" + videoSource;
+                document.getElementById('mainVideo').load();
+            });
+        });
+    });
 </script>
+
 @endsection
+
+@section('page_scripts')
+
+@endsection
+
