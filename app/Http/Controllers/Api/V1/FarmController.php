@@ -307,6 +307,7 @@ class FarmController extends Controller
                     'time_until_harvest' => [
                         'months' => 0,
                         'days' => 0,
+                        'percentage_time_left' => 100,
                     ]
                 ]);
             }
@@ -318,6 +319,7 @@ class FarmController extends Controller
 
             // Calculate the interval until the start of the next harvest season
             $interval = $currentDate->diff($startOfSeason);
+            $totalDaysInInterval = (int) $currentDate->diff($startOfSeason)->format("%a");
 
             // If this is the first interval calculated or if it's shorter than the previously calculated interval, update the timeUntilHarvest
             if ($timeUntilHarvest === null || $interval->days < $timeUntilHarvest->days) {
@@ -325,13 +327,26 @@ class FarmController extends Controller
             }
         }
 
+        // Calculate the total duration of the next harvest season interval
+        $startOfNextSeason = \DateTime::createFromFormat('Y-m-d', $currentYear . '-' . $harvestSeasons[0]['start']);
+        if ($startOfNextSeason < $currentDate) {
+            $startOfNextSeason->modify('+1 year');
+        }
+
+        $totalDaysInInterval = (int) $currentDate->diff($startOfNextSeason)->format("%a");
+
+        // Calculate the percentage of time left
+        $percentageTimeLeft = ($timeUntilHarvest->days / $totalDaysInInterval) * 100;
+
         return response()->json([
             'time_until_harvest' => [
                 'months' => $timeUntilHarvest->m,
                 'days' => $timeUntilHarvest->d,
+                'percentage_time_left' => round($percentageTimeLeft, 2), // Round to 2 decimal places
             ]
         ]);
     }
+
 
     /**
      * Display the total number of hives of a farm.
@@ -389,7 +404,7 @@ class FarmController extends Controller
 
         if ($farm instanceof JsonResponse) {
             return $farm;
-        }        
+        }
 
         foreach ($farm->hives as $hive) {
             $temperatureData = HiveTemperature::where('hive_id', $hive->id)
