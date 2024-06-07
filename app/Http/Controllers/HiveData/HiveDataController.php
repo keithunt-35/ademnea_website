@@ -331,7 +331,7 @@ class HiveDataController extends Controller
 
 //-------------------------------HIVE VIBRATION CODE----------------------------
  
-        //get vibration for plotting.
+        //get vibration data for plotting.
     public function vibrationdefault(Request $request, $id)
     {
       // dd($id);
@@ -360,10 +360,10 @@ class HiveDataController extends Controller
                 // Assuming your CSV has columns named 'data1', 'data2', 'data3', and 'data4'
                // if ($row['data1'] == $id && strtotime($row['data4']) >= strtotime($start) && strtotime($row['data4']) <= strtotime($end)) {
                     $vibrationData[] = [
-                        'data1' => $row['data'],
-                        'data2' => $row['data1'],
-                        'data3' => $row['data2'],
-                        'data4' => $row['data3'],
+                        'time' => $row['Time'],
+                        'x' => $row['X'],
+                        'y' => $row['Y'],
+                        'z' => $row['Z'],
                     ];
                // }
             }
@@ -411,12 +411,12 @@ class HiveDataController extends Controller
                     foreach ($reader as $row) {
                         // Assuming your CSV has columns named 'data1', 'data2', 'data3', and 'data4'
                        // if ($row['data1'] == $id && strtotime($row['data4']) >= strtotime($start) && strtotime($row['data4']) <= strtotime($end)) {
-                            $vibrationData[] = [
-                                'data1' => $row['data'],
-                                'data2' => $row['data1'],
-                                'data3' => $row['data2'],
-                                'data4' => $row['data3'],
-                            ];
+                        $vibrationData[] = [
+                            'time' => $row['Time'],
+                            'x' => $row['X'],
+                            'y' => $row['Y'],
+                            'z' => $row['Z'],
+                        ];
                        // }
                     }
         
@@ -425,10 +425,10 @@ class HiveDataController extends Controller
         
         // Return the data as a JSON response
         return response()->json([
-            'data' => $row['data'],
-            'data1' => $row['data1'],
-            'data2' => $row['data2'],
-            'data3' => $row['data3'],
+            'time' => $row['Time'],
+            'x' => $row['X'],
+            'y' => $row['Y'],
+            'z' => $row['Z'],
         ]);
 
         

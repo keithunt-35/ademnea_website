@@ -118,22 +118,23 @@ $(function() {
                 xAxis: {
                           type: 'category',
                           boundaryGap: false,
-                          data: response.data1 // assuming you returned the dates under the key 'dates'
+                          data: response.time // assuming you returned the dates under the key 'dates'
                       },
                 yAxis: {
-                          type: 'value',
+                          type: 'category',
+                          data:response.x,
                           min: 0,
-                          max: 15,
+                          max: 10,
                           axisLabel: {
                           formatter: '{value}'
                           },
-                          splitNumber: 10
+                          splitNumber: 0
                       },
                 series: [
                   {
                         name: 'Vibration',
                         type: 'line',
-                        data: response.data2, // the returned column on the response that you wish to plot.
+                        data: response.x, // the returned column on the response that you wish to plot.
                         markPoint: {
                                     data: [
                                           { type: 'max', name: 'Max' },
