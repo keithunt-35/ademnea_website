@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddImageToPublicationsTable extends Migration
+class CreateVibrationDataTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class AddImageToPublicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('event_photos', function (Blueprint $table) {
+        Schema::create('vibration_data', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_id');
-            $table->string('photo_url');
             $table->timestamps();
-    
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 
@@ -30,8 +26,6 @@ class AddImageToPublicationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('publications', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('vibration_data');
     }
 }

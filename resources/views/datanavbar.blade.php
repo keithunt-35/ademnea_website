@@ -38,6 +38,10 @@
                 <a href="{{ url('/hive_data/tempHumidity_data_default/' . $hive_id) }}"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">TemperatureHumidity</a>
             </li>
+            {{-- <li>
+                < href="{{ url('admin/hivegraphs/vibrations') }}">
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vibrations</a>
+            </li> --}}
         </ul>
     </div>
 
@@ -119,13 +123,28 @@
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sensor Monitoring</a>
             </li>
             <li>
-                
-                
-                <a href="{{ url('/admin/power-monitoring-default/' . $hive_id ) }}"
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Power Monitoring</a>
+                <a href="/admin/thingspeak"
+                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                   Battery Monitoring
+                </a>
+            </li>
+            <li>
+                {{-- <a href="/vibrationImport/import"
+                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                   import
+                </a>
+            </li> --}}
+            <li>
+                <a href="/admin/hivegraphs/vibrations"
+                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                   Vibration graph
+                </a>
             </li>
         </ul>
     </div>
+
+    
+    
 </div>
 
 
