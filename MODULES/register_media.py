@@ -9,6 +9,7 @@ import register_hiveaudios
 import register_hiveimages
 import register_hivevideos
 import register_hivetemp_hivehumidity
+import register_hivevibration
 
 
 #CONNECTION TO DB, CORRECT DATABASE DETAILS HAVE TO BE PASSED AT THIS POINT
@@ -65,15 +66,29 @@ class Handler(FileSystemEventHandler):
                 except Exception as e:
                     print(f"Error registering image {filename}: {e}")
             elif media_flag == "csv":
-                print(f"Handling CSV: {filename}")
-                try:
-                    register_hivetemp_hivehumidity.reg(filename, folder_to_track)
-                    print(f"Inserted CSV {filename} into DB")
-                except Exception as e:
-                    print(f"Error registering CSV {filename}: {e}")
-            else:
-                print(f"INVALID MEDIA NAME: {filename}")
-
+                if filename.startswith("vibration"):
+                    print(f"Handling Vibration CSV: {filename}")
+                    try:
+                        register_hivevibration.reg(filename, folder_to_track)
+                        print(f"Inserted Vibration CSV {filename} into DB")
+                    except Exception as e:
+                        print(f"Error registering Vibration CSV {filename}: {e}")
+                elif filename.startswith("power"):
+                    print(f"Not yet handling Power CSV: {filename}")
+                    # print(f"Handling Power CSV: {filename}")
+                    # try:
+                    #     # Assuming you have a similar function for power parameters
+                    #     register_power.reg(filename, folder_to_track)
+                    #     print(f"Inserted Power CSV {filename} into DB")
+                    # except Exception as e:
+                    #     print(f"Error registering Power CSV {filename}: {e}")
+                else:
+                    print(f"Handling temperature and humidity CSV: {filename}")
+                    try:
+                        register_hivetemp_hivehumidity.reg(filename, folder_to_track)
+                        print(f"Inserted other CSV {filename} into DB")
+                    except Exception as e:
+                        print(f"Error registering other CSV {filename}: {e}")
 
 if __name__ == '__main__':
     folder_to_track = r"/var/www/html/ademnea_website/public/arriving_hive_media"

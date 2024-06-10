@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddImageToPublicationsTable extends Migration
+class CreateHiveVibrationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,18 @@ class AddImageToPublicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('event_photos', function (Blueprint $table) {
+        Schema::create('hive_vibrations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_id');
-            $table->string('photo_url');
+
+            $table->string('path');
+            $table->unsignedBigInteger('hive_id');
+
+            $table->foreign('hive_id')
+                ->references('id')->on('hives')
+                ->onDelete('cascade')
+                ->nullable();
+
             $table->timestamps();
-    
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 
@@ -30,8 +35,6 @@ class AddImageToPublicationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('publications', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('hive_vibrations');
     }
 }
