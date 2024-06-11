@@ -5,58 +5,31 @@
 @php
   $hive_id = session('hive_id');
 @endphp
->
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
 @include('datanavbar')
 
-<div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
-
-<!-- Display the hive_id at the top of the page -->
-<h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-bottom: 20px; color: green;">Hive ID: {{ $hive_id }}</h1>
-
-    <table id="myTable"class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">
-                    #
-                </th>
-                <!-- <th scope="col" class="px-6 py-3">
-                    Hive ID
-                </th> -->
-                <th scope="col" class="px-6 py-3">
-                    Photo
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Date
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-        @php
-            $count =  1
-            @endphp
-        @foreach($photos as $photo)
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-           
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {{ $count }}
-                </th>
-                <td class="px-6 py-4">
-                {{ $photo->hive_id }}
-                </td>
-                <td class="px-6 py-4">
-                    <a href="{{ URL("hiveimage/"."".$photo->path) }}" target="_blank"><img src="{{ URL("hiveimage/"."".$photo->path) }}" alt=""" height="100" width="100"></a>
-                </td>
-                <td class="px-6 py-4">
-                {{ $photo->created_at }}
-                </td>
-            </tr>
-            @php
-                $count = $count + 1
-                @endphp
-            @endforeach 
-        </tbody>
-    </table>
+<div class="container mx-auto px-4 relative">
+    <div class="portfolio-area">
+        <div class="container mx-auto px-10 md:px-5 lg:px-5 sm:px-5">
+            <div class="row portfolio relative">
+                @foreach($photos as $photo)
+                <div class="col-12 col-sm-6 col-lg-3 single_gallery_item {{$photo->category}} mb-30 wow fadeInUp" data-wow-delay="{{$loop->index * 200}}ms">
+                    <div class="single-portfolio-content relative">
+                        <a href="{{ URL("hiveimage/" . $photo->path) }}" data-lightbox="hive-images" data-title="{{ $photo->name ?? 'Hive Image' }}" class="relative inline-block">
+                            <img class="w-full transition-transform duration-500 transform hover:scale-125" src="{{ URL("hiveimage/" . $photo->path) }}" alt="{{ $photo->name ?? 'Hive Image' }}">
+                        </a>
+                        {{-- <div>ID: {{ $photo->id }}</div> --}}
+                        <div>Created at: {{ $photo->created_at }}</div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            {{ $photos->appends(['hive_id' => $hive_id])->links() }}
+        </div>
+    </div>
 </div>
 
 <script src="{{ asset('js/lightbox-plus-jquery.js') }}"></script>
@@ -66,3 +39,4 @@
 @section('page_scripts')
 
 @endsection 
+
