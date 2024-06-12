@@ -52,9 +52,9 @@
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 {{ $count }}
                 </th>
-                <td class="px-6 py-4">
+                <!-- <td class="px-6 py-4">
                 {{ $humidity->hive_id }}
-                </td>
+                </td> -->
                 <td class="px-6 py-4">
                 {{ explode('*', $humidity->record)[0] }}
                 </td>

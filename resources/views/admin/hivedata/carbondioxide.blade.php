@@ -16,7 +16,7 @@
 @include('datanavbar')
 
 <!-- Display the hive_id at the top of the page -->
-<h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-bottom: 20px; color: green;">Hive ID: {{ $hive_id }}</h1>
+<h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-bottom: 20px; color: green;">Hive : {{ $hive_id }}</h1>
 
 <div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
 
@@ -46,9 +46,9 @@
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 {{ $count }}
                 </th>
-                <td class="px-6 py-4">
+                <!-- <td class="px-6 py-4">
                 {{ $carbondioxide->hive_id }}
-                </td>
+                </td> -->
                 <td class="px-6 py-4">
                 {{ $carbondioxide->record }}
                 </td>
