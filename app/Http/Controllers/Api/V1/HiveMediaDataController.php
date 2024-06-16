@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Models\Hive;
 use App\Models\HiveAudio;
 use App\Models\HivePhoto;
@@ -12,6 +13,15 @@ use App\Models\HiveVideo;
 
 class HiveMediaDataController extends Controller
 {
+    /**
+     * Get images for a specific date range.
+     *
+     * @param  Request  $request
+     * @param  int  $hive_id
+     * @param  string  $from_date
+     * @param  string  $to_date
+     * @return \Illuminate\Http\JsonResponse
+     */
     /**
      * Get images for a specific date range.
      *
@@ -37,11 +47,9 @@ class HiveMediaDataController extends Controller
             ->select('path', 'created_at')
             ->paginate(10);
 
-        foreach ($imageData as $record) {
-            $record->path = 'public/hiveimage/' . $record->path;
-        }
+        $formattedData = $this->formatMediaData($imageData, 'hiveimage');
 
-        return $this->formatResponse($imageData);
+        return $formattedData;
     }
 
     /**
@@ -69,11 +77,9 @@ class HiveMediaDataController extends Controller
             ->select('path', 'created_at')
             ->paginate(10);
 
-        foreach ($videoData as $record) {
-            $record->path = 'public/hivevideo/' . $record->path;
-        }
+        $formattedData = $this->formatMediaData($videoData, 'hivevideo');
 
-        return $this->formatResponse($videoData);
+        return $formattedData;
     }
 
     /**
@@ -101,12 +107,11 @@ class HiveMediaDataController extends Controller
             ->select('path', 'created_at')
             ->paginate(10);
 
-        foreach ($audioData as $record) {
-            $record->path = 'public/hiveaudio/' . $record->path;
-        }
+        $formattedData = $this->formatMediaData($audioData, 'hiveaudio');
 
-        return $this->formatResponse($audioData);
+        return $formattedData;
     }
+
 
     /**
      * Check if the authenticated user owns the specified hive.
@@ -134,16 +139,25 @@ class HiveMediaDataController extends Controller
     }
 
     /**
-     * Format the response to include pagination data.
+     * Format the media data for the response.
      *
      * @param  \Illuminate\Pagination\LengthAwarePaginator  $data
+     * @param  string  $folder
      * @return \Illuminate\Http\JsonResponse
      */
-    private function formatResponse($data)
+    private function formatMediaData($data, $folder)
     {
+        foreach ($data as $record) {
+            $record->path = 'public/' . $folder . '/' . $record->path;
+        }
+
         return response()->json([
-            'dates' => $data->pluck('created_at'),
-            'paths' => $data->pluck('path'),
+            'data' => $data->map(function ($item) {
+                return [
+                    'date' => $item->created_at,
+                    'path' => $item->path,
+                ];
+            }),
             'pagination' => [
                 'total' => $data->total(),
                 'per_page' => $data->perPage(),
