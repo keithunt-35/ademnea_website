@@ -488,7 +488,7 @@ class FarmController extends Controller
 
             $averageInteriorTemperature = $temperatureStatsData['interiorTemperatureStats']['average'];
 
-            if ($averageInteriorTemperature > 28) {
+            if ($averageInteriorTemperature >= 30) {
                 $farm->setAttribute('averageTemperatureLast7Days', $averageInteriorTemperature);
                 $farmsRequiringSupplementaryFeeding[] = $farm;
             }
