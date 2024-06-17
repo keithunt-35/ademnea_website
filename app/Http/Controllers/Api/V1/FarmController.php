@@ -467,62 +467,44 @@ class FarmController extends Controller
     {
         // Get the authenticated user from the request
         $user = $request->user();
-    
+
         // Retrieve the farmer associated with the user
         $farmer = $user->farmer;
-    
+
         if (!$farmer) {
             return response()->json(['error' => 'Farmer not found'], 404);
         }
-    
+
         // Retrieve only the farms associated with that farmer
         $farms = $farmer->farms;
         $farmsRequiringSupplementaryFeeding = [];
-    
+
         foreach ($farms as $farm) {
             $request->merge([
                 'from_date' => Carbon::now()->subDays(7)->toDateString(),
                 'to_date' => Carbon::now()->addDay()->toDateString(),
             ]);
-    
-            // Debug: Print the farm ID and request parameters
-            print("Processing Farm ID: " . $farm->id . "\n");
-            print("Request Parameters: " . json_encode($request->all()) . "\n");
-    
+
             $temperatureStats = $this->getFarmTemperatureStats($request, $farm->id);
-    
-            // Debug: Print the status code of the temperature stats response
-            print("Temperature Stats Status Code: " . $temperatureStats->getStatusCode() . "\n");
-    
+
             if ($temperatureStats->getStatusCode() !== 200) {
-                print("Error getting temperature stats for Farm ID: " . $farm->id . "\n");
                 continue; // Skip if there was an error getting the temperature stats
             }
-    
+
             $temperatureStatsData = json_decode($temperatureStats->getContent(), true);
-    
-            // Debug: Print the temperature stats data
-            print("Temperature Stats Data: " . json_encode($temperatureStatsData) . "\n");
-    
+
             if (!isset($temperatureStatsData['exteriorTemperatureStats']['average'])) {
-                print("No average exterior temperature for Farm ID: " . $farm->id . "\n");
                 continue; // Skip if there was no average exterior temperature
             }
-    
+
             $averageExteriorTemperature = $temperatureStatsData['exteriorTemperatureStats']['average'];
-    
-            // Debug: Print the average exterior temperature
-            print("Average Exterior Temperature for Farm ID " . $farm->id . ": " . $averageExteriorTemperature . "\n");
-    
+
             if ($averageExteriorTemperature >= 30) {
                 $farm->setAttribute('averageTemperatureLast7Days', $averageExteriorTemperature);
                 $farmsRequiringSupplementaryFeeding[] = $farm;
             }
         }
-    
-        // Debug: Print the final list of farms requiring supplementary feeding
-        print("Farms Requiring Supplementary Feeding: " . json_encode($farmsRequiringSupplementaryFeeding) . "\n");
-    
+
         return response()->json($farmsRequiringSupplementaryFeeding);
     }
     /**
