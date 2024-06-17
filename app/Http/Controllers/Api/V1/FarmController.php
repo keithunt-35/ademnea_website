@@ -465,7 +465,18 @@ class FarmController extends Controller
      */
     public function getFarmsRequiringSupplementaryFeeding(Request $request)
     {
-        $farms = Farm::all();
+        // Get the authenticated user from the request
+        $user = $request->user();
+    
+        // Retrieve the farmer associated with the user
+        $farmer = $user->farmer;
+    
+        if (!$farmer) {
+            return response()->json(['error' => 'Farmer not found'], 404);
+        }
+    
+        // Retrieve only the farms associated with that farmer
+        $farms = $farmer->farms;
         $farmsRequiringSupplementaryFeeding = [];
     
         foreach ($farms as $farm) {
@@ -514,7 +525,6 @@ class FarmController extends Controller
     
         return response()->json($farmsRequiringSupplementaryFeeding);
     }
-
     /**
      * Display humidity stats of a farm given the start date and end date.
      *
