@@ -89,6 +89,8 @@ class Handler(FileSystemEventHandler):
                         print(f"Inserted other CSV {filename} into DB")
                     except Exception as e:
                         print(f"Error registering other CSV {filename}: {e}")
+            else:
+                print(f"Handling of {filename} file type not yet supported")
 
 if __name__ == '__main__':
     folder_to_track = r"/var/www/html/ademnea_website/public/arriving_hive_media"
