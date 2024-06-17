@@ -482,7 +482,7 @@ class FarmController extends Controller
         foreach ($farms as $farm) {
             $request->merge([
                 'from_date' => Carbon::now()->subDays(7)->toDateString(),
-                'to_date' => Carbon::now()->toDateString(),
+                'to_date' => Carbon::now()->addDay()->toDateString(),
             ]);
     
             // Debug: Print the farm ID and request parameters
