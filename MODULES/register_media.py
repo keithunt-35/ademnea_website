@@ -69,8 +69,9 @@ class Handler(FileSystemEventHandler):
                 if filename.startswith("vibration"):
                     print(f"Handling Vibration CSV: {filename}")
                     try:
-                        register_hivevibration.reg(filename, folder_to_track)
-                        print(f"Inserted Vibration CSV {filename} into DB")
+                        # register_hivevibration.reg(filename, folder_to_track)
+                        # print(f"Inserted Vibration CSV {filename} into DB")
+                        print(f"Handling vibration data not yet available")
                     except Exception as e:
                         print(f"Error registering Vibration CSV {filename}: {e}")
                 elif filename.startswith("power"):
