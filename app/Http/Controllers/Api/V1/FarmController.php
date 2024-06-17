@@ -482,14 +482,14 @@ class FarmController extends Controller
 
             $temperatureStatsData = json_decode($temperatureStats->getContent(), true);
 
-            if (!isset($temperatureStatsData['interiorTemperatureStats']['average'])) {
+            if (!isset($temperatureStatsData['exteriorTemperatureStats']['average'])) {
                 continue; // Skip if there was no average interior temperature
             }
 
-            $averageInteriorTemperature = $temperatureStatsData['interiorTemperatureStats']['average'];
+            $averageExteriorTemperature = $temperatureStatsData['exteriorTemperatureStats']['average'];
 
-            if ($averageInteriorTemperature >= 30) {
-                $farm->setAttribute('averageTemperatureLast7Days', $averageInteriorTemperature);
+            if ($averageExteriorTemperature >= 30) {
+                $farm->setAttribute('averageTemperatureLast7Days', $averageExteriorTemperature);
                 $farmsRequiringSupplementaryFeeding[] = $farm;
             }
         }
