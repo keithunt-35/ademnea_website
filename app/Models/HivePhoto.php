@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class HivePhoto extends Model
 {
     use HasFactory;
-    protected $fillable = ['path', 'hive_id'];
+    protected $fillable = [
+        'hive_id',
+        'path',
+        'detected_bees', 
+    ];
 
     /**
      * Get the hive that owns the photo.
