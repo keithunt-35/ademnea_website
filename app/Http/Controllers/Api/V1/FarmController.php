@@ -465,13 +465,24 @@ class FarmController extends Controller
      */
     public function getFarmsRequiringSupplementaryFeeding(Request $request)
     {
-        $farms = Farm::all();
+        // Get the authenticated user from the request
+        $user = $request->user();
+
+        // Retrieve the farmer associated with the user
+        $farmer = $user->farmer;
+
+        if (!$farmer) {
+            return response()->json(['error' => 'Farmer not found'], 404);
+        }
+
+        // Retrieve only the farms associated with that farmer
+        $farms = $farmer->farms;
         $farmsRequiringSupplementaryFeeding = [];
 
         foreach ($farms as $farm) {
             $request->merge([
                 'from_date' => Carbon::now()->subDays(7)->toDateString(),
-                'to_date' => Carbon::now()->toDateString(),
+                'to_date' => Carbon::now()->addDay()->toDateString(),
             ]);
 
             $temperatureStats = $this->getFarmTemperatureStats($request, $farm->id);
@@ -483,7 +494,7 @@ class FarmController extends Controller
             $temperatureStatsData = json_decode($temperatureStats->getContent(), true);
 
             if (!isset($temperatureStatsData['exteriorTemperatureStats']['average'])) {
-                continue; // Skip if there was no average interior temperature
+                continue; // Skip if there was no average exterior temperature
             }
 
             $averageExteriorTemperature = $temperatureStatsData['exteriorTemperatureStats']['average'];
@@ -496,7 +507,6 @@ class FarmController extends Controller
 
         return response()->json($farmsRequiringSupplementaryFeeding);
     }
-
     /**
      * Display humidity stats of a farm given the start date and end date.
      *
