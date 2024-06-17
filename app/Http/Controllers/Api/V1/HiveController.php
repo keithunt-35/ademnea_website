@@ -126,7 +126,7 @@ class HiveController extends Controller
             if ($latestWeight->record == 2) {
                 $latestWeight->record = null;
             }
-            $honeyPercentage = $this->getHiveHoneyPercentage($latestWeight->weight);
+            $honeyPercentage = $this->getHiveHoneyPercentage($latestWeight->record);
             $latestWeight->honey_percentage = $honeyPercentage;
             $latestWeight->date_collected = $latestWeight->created_at->format('Y-m-d H:i:s');
         }
