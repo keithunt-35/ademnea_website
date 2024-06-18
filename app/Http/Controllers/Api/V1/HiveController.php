@@ -271,17 +271,19 @@ class HiveController extends Controller
     public function getHiveColonizationStatus($hive_id)
     {
         $hive = Hive::find($hive_id);
-
+    
         if (!$hive) {
             return response()->json(['error' => 'Hive not found'], 404);
         }
-
-        // Placeholder logic, always returns true
+    
+        if ($hive_id !== 1) {
+            return response()->json(['Colonized' => false]);
+        }
+    
         $colonizationStatus = true;
-
+    
         return response()->json(['Colonized' => $colonizationStatus]);
     }
-
     /**
      * Get the current state of a hive.
      *
