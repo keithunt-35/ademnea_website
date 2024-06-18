@@ -45,7 +45,7 @@ class HiveParameterDataController extends Controller
     
         // Ensure the dates are in a valid format
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
     
         $temperatureData = HiveTemperature::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
@@ -111,7 +111,7 @@ class HiveParameterDataController extends Controller
     
         // Ensure the dates are in a valid format
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
     
         $humidityData = HiveHumidity::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
@@ -176,7 +176,7 @@ class HiveParameterDataController extends Controller
     
         // Ensure the dates are in a valid format
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
     
         $weightData = HiveWeight::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
@@ -227,7 +227,7 @@ class HiveParameterDataController extends Controller
     
         // Ensure the dates are in a valid format
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
     
         $carbondioxideData = HiveCarbondioxide::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])

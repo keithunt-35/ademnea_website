@@ -40,7 +40,7 @@ class HiveMediaDataController extends Controller
         }
 
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
 
         $imageData = HivePhoto::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
@@ -70,7 +70,7 @@ class HiveMediaDataController extends Controller
         }
 
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
 
         $videoData = HiveVideo::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
@@ -100,7 +100,7 @@ class HiveMediaDataController extends Controller
         }
 
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
 
         $audioData = HiveAudio::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
