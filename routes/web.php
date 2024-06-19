@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\HiveData\HiveDataController;
 
+use App\Exports\HiveTemperatureExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 /*
@@ -94,6 +96,16 @@ Route::get('/hive_data/tempHumidity_data_default/{hive}', [App\Http\Controllers\
 Route::get('/hive_data/tempHumidity_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getTempHumidity']);
 
 
+
+/*--------------------------------VIBRATIONS---------------*/
+Route::get('admin/hivegraphs/vibrations/{hive_id}', [App\Http\Controllers\Admin\HiveVibrationController::class,'plot']);
+
+
+
+
+
+
+
 Route::get('/individual_newsletter/{id}', [App\Http\Controllers\DisplayIndividualNewsletterController::class, 'show']);
 
 Route::get('displaynewsletter', [App\Http\Controllers\DisplayNewsletterController::class, 'displayNewsletter']);
@@ -135,10 +147,26 @@ Route::get('/farms/map/{id}', [App\Http\Controllers\MapController::class, 'displ
 
 
 Route::get('/sensor-monitoring', [App\Http\Controllers\SensorMonitoringController::class, 'sensorMonitor']);
-
+Route::get('admin/power-monitoring', [App\Http\Controllers\Admin\PowerMonitoringController::class, 'powerMonitor']);
 // .........................POWER MONITORING...................................
-Route::get('/admin/power-monitoring-default/{hive_id}', [App\Http\Controllers\PowerMonitoringController::class, 'batteryDefault']);
-Route::get('/admin/power-monitoring/{hive_id}', [App\Http\Controllers\PowerMonitoringController::class, 'getBatteryData']);
-// Route::get('/battery', [App\Http\Controllers\PowerMonitoringController::class, 'batteryLevel']);
+// Route::get('/admin/power-monitoring/index/{hive_id}', [App\Http\Controllers\PowerMonitoringController::class, 'batteryDefault']);
 
 
+/*----------------------------- DOWNLOAD EXCEL EXPORT ROUTES---------------------*/
+Route::get('/export-temperatures', function (Request $request) {
+    $fromDate = $request->query('from_date');
+    $toDate = $request->query('to_date');
+    $hiveId = $request->query('hive_id');
+
+    return Excel::download(new HiveTemperatureExport($fromDate, $toDate, $hiveId), 'hive_temperatures.xlsx');
+});
+
+Route::get('/admin/hive_temperatures/export', [App\Http\Controllers\Admin\HiveTemperatureController::class, 'export'])
+->name('admin.hive_temperatures.export');
+
+
+
+/*------------------------------------ThingSpeak Battery Monitoring--------------*/
+
+Route::get('admin/thingspeak',[App\Http\Controllers\ThingspeakController::class,'index']);
+Route::get('admin/thingspeak/data',[App\Http\Controllers\ThingspeakController::class,'fetchData']);

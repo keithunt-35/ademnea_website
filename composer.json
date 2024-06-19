@@ -15,6 +15,7 @@
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
+        "maatwebsite/excel": "3.1.28",
         "yajra/laravel-datatables-oracle": "^9.21"
     },
     "require-dev": {
@@ -56,6 +57,7 @@
             "dont-discover": []
         }
     },
+
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
