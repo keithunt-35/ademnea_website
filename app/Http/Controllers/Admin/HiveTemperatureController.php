@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\HiveTemperature;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Exports\HiveTemperatureExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HiveTemperatureController extends Controller
 {
@@ -47,6 +49,19 @@ class HiveTemperatureController extends Controller
     }
 
         return view('admin.hivedata.temperatures', compact('temperatures'));
+    }
+
+    public function export(Request $request){
+    
+
+        $fromDate = $request->query('from_date');
+        $toDate = $request->query('to_date');
+        $hiveId = $request->query('hive_id');
+
+        return Excel::download(new HiveTemperatureExport($fromDate, $toDate, $hiveId), 'hive_temperatures.xlsx');
+
+        
+
     }
 
    
