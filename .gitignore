@@ -36,3 +36,5 @@ composer.lock
 *.pdf
 *.txt
 *.png
+*.tmp
+*.csv
