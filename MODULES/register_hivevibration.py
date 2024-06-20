@@ -7,8 +7,9 @@ def insert_vibration(csv, filename):
     mycursor = mydb.cursor()  # the cursor helps us execute our queries
 
     # EXTRACTING DB DETAILS FROM NAME
-    hive_id = csv.split("_")[1]  # Assuming the format is vibration_hiveID_timestamp.csv
-    created_at = csv.split("_")[2].split(".csv")[0]
+    hive_id = csv.split("_")[0]
+    created_at_withID = csv.split(".csv")[0]
+    created_at = created_at_withID.split("_")[1]
 
     # DB INSERTION
     query = "INSERT INTO hive_vibrations(path, hive_id, created_at) VALUES (%s, %s, %s)"
@@ -28,7 +29,13 @@ def insert_vibration(csv, filename):
 def reg(filename, source_folder):
 
     csv = filename
-    filename = register_media.reconstruct(filename)  # Assuming this function reconstructs the path as needed
+    parts = filename.split("_")
+    if len(parts) < 4:
+        print("Error: Filename format is incorrect.")
+        return
+    transformed_filename = "_".join(parts[1:])
+    
+    filename = register_media.reconstruct(transformed_filename)  # Assuming this function reconstructs the path as needed
     insert_vibration(filename, csv)  # insert csv path into DB
 
     # TRANSFER TO ANOTHER FOLDER
