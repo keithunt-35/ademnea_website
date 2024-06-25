@@ -14,7 +14,7 @@ import register_hivevibration
 
 #CONNECTION TO DB, CORRECT DATABASE DETAILS HAVE TO BE PASSED AT THIS POINT
 def database_connection():
-    mydb = mysql.connector.connect(host='localhost', user='root', password='', db='')
+    mydb = mysql.connector.connect(host='localhost', user='root', password='W1m3@-d6p@55', db='ademnea')
     return mydb
 
 #FUNCTION RECONSTRUCTS THE FILE NAME
@@ -69,8 +69,8 @@ class Handler(FileSystemEventHandler):
                 if filename.startswith("vibration"):
                     print(f"Handling Vibration CSV: {filename}")
                     try:
-                        # register_hivevibration.reg(filename, folder_to_track)
-                        # print(f"Inserted Vibration CSV {filename} into DB")
+                        register_hivevibration.reg(filename, folder_to_track)
+                        print(f"Inserted Vibration CSV {filename} into DB")
                         print(f"Handling vibration data not yet available")
                     except Exception as e:
                         print(f"Error registering Vibration CSV {filename}: {e}")
