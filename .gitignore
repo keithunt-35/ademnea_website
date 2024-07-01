@@ -38,3 +38,4 @@ composer.lock
 *.png
 *.tmp
 *.csv
+*.pt

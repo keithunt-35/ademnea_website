@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vibration extends Model
+class HiveEntranceBeeCount extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class Vibration extends Model
      *
      * @var string
      */
-    protected $table = 'hive_vibrations';
+    protected $table = 'hive_entrance_bee_counts';
 
     /**
      * The database primary key value.
@@ -28,10 +28,10 @@ class Vibration extends Model
      *
      * @var array
      */
-    protected $fillable = ['path', 'hive_id'];
+    protected $fillable = ['detected_bees', 'hive_id'];
 
     /**
-     * Get the hive that owns the vibration.
+     * Get the hive that owns the bee count at the entrance.
      */
     public function hive()
     {

@@ -5,123 +5,168 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\Hive;
 use App\Models\HiveAudio;
 use App\Models\HivePhoto;
 use App\Models\HiveVideo;
 
 class HiveMediaDataController extends Controller
 {
-    public function getImagesForDateRange($hive_id, $from_date, $to_date)
+    /**
+     * Get images for a specific date range.
+     *
+     * @param  Request  $request
+     * @param  int  $hive_id
+     * @param  string  $from_date
+     * @param  string  $to_date
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * Get images for a specific date range.
+     *
+     * @param  Request  $request
+     * @param  int  $hive_id
+     * @param  string  $from_date
+     * @param  string  $to_date
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getImagesForDateRange(Request $request, $hive_id, $from_date, $to_date)
     {
-        // Ensure the dates are in a valid format
+        $hive = $this->checkHiveOwnership($request, $hive_id);
+
+        if ($hive instanceof Response) {
+            return $hive;
+        }
+
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
 
         $imageData = HivePhoto::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
             ->select('path', 'created_at')
-            ->paginate(10); // Adjust the number as needed
+            ->paginate(10);
 
-        $dates = [];
-        $imagePaths = [];
+        $formattedData = $this->formatMediaData($imageData, 'hiveimage');
 
-        foreach ($imageData as $record) {
-            // Append the path to the image name
-            $imagePath = 'public/hiveimage/' . $record->path;
+        return $formattedData;
+    }
 
-            $dates[] = $record->created_at;
-            $imagePaths[] = $imagePath;
+    /**
+     * Get videos for a specific date range.
+     *
+     * @param  Request  $request
+     * @param  int  $hive_id
+     * @param  string  $from_date
+     * @param  string  $to_date
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getVideosForDateRange(Request $request, $hive_id, $from_date, $to_date)
+    {
+        $hive = $this->checkHiveOwnership($request, $hive_id);
+
+        if ($hive instanceof Response) {
+            return $hive;
         }
 
-        // Return the data as a JSON response
-        return response()->json([
-            'dates' => $dates,
-            'imagePaths' => $imagePaths,
-            'pagination' => [
-                'total' => $imageData->total(),
-                'per_page' => $imageData->perPage(),
-                'current_page' => $imageData->currentPage(),
-                'last_page' => $imageData->lastPage(),
-                'from' => $imageData->firstItem(),
-                'to' => $imageData->lastItem(),
-                'next_page_url' => $imageData->nextPageUrl(),
-                'prev_page_url' => $imageData->previousPageUrl(),
-            ],
-        ]);
-    }
-    
-    public function getVideosForDateRange($hive_id, $from_date, $to_date){
-        // Ensure the dates are in a valid format
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
 
         $videoData = HiveVideo::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
             ->select('path', 'created_at')
-            ->paginate(10); // Adjust the number as needed
+            ->paginate(10);
 
-        $dates = [];
-        $videoPaths = [];
+        $formattedData = $this->formatMediaData($videoData, 'hivevideo');
 
-        foreach ($videoData as $record) {
-            // Append the path to the video name
-            $videoPath = 'public/hivevideo/' . $record->path;
-
-            $dates[] = $record->created_at;
-            $videoPaths[] = $videoPath;
-        }
-
-        // Return the data as a JSON response
-        return response()->json([
-            'dates' => $dates,
-            'videoPaths' => $videoPaths,
-            'pagination' => [
-                'total' => $videoData->total(),
-                'per_page' => $videoData->perPage(),
-                'current_page' => $videoData->currentPage(),
-                'last_page' => $videoData->lastPage(),
-                'from' => $videoData->firstItem(),
-                'to' => $videoData->lastItem(),
-                'next_page_url' => $videoData->nextPageUrl(),
-                'prev_page_url' => $videoData->previousPageUrl(),
-            ],
-        ]);
+        return $formattedData;
     }
 
-    public function getAudiosForDateRange($hive_id, $from_date, $to_date){
-        // Ensure the dates are in a valid format
+    /**
+     * Get audios for a specific date range.
+     *
+     * @param  Request  $request
+     * @param  int  $hive_id
+     * @param  string  $from_date
+     * @param  string  $to_date
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAudiosForDateRange(Request $request, $hive_id, $from_date, $to_date)
+    {
+        $hive = $this->checkHiveOwnership($request, $hive_id);
+
+        if ($hive instanceof Response) {
+            return $hive;
+        }
+
         $from_date = Carbon::parse($from_date);
-        $to_date = Carbon::parse($to_date);
+        $to_date = Carbon::parse($to_date)->addDay();
 
         $audioData = HiveAudio::where('hive_id', $hive_id)
             ->whereBetween('created_at', [$from_date, $to_date])
             ->select('path', 'created_at')
-            ->paginate(10); // Adjust the number as needed
+            ->paginate(10);
 
-        $dates = [];
-        $audioPaths = [];
+        $formattedData = $this->formatMediaData($audioData, 'hiveaudio');
 
-        foreach ($audioData as $record) {
-            // Append the path to the audio name
-            $audioPath = 'public/hiveaudio/' . $record->path;
+        return $formattedData;
+    }
 
-            $dates[] = $record->created_at;
-            $audioPaths[] = $audioPath;
+
+    /**
+     * Check if the authenticated user owns the specified hive.
+     *
+     * @param  Request  $request
+     * @param  int  $hive_id
+     * @return \Illuminate\Http\JsonResponse|Hive
+     */
+    private function checkHiveOwnership(Request $request, $hive_id)
+    {
+        $hive = Hive::find($hive_id);
+
+        if (!$hive) {
+            return response()->json(['error' => 'Hive not found'], 404);
         }
 
-        // Return the data as a JSON response
+        $user = $request->user();
+        $farmer = $user->farmer;
+
+        if ($farmer->id !== $hive->farm->ownerId) {
+            return response()->json(['error' => 'Access denied'], 403);
+        }
+
+        return $hive;
+    }
+
+    /**
+     * Format the media data for the response.
+     *
+     * @param  \Illuminate\Pagination\LengthAwarePaginator  $data
+     * @param  string  $folder
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function formatMediaData($data, $folder)
+    {
+        foreach ($data as $record) {
+            $record->path = 'public/' . $folder . '/' . $record->path;
+        }
+
         return response()->json([
-            'dates' => $dates,
-            'audioPaths' => $audioPaths,
+            'data' => $data->map(function ($item) {
+                return [
+                    'date' => $item->created_at,
+                    'path' => $item->path,
+                ];
+            }),
             'pagination' => [
-                'total' => $audioData->total(),
-                'per_page' => $audioData->perPage(),
-                'current_page' => $audioData->currentPage(),
-                'last_page' => $audioData->lastPage(),
-                'from' => $audioData->firstItem(),
-                'to' => $audioData->lastItem(),
-                'next_page_url' => $audioData->nextPageUrl(),
-                'prev_page_url' => $audioData->previousPageUrl(),
+                'total' => $data->total(),
+                'per_page' => $data->perPage(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'from' => $data->firstItem(),
+                'to' => $data->lastItem(),
+                'next_page_url' => $data->nextPageUrl(),
+                'prev_page_url' => $data->previousPageUrl(),
             ],
         ]);
     }
