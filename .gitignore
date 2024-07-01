@@ -31,3 +31,10 @@ MODULES/__pycache__/register_media.cpython-310.pyc
 MODULES/register_media.py
 public/hivevideo/bees2.mp4
 composer.lock
+
+*.jpg
+*.pdf
+*.txt
+*.png
+*.tmp
+*.csv
