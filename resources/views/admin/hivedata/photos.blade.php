@@ -18,8 +18,8 @@
                 @foreach($photos as $photo)
                 <div class="col-12 col-sm-6 col-lg-3 single_gallery_item {{$photo->category}} mb-30 wow fadeInUp" data-wow-delay="{{$loop->index * 200}}ms">
                     <div class="single-portfolio-content relative">
-                        <a href="{{ URL("hiveimage/" . $photo->path) }}" data-lightbox="hive-images" data-title="{{ $photo->name ?? 'Hive Image' }}" class="relative inline-block">
-                            <img class="w-full transition-transform duration-500 transform hover:scale-125 rotate-180" src="{{ URL("hiveimage/" . $photo->path) }}" alt="{{ $photo->name ?? 'Hive Image' }}">
+                        <a href="{{ URL('hiveimage/'. $photo->path) }}" data-lightbox="hive-images" data-title="{{ $photo->name ?? 'Hive Image' }}" class="relative inline-block">
+                            <img class="w-full transition-transform duration-500 transform hover:scale-125 " src="{{ URL('hiveimage/'. $photo->path) }}" alt="{{ $photo->name ?? 'Hive Image' }}">
                         </a>
                         {{-- <div>ID: {{ $photo->id }}</div> --}}
                         <div>Created at: {{ $photo->created_at }}</div>

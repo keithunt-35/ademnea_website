@@ -98,8 +98,7 @@ Route::get('/hive_data/tempHumidity_data/{hive}', [App\Http\Controllers\HiveData
 
 
 /*--------------------------------VIBRATIONS---------------*/
-Route::get('admin/hivegraphs/vibrations/{hive_id}', [App\Http\Controllers\Admin\HiveVibrationController::class,'plot']);
-
+Route::get('/hive_data/hiveVibration_data_default/{hive}',[App\Http\Controllers\HiveVibrationsController::class,'plot']);
 
 
 

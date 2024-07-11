@@ -321,5 +321,9 @@ class HiveDataController extends Controller
 
         ]);
     }
+    public function getHiveVibration_data(Request $request){
+        $hiveId = $request->query('hive_id');
+        return view('admin.hivegraphs.vibrations',['hive_id' => $id, 'farm_name' => $farm->name]);
+    }
    
 }
