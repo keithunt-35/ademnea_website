@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HiveData\HiveDataController;
 
 use App\Exports\HiveTemperatureExport;
+use GuzzleHttp\Psr7\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -132,7 +133,7 @@ Route::get('/workpackages-wp2', [App\Http\Controllers\WebsiteController::class, 
 Route::get('/workpackages-wp3', [App\Http\Controllers\WebsiteController::class, 'wp3'])->name('workpackages-wp3');
 Route::get('/workpackages-wp4', [App\Http\Controllers\WebsiteController::class, 'wp4'])->name('workpackages-wp4');
 
-Route::get('/gallery', [App\Http\Controllers\GalleryController::class, 'index'])->name('gallery');
+Route::get('/gallery', [App\Http\Controllers\Admin\GalleryController::class, 'index'])->name('gallery');
 Route::get('/admin/tasks/create/{id}', [App\Http\Controllers\Admin\TaskController::class, 'create']);
 
 Route::get('/article/{id}', [App\Http\Controllers\ArticleController::class, 'index']);
@@ -146,26 +147,26 @@ Route::get('/farms/map/{id}', [App\Http\Controllers\MapController::class, 'displ
 
 
 Route::get('/sensor-monitoring', [App\Http\Controllers\SensorMonitoringController::class, 'sensorMonitor']);
-Route::get('admin/power-monitoring', [App\Http\Controllers\Admin\PowerMonitoringController::class, 'powerMonitor']);
+// Route::get('admin/power-monitoring', [App\Http\Controllers\Admin\PowerMonitoringController::class, 'powerMonitor']);
 // .........................POWER MONITORING...................................
 // Route::get('/admin/power-monitoring/index/{hive_id}', [App\Http\Controllers\PowerMonitoringController::class, 'batteryDefault']);
 
 
 /*----------------------------- DOWNLOAD EXCEL EXPORT ROUTES---------------------*/
-Route::get('/export-temperatures', function (Request $request) {
-    $fromDate = $request->query('from_date');
-    $toDate = $request->query('to_date');
-    $hiveId = $request->query('hive_id');
+// Route::get('/export-temperatures', function (Request $request) {
+//     $fromDate = $request->query('from_date');
+//     $toDate = $request->query('to_date');
+//     $hiveId = $request->query('hive_id');
 
-    return Excel::download(new HiveTemperatureExport($fromDate, $toDate, $hiveId), 'hive_temperatures.xlsx');
-});
+//     return Excel::download(new HiveTemperatureExport($fromDate, $toDate, $hiveId), 'hive_temperatures.xlsx');
+// });
 
-Route::get('/admin/hive_temperatures/export', [App\Http\Controllers\Admin\HiveTemperatureController::class, 'export'])
+Route::get('admin/hive_temperatures/export', [App\Http\Controllers\Admin\HiveTemperatureController::class, 'export'])
 ->name('admin.hive_temperatures.export');
 
 
 
 /*------------------------------------ThingSpeak Battery Monitoring--------------*/
 
-Route::get('admin/thingspeak',[App\Http\Controllers\ThingspeakController::class,'index']);
-Route::get('admin/thingspeak/data',[App\Http\Controllers\ThingspeakController::class,'fetchData']);
+// Route::get('admin/thingspeak',[App\Http\Controllers\ThingspeakController::class,'index']);
+// Route::get('admin/thingspeak/data',[App\Http\Controllers\ThingspeakController::class,'fetchData']);

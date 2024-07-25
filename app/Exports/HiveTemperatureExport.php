@@ -32,26 +32,32 @@ class HiveTemperatureExport implements FromCollection, WithHeadings, WithMapping
             $query->where('hive_id', $this->hiveId);
         }
 
-        return $query->get();
+        $data = $query->get();
+
+        // \Log::info('Export query data:', $data->toArray());
+
+        return $data;
     }
 
     public function headings(): array
     {
         return [
             'ID',
-            'Record',
             'Hive ID',
+            'Interior Temperature(°C)',
+            'Exterior Temperature (°C)',
             'Created At',
         ];
     }
 
     public function map($temperature): array
     {
+        $recordParts = explode('*', $temperature->record);
         return [
             $temperature->id,
             $temperature->hive_id,
-            explode('*', $temperature->record)[0],
-            explode('*', $temperature->record)[2],
+            $recordParts[0] ?? 'N/A', // Interior Temperature
+            $recordParts[2] ?? 'N/A', // Exterior Temperature
             $temperature->created_at,
         ];
     }

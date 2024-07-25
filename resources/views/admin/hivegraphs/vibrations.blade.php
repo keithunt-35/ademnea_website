@@ -63,7 +63,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const hiveId = '{{ $hive_id }}';
-            const csvFilePath = '/vibrations/vibration.csv';
+            const csvFilePath = ''/hivevibration/vibration_2.csv'';
   
             fetch(csvFilePath)
                 .then(response => response.text())
