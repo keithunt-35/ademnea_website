@@ -101,7 +101,8 @@ Route::get('/hive_data/tempHumidity_data/{hive}', [App\Http\Controllers\HiveData
 /*--------------------------------VIBRATIONS---------------*/
 Route::get('/hive_data/hiveVibration_data_default/{hive}',[App\Http\Controllers\HiveVibrationsController::class,'plot']);
 
-
+// Route::get('/hive/vibration/{id}', [App\Http\Controllers\HiveVibrationsController::class, 'vibrationDefault'])->name('hive.vibration');
+// Route::get('/hive/vibration-data/{hive}', [App\Http\Controllers\HiveVibrationsController::class, 'getVibrationData'])->name('hive.vibration.data');
 
 
 
@@ -153,18 +154,15 @@ Route::get('/sensor-monitoring', [App\Http\Controllers\SensorMonitoringControlle
 
 
 /*----------------------------- DOWNLOAD EXCEL EXPORT ROUTES---------------------*/
-// Route::get('/export-temperatures', function (Request $request) {
-//     $fromDate = $request->query('from_date');
-//     $toDate = $request->query('to_date');
-//     $hiveId = $request->query('hive_id');
-
-//     return Excel::download(new HiveTemperatureExport($fromDate, $toDate, $hiveId), 'hive_temperatures.xlsx');
-// });
-
-Route::get('admin/hive_temperatures/export', [App\Http\Controllers\Admin\HiveTemperatureController::class, 'export'])
-->name('admin.hive_temperatures.export');
 
 
+Route::get('admin/temperature/export', [App\Http\Controllers\Admin\HiveTemperatureController::class, 'export'])->name('temperature.export');
+
+Route::get('admin/humidity/export', [App\Http\Controllers\Admin\HiveHumidityController::class, 'export'])->name('humidity.export');
+
+Route::get('admin/carbondioxide/export', [App\Http\Controllers\Admin\HiveCarbondioxideController::class, 'export'])->name('carbondioxide.export');
+
+Route::get('weights/export', [App\Http\Controllers\Admin\HiveWeightController::class, 'export'])->name('weights.export');
 
 /*------------------------------------ThingSpeak Battery Monitoring--------------*/
 

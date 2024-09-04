@@ -20,6 +20,12 @@
 <!-- Display the hive_id at the top of the page -->
 <h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-bottom: 20px; color: green;">Hive ID: {{ $hive_id }}</h1>
 
+<div class="flex justify-end mb-4">
+    <a href="{{ route('weights.export', ['hive_id' => $hive_id]) }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Download
+    </a>
+</div>
+
 <div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
     
 

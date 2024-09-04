@@ -51,19 +51,10 @@ class HiveTemperatureController extends Controller
         return view('admin.hivedata.temperatures', compact('temperatures'));
     }
 
-    public function export(Request $request){
-    
-
-        $fromDate = $request->query('from_date');
-        $toDate = $request->query('to_date');
+    public function export(Request $request)
+    {
         $hiveId = $request->query('hive_id');
-
-        $export = new HiveTemperatureExport($fromDate, $toDate, $hiveId);
-        $collection = $export->collection();
-        return Excel::download(new HiveTemperatureExport($fromDate, $toDate, $hiveId), 'hive_temperatures.xlsx');
-
-        
-
+        return Excel::download(new HiveTemperatureExport($hiveId), 'temperatures.xlsx');
     }
 
    

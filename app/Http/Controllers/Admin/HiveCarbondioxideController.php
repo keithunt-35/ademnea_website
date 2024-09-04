@@ -7,6 +7,8 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
 use App\Models\HiveCarbondioxide;
 use Illuminate\Http\Request;
+use App\Exports\HiveCarbondioxideExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HiveCarbondioxideController extends Controller
 {
@@ -35,5 +37,10 @@ class HiveCarbondioxideController extends Controller
         return view('admin.hivedata.carbondioxide', compact('carbondioxide'));
     }
 
+    public function export(Request $request)
+    {
+        $hiveId = $request->query('hive_id');
+        return Excel::download(new HiveCarbondioxideExport($hiveId), 'carbondioxide.xlsx');
+    }   
    
 }

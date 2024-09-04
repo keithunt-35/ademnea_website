@@ -1,64 +1,70 @@
 <?php
 
+
+
 namespace App\Exports;
 
 use App\Models\HiveTemperature;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 
-class HiveTemperatureExport implements FromCollection, WithHeadings, WithMapping
+class HiveTemperatureExport implements FromCollection, WithHeadings
 {
-    protected $fromDate;
-    protected $toDate;
+    
     protected $hiveId;
 
-    public function __construct($fromDate, $toDate, $hiveId)
+    public function __construct($hiveId)
     {
-        $this->fromDate = $fromDate;
-        $this->toDate = $toDate;
-        $this->hiveId = $hiveId;
+       
+         $this->hiveId = $hiveId;
     }
 
     public function collection()
+
     {
-        $query = HiveTemperature::query();
+        // return HiveTemperature::all();
+        // return collect([
+        //     (object) ['id'=>1, 'record'=>'20*23*25', 'created_at' => now()],
+        //     (object) ['id'=>2, 'record'=>'22*24*26', 'created_at' => now()],
+        // ]);
 
-        if ($this->fromDate && $this->toDate) {
-            $query->whereBetween('created_at', [$this->fromDate, $this->toDate]);
-        }
+        return HiveTemperature::where('hive_id', $this->hiveId)
+            ->latest()
+            ->get()
+            ->map(function ($temperature) {
+                $recordParts = explode('*', $temperature->record);
+                return [
+                    
+                    'interior' => $recordParts[0] ?? null,
+                    'exterior' => $recordParts[2] ?? null,
+                    'created_at' => $temperature->created_at,
+                ];
+            });
 
-        if ($this->hiveId) {
-            $query->where('hive_id', $this->hiveId);
-        }
-
-        $data = $query->get();
-
-        // \Log::info('Export query data:', $data->toArray());
-
-        return $data;
+            
     }
 
     public function headings(): array
     {
         return [
-            'ID',
-            'Hive ID',
-            'Interior Temperature(°C)',
-            'Exterior Temperature (°C)',
-            'Created At',
+            'Interior (°C)',
+            'Exterior (°C)',
+            'Date',
         ];
     }
+    //  public function map($temperature): array
 
-    public function map($temperature): array
-    {
-        $recordParts = explode('*', $temperature->record);
-        return [
-            $temperature->id,
-            $temperature->hive_id,
-            $recordParts[0] ?? 'N/A', // Interior Temperature
-            $recordParts[2] ?? 'N/A', // Exterior Temperature
-            $temperature->created_at,
-        ];
-    }
+    //  {
+    //     $recordParts = explode('*', $temperature->record);
+    //     return [
+    //         'id',
+    //         'interior' => $recordParts[0] ?? null,
+    //         'exterior' => $recordParts[2] ?? null,
+    //         'created_at' => $temperature->created_at,
+    //     ];
+    //     // \Log::info('Mapping temperature: ' . json_encode($temperature));
+    //     
+    //}
+
+    
 }

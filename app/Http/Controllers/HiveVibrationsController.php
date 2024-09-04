@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\File;
 
 use Illuminate\Http\Request;
 
@@ -12,32 +13,32 @@ class HiveVibrationsController extends Controller
     {
         $hiveId = $request->query('hive_id');
 
-         // Fetch the latest vibration entry for the given hive_id
-        //  $vibration = Vibration::where('hive_id', $hiveId)
-        //  ->orderBy('created_at', 'desc')
-        //  ->first();
+        // Define the directory where the CSV files are stored
+        $directory = public_path('hivevibration');
 
-         
-        //  if (!$vibration) {
-        //     return response()->json(['error' => 'No data found for this hive ID'], 404);
-        // }
+        // Find the latest CSV file that matches the hive ID
+        $csvFiles = File::files($directory);
+        $csvFilePath = null;
 
-        // $path = public_path('hivevibration/' . $vibration->path);
-        // if (!file_exists($path)) {
-        //     return response()->json(['error' => 'CSV file not found'], 404);
-        // }
+        foreach ($csvFiles as $file) {
+            if (strpos($file->getFilename(), (string)$hiveId) !== false && $file->getExtension() == 'csv') {
+                $csvFilePath = $file->getRealPath();
+                break;
+            }
+        }
 
-        
+        // Check if the CSV file exists
+        if (!$csvFilePath || !file_exists($csvFilePath)) {
+            return response()->json(['error' => 'CSV file not found for this hive ID']);
+        }
 
-        // return view('admin.hivegraphs.vibrations', [
-        //     'hive_id' => $hiveId,
-        //     'csv_path' => asset('hivevibration/' . $vibration->path)
-        // ]);
-        $hiveId = $request->query('hive_id');
-        $path = public_path('hivevibration/vibration_2.csv'); // Correct path
-        $data = array_map('str_getcsv', file($path));
+        // Parse the CSV file into an array
+        $data = array_map('str_getcsv', file($csvFilePath));
         $json_data = json_encode($data);
 
-        return view('admin.hivegraphs.vibrations', ['data' => $json_data,'hive_id' => $hiveId]);
-}
-}
+                
+            
+                return view('admin.hivegraphs.vibrations', ['data' => $json_data,'hive_id' => $hiveId]);
+        }
+                }
+            

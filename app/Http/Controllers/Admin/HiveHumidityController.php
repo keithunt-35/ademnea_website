@@ -7,6 +7,9 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
 use App\Models\HiveHumidity;
 use Illuminate\Http\Request;
+use App\Exports\HiveHumidityExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class HiveHumidityController extends Controller
 {
@@ -35,5 +38,11 @@ class HiveHumidityController extends Controller
         return view('admin.hivedata.humidity', compact('humidity'));
     }
 
-   
+    public function export(Request $request)
+    {
+        $hiveId = $request->query('hive_id');
+        return Excel::download(new HiveHumidityExport($hiveId), 'hive_humidity.xlsx');
+    }
 }
+   
+

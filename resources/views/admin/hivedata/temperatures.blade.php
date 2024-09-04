@@ -62,15 +62,7 @@
 
             cb(start, end);
 
-            $('#exportButton').on('click', function() {
-                var start = $('#reportrange').data('daterangepicker').startDate.format('YYYY-MM-DD');
-                var end = $('#reportrange').data('daterangepicker').endDate.format('YYYY-MM-DD');
-                var hiveId = '{{ $hive_id }}';
-
-                var url = '{{ route("admin.hive_temperatures.export") }}' + '?from_date=' + start + '&to_date=' + end + '&hive_id=' + hiveId;
-                window.location.href = url;
-            });
-
+            
             $('#myTable').DataTable({
                 responsive: true
             });
@@ -104,10 +96,11 @@
     <br>
 
     <div class="flex justify-end mb-4">
-        <button id="exportButton" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        <a href="{{ route('temperature.export', ['hive_id' => $hive_id]) }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
             Download
-        </button>
+        </a>
     </div>
+    
 
     <table id="myTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

@@ -7,6 +7,8 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
 use App\Models\HiveWeight;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\HiveWeightExport;
 
 class HiveWeightController extends Controller
 {
@@ -34,5 +36,10 @@ class HiveWeightController extends Controller
         return view('admin.hivedata.weights', compact('weights'));
     }
 
+    public function export(Request $request)
+    {
+        $hiveId = $request->query('hive_id');
+        return Excel::download(new HiveWeightExport($hiveId), 'weights.xlsx');
+    }
    
 }
