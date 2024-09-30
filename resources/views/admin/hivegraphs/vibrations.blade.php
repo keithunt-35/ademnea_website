@@ -70,7 +70,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const data = {!! $data !!};
-            const csvFilePath = '/hivevibration/vibration_2.csv';
+            const csvFilePath = '/hivevibration/';
   
             fetch(csvFilePath)
                 .then(response => {
