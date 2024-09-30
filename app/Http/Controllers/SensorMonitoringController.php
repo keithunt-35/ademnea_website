@@ -13,5 +13,7 @@ class SensorMonitoringController extends Controller
     {
         return view('admin.sensor-monitoring.index');
     }
+
+    
     
 }
