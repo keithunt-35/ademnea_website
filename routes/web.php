@@ -168,3 +168,8 @@ Route::get('weights/export', [App\Http\Controllers\Admin\HiveWeightController::c
 
 // Route::get('admin/thingspeak',[App\Http\Controllers\ThingspeakController::class,'index']);
 // Route::get('admin/thingspeak/data',[App\Http\Controllers\ThingspeakController::class,'fetchData']);
+
+
+/*----------------------------------------analytics--------------------------------------------------*/
+Route::get('analytics/weight_analytics',[App\Http\Controllers\WeightAnalyticsController::class,'index']);
+Route::get('analytics/temperature_humidity',[App\Http\Controllers\TemperatureAnalyticsController::class,'index']);
