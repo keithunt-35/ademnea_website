@@ -9,7 +9,7 @@
             <div class="carousel-item active" style="background-image: url(assets/img/slide/bee.jpg)">
                 <div class="carousel-container">
                     <div class="container">
-                        <h2 class="animate__animated animate__fadeInDown">Sensors and signal processing </h2>
+                        <h2 class="animate__animated animate__fadeInDown">Sensor and signal processing </h2>
                         <p class="animate__animated animate__fadeInUp">
                             Design and implementation of sensors, supporting electronics and data processing methods for: automatic real-time identification, counting and tracking of  insects that are key agents in the pollination process (honey bees, solitary bees, bumble bees, carpenter bees, hoverflies, butterflies) or crop pests (ants, beetles, caterpillars, army worm, mites, locusts, aphids).
                         </p>
