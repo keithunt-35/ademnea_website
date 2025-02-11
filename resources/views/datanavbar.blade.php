@@ -43,7 +43,7 @@
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Hive Vibrations</a>
                 <!-- route('vibration.graph',['hive_id' => $hive_id])  -->
             </li>
-            
+
         </ul>
     </div>
 
@@ -124,11 +124,15 @@
                 <a href="/sensor-monitoring"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sensor Monitoring</a>
             </li>
-            <li>
+            <!-- <li>
                 <a href="{{ url('/admin/power-monitoring-default/' . $hive_id ) }}"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Power Monitoring</a>
-            </li>
-            
+            </li> -->
+            <li>
+                        <a href="{{ route('thingspeak.monitoring', ['hive_id' => $hive_id]) }}"
+                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Battery Monitoring</a>
+                    </li>
+
         </ul>
     </div>
 
@@ -161,13 +165,6 @@
         </ul>
     </div>
 
-    
-    
+
+
 </div>
-
-
-
-
-
-
-
