@@ -21,7 +21,7 @@ use Maatwebsite\Excel\Facades\Excel;
 |
 */
 
-Route::get('/',[App\Http\Controllers\WebsiteController::class, 'index'])->name('website'); //route for home page, before login 
+Route::get('/',[App\Http\Controllers\WebsiteController::class, 'index'])->name('website'); //route for home page, before login
 Route::get('register', [AuthController::class, 'registerForm'])->name('registerForm');//
 Route::post('register', [AuthController::class, 'register'])->name('auth.register');
 Route::get('/login', [AuthController::class, 'loginForm'])->name('loginForm');
@@ -65,16 +65,16 @@ Route::middleware('auth:web')->group(function () {
     Route::resource('admin/weightdata', 'App\Http\Controllers\Admin\HiveWeightController');
     Route::resource('admin/carbondioxidedata', 'App\Http\Controllers\Admin\HiveCarbondioxideController');
 
-//gallery route for the admin side 
+//gallery route for the admin side
     Route::get('/admin/gallery', 'App\Http\Controllers\Admin\GalleryController@index');
     Route::post('/admin/event','App\Http\Controllers\Admin\GalleryController@update');
 
- //hive controllers   
+ //hive controllers
     Route::post('/edithive','App\Http\Controllers\Admin\HiveController@update');
 });
 
                 /* ------------HIVE DATA------------------*/
-                
+
 /* ------------TEMPERATURE------------------*/
 Route::get('/hive_data/{id}', [App\Http\Controllers\HiveData\HiveDataController::class, 'temperatureDefault']);
 Route::get('hive_data/temperature_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getTemperatureData']);
@@ -166,9 +166,10 @@ Route::get('weights/export', [App\Http\Controllers\Admin\HiveWeightController::c
 
 /*------------------------------------ThingSpeak Battery Monitoring--------------*/
 
-// Route::get('admin/thingspeak',[App\Http\Controllers\ThingspeakController::class,'index']);
-// Route::get('admin/thingspeak/data',[App\Http\Controllers\ThingspeakController::class,'fetchData']);
-
+// Route::get('/sensor-data', [App\Http\Controllers\ThingSpeakController::class, 'index']);
+// Route::get('/fetch-sensor-data', [App\Http\Controllers\ThingSpeakController::class, 'fetchData']);
+Route::get('/admin/thingspeak-monitoring/{hive_id}', [App\Http\Controllers\ThingSpeakController::class, 'showMonitoring'])
+     ->name('thingspeak.monitoring');
 
 /*----------------------------------------analytics--------------------------------------------------*/
 Route::get('analytics/weight_analytics',[App\Http\Controllers\WeightAnalyticsController::class,'index']);
