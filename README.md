@@ -1,5 +1,5 @@
 <p align="center"><a href="http://196.43.168.57/" target="_blank"></a></p>
-![image alt](https://github.com/ademnea/ademnea_website/blob/master/public/dash/logo2.png)
+<img src="https://github.com/ademnea/ademnea_website/blob/master/public/dash/logo2.png">
 
 
 # About AdEMNEA
