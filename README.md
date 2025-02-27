@@ -1,4 +1,4 @@
-<p align="center"><a href="http://196.43.168.57/" target="_blank"><img src="{{https://github.com/ademnea/ademnea_website/blob/master/public/dash/logo2.png)}}" width="400"></a></p>
+<p align="center"><a href="http://196.43.168.57/" target="_blank"></a>![image alt](https://github.com/ademnea/ademnea_website/blob/master/public/dash/logo2.png)</p>
 
 
 # About AdEMNEA
