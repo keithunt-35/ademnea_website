@@ -1,4 +1,4 @@
-<p align="center"><a href="https://ademnea.com" target="_blank"><img src="{{asset('dash/logo2.png')}}" width="400"></a></p>
+<p align="center"><a href="http://196.43.168.57/" target="_blank"><img src="{{asset('dash/logo2.png')}}" width="400"></a></p>
 
 
 # About AdEMNEA
