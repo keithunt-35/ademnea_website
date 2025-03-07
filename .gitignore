@@ -27,10 +27,21 @@ public/hiveaudio/
 database/migrations/2022_09_20_154350_create_audios_table.php
 database/migrations/2022_09_20_154350_create_audios_table.php
 
+database/migrations/2025_02_25_154350_create_battery_readings_table.php
+database/migrations/2025_02_25_154350_create_thingspeak_table.php
+
+app/Models/Battery.php
+app/Models/ThingSpeak.php
+
+app/Http/Controllers/ThingSpeakController.php
+
 MODULES/__pycache__/register_media.cpython-310.pyc
 MODULES/register_media.py
 public/hivevideo/bees2.mp4
 composer.lock
+
+
+
 
 *.jpg
 *.pdf
