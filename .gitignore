@@ -50,3 +50,5 @@ composer.lock
 *.tmp
 *.csv
 *.pt
+
+database_backup.sql
