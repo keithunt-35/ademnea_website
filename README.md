@@ -1,4 +1,3 @@
-
 <p align="center"><a href="https://ademnea.com" target="_blank"><img src="{{asset('dash/logo2.png')}}" width="400"></a></p>
 
 
@@ -58,3 +57,7 @@ increasing Agricultural yields in the partner countries.
 5. Open register_hivetemp_hivehumidity.py , edit line 56 as per the directive in its comment.
 
 6. Finally, run the file register_media.py, it will run all the other scripts in turn.
+
+
+
+
