@@ -150,7 +150,7 @@
             }
 
             // Initial data fetch and plot
-            // parseDataAndPlot(parsedData);
+            parseDataAndPlot(parsedData);
 
             // Automatically refresh the chart every 60 seconds
             // setInterval(function() {
