@@ -130,8 +130,6 @@ https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js
                     },
                     yAxis: {
                         type: 'value',
-                        // min: 100,
-                        // max: 1500,
                         axisLabel: {
                             formatter: '{value} ppm'
                         },
