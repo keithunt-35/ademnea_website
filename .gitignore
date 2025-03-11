@@ -23,6 +23,7 @@ public/image/
 public/hiveimage/
 public/hivevideo/
 public/hiveaudio/
+public/hivevibration/
 
 database/migrations/2022_09_20_154350_create_audios_table.php
 database/migrations/2022_09_20_154350_create_audios_table.php
