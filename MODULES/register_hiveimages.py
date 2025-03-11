@@ -12,8 +12,8 @@ def insert_photo(photo, filename):
     created_at = created_at_withID.split("_")[1]
 
     # Check if this photo already exists
-    check_query = "SELECT COUNT(*) FROM hive_photos WHERE path = %s AND hive_id = %s AND created_at = %s"
-    check_data = (filename, hive_id, created_at)
+    check_query = "SELECT COUNT(*) FROM hive_photos WHERE path = %s AND hive_id = %s"
+    check_data = (filename, hive_id)
     mycursor.execute(check_query, check_data)
     exists = mycursor.fetchone()[0]
 
@@ -25,6 +25,11 @@ def insert_photo(photo, filename):
     #DB INSERTION
     query = "INSERT INTO hive_photos(path, hive_id, created_at) VALUES (%s, %s, %s)"
     data  = (filename, hive_id, created_at)
+
+
+    # Check again inside transaction to prevent race conditions
+    mycursor.execute(check_query, check_data)
+    exists = mycursor.fetchone()[0]
 
     try:
     # Executing the SQL command
