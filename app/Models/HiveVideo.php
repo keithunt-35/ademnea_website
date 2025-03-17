@@ -10,6 +10,23 @@ class HiveVideo extends Model
     use HasFactory;
     protected $fillable = ['path', 'hive_id'];
 
+
+    protected static function boot()
+      {
+          parent::boot();
+
+          static::creating(function ($video) {
+              // Check if a photo with the same path and hive_id already exists
+              $exists = self::where('hive_id', $video->hive_id)
+                            ->where('path', $video->path)
+                            ->exists();
+
+              if ($exists) {
+                  return false;
+              }
+          });
+      }
+
     /**
      * Get the hive that owns the video.
      */
