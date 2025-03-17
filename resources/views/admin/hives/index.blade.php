@@ -15,13 +15,13 @@ $farmName = $farm_name[0]->farm;
 ?>
 
 
-    <div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="relative p-3 mt-2 overflow-x-auto shadow-md sm:rounded-lg">
         <button type="button" data-modal-target="addHive" data-modal-show="addHive"
             class="text-white ml-4 mt-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add
             New Hive</button>
 
-    <!-- Display the farm name below the "Add New Hive" button and align it to the left -->
-    <h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-top: 20px; margin-bottom: 20px; color: green;">Farm Name: <?php echo $farmName; ?></h1>
+        <!-- Display the farm name below the "Add New Hive" button and align it to the left -->
+        <h1 style="text-align: left; font-weight: bold; font-size: 1em; margin-top: 20px; margin-bottom: 20px; color: green;">Farm Name: <?php echo $farmName; ?></h1>
 
         <table id="myTable"class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -74,22 +74,22 @@ $farmName = $farm_name[0]->farm;
                         <td class="px-6 py-4">
                             <!-- Modal toggle -->
                             <a href="#"
-                                style="width:auto; height: 30px; background-color:rgb(190, 190, 190); border-radius:10px;padding: 5px;"
+                                 style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;"
                                 type="button" data-modal-target="{{ $item->longitude }}"
                                 data-modal-show="{{ $item->longitude }}"
-                                class="font-medium text-green-600 dark:text-green-500 hover:underline">View</a>
+                                class="">View</a>
                             <a href="#"
-                                style="width:auto; height: 30px; background-color:rgb(190, 190, 190); border-radius:10px;padding: 5px;"
+                                 style="color: white; background-color:  #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;"
                                 type="button" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}"
-                                class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
+                                class="">Edit</a>
                             <a href="{{ url('/hive_data/' . $item->id) }}"
-                                style="width:auto; height: 30px; background-color:rgb(190, 190, 190); border-radius:10px;padding: 5px;"
-                                type="button" class="font-medium text-black dark:text-gray-500 hover:underline">Hive
+                                 style="color: white; background-color:  #007bff;#28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;"
+                                type="button" class="">Hive
                                 Data</a>
                             <a href="#"
-                                style="width:auto; height: 30px; background-color:rgb(190, 190, 190); border-radius:10px;padding: 5px;"
+                                 style="color: white; background-color: #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;"
                                 type="button" data-modal-target="popup-modal" data-modal-show="popup-modal"
-                                class="font-medium text-red-600 dark:text-green-500 hover:underline">Delete</a>
+                                class="">Delete</a>
 
                         </td>
                     </tr>

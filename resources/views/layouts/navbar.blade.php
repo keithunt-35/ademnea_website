@@ -26,7 +26,7 @@
                 </button>
               </div>
               <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
-                <div class="px-4 py-3" role="none">
+                <div class="px-4 py-2" role="none">
                   <p class="text-sm text-gray-900 dark:text-white" role="none">
                     {{Auth::user()->name}}
                   </p>
@@ -36,7 +36,7 @@
                 </div>
                 <ul class="py-1" role="none">
                   <li>
-                    <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                    <a href="/logout" style="color: white; background-color:  #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="mx-4 my-2" role="menuitem">Sign out</a>
                   </li>
                 </ul>
               </div>

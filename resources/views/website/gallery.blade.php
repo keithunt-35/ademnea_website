@@ -51,7 +51,8 @@
         <h2>Gallery</h2>
       </div>
 
-  {{-- <div class="row no-gutters"><!-- changed to cards-->
+      <!-- changed to cards-->
+  <!-- {{-- <div class="row no-gutters">
   @foreach($gallery as $item)
 
   <div class="col-lg-4 col-md-6 col-sm-12 image2">
@@ -69,21 +70,44 @@
   </div>
   <br>
 @endforeach
-
+</div> --}} -->
 <!-- close container1 -->
-</div> --}}
-<div class="row no-gutters">
-  @foreach($gallery as $item)
-      <div class="col-lg-4 col-md-6 col-sm-12 image2">
-          <div class="card">
-              <img src="{{ asset('image/' . explode('|', $item->image)[0]) }}" alt="gallery description" class="card-img-top">
-              <div class="card-body">
-                  <h5 class="card-title">{{ $item->title }}</h5>
-                  <a href="/gallery" class="btn btn-primary">View Album</a>
-              </div>
-          </div>
-      </div>
-  @endforeach
+
+
+<!-- //starts here -->
+<div class="container">
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card">
+            <img src="{{ asset('hiveimage/bee1.jpg') }}" alt="gallery description" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Title here</h5>
+                <a href="/gallery" class="btn btn-primary">View Album</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card">
+            <img src="{{ asset('hiveimage/bee1.jpg') }}" alt="gallery description" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Title here</h5>
+                <a href="/gallery" class="btn btn-primary">View Album</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card">
+            <img src="{{ asset('hiveimage/bee1.jpg') }}" alt="gallery description" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Title here</h5>
+                <a href="/gallery" class="btn btn-primary">View Album</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 
 </div>

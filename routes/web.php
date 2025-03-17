@@ -55,6 +55,8 @@ Route::middleware('auth:web')->group(function () {
     Route::resource('admin/research-profile', 'App\Http\Controllers\Admin\ResearchProfileController');
     Route::resource('admin/farm', 'App\Http\Controllers\Admin\FarmController');
     Route::resource('admin/farmer', 'App\Http\Controllers\Admin\FarmerController');
+    //added for dashboard_page
+    Route::resource('admin/dashboard', 'App\Http\Controllers\Admin\DashboardController');
     Route::resource('admin/hive', 'App\Http\Controllers\Admin\HiveController');
     Route::resource('admin/hivedata', 'App\Http\Controllers\Admin\HiveDataController');
     Route::resource('admin/videodata', 'App\Http\Controllers\Admin\HiveVideoController');
@@ -174,3 +176,5 @@ Route::get('/admin/thingspeak-monitoring/{hive_id}', [App\Http\Controllers\Thing
 /*----------------------------------------analytics--------------------------------------------------*/
 Route::get('analytics/weight_analytics',[App\Http\Controllers\WeightAnalyticsController::class,'index']);
 Route::get('analytics/temperature_humidity',[App\Http\Controllers\TemperatureAnalyticsController::class,'index']);
+
+Route::get('website/gallery', [GalleryController::class, 'index']);
