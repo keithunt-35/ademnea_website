@@ -125,41 +125,44 @@
     <!-- End Header -->
 
 
-    <main id="main">
+  <main id="main">
 
     <section id="team" class="team">
 
-<div class="container" data-aos="fade-up">
+        <div class="container" data-aos="fade-up">
 
-    <h2>AdeMNEA Publications</h2>
-<br>
-        {{-- publication cards begin here --}}
-        @if($publication->count())
-        <div class="row gy-5">
+            <h2>AdeMNEA Publications</h2>
+        <br>
+                {{-- publication cards begin here --}}
+                @if($publication->count())
+                <div class="row gy-5">
 
-        @foreach($publication as $item)
-          <div class="col-xl-4 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
-            <div class="team-member">
-              <div class="member-img">
-                <img src="images/publications/{{ $item->image }}" class="img-fluid" alt="image">
-              </div>
-              <div class="member-info">
-                <h4>{{$item->name}}</h4>
-                <span>{{$item->title}}</span>
-                <p>{{$item->publisher}}</p>
-                <p>{{$item->year}}</p>
-                <p><a href=" ../documents/publications/{{ $item->attachment }}" download><i class="fa fa-download"></i>Download</a></p>
-              </div>
-            </div>
-          </div><!-- End publication -->
-        @endforeach
-          @else
-          <p>No publications yet</p>
-          @endif
+                @foreach($publication as $item)
+                  <div class="col-xl-3 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="team-member">
+                      <div class="member-img">
+                        <!-- Use asset() to generate the correct path for the image -->
+                        <img src="{{ asset($item->image) }}" class="img-fluid" alt="image">
+                      </div>
+                      <div class="member-info">
+                        <h4>{{$item->name}}</h4>
+                        <span>{{$item->title}}</span>
+                        <p>{{$item->publisher}}</p>
+                        <p>{{$item->year}}</p>
+                        <!-- Use asset() for the download link as well -->
+                        <p><a href="{{ asset($item->attachment) }}" download><i class="fa fa-download"></i> Download</a></p>
+                      </div>
+                    </div>
+                  </div><!-- End publication -->
+                @endforeach
 
-</div>
- 
-</section>
+                  @else
+                  <p>No publications yet</p>
+                  @endif
+
+        </div>
+        
+    </section>
   </main><!-- End #main -->
 
 

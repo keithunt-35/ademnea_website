@@ -29,9 +29,8 @@ class Publication extends Model
         'name', 
         'title', 
         'publisher', 
-        'year',
-        'attachment'
-    ];
-
+        'year', 
+        'attachment',
+        'image'];
     
 }

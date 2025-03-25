@@ -4,19 +4,14 @@
 
 @include('datanavbar')
 
-<div class="bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-2xl font-semibold mb-4">{{ $hive->name }} Hive {{ $hive->id }}</h2>
-    <p class="mb-4">{{ $hive->description }}</p>
-
-    <div class="flex flex-col space-y-6">
-        <div class="chart-container">
-            <h2 class="text-2xl font-semibold mb-4">VOLTAGE CHARTS</h2>
-            <canvas id="voltageChart"></canvas>
-        </div>
-        <div class="chart-container">
-            <h2 class="text-2xl font-semibold mb-4">BATTERY(%) CHARTS</h2>
-            <canvas id="batteryChart"></canvas>
-        </div>
+<div class="flex flex-col space-y-60"> <!-- Increased from space-y-6 to space-y-12 -->
+    <div class="chart-container">
+        <h2 class="text-2xl font-semibold mb-4">VOLTAGE CHARTS</h2>
+        <canvas id="voltageChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <h2 class="text-2xl font-semibold mb-4">BATTERY(%) CHARTS</h2>
+        <canvas id="batteryChart"></canvas>
     </div>
 </div>
 
@@ -25,7 +20,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const voltageCtx = document.getElementById('voltageChart').getContext('2d');
     const batteryCtx = document.getElementById('batteryChart').getContext('2d');
-    const initialFeeds = @json($feeds ?? []);
+    const initialFeeds = {!! json_encode($battery_readings, JSON_HEX_TAG) !!};
+
     const hiveId = {{ $hive->id }};
 
     console.log('Initial feeds:', initialFeeds);
@@ -92,63 +88,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Function to fetch new data and update charts
-    async function updateCharts() {
-        try {
-            // API endpoint
-            const response = await fetch(`/api/v1/hives/${hiveId}/data`, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('Updated data received:', data);
-
-            if (!data.feeds || !Array.isArray(data.feeds)) {
-                console.error('Invalid data format received:', data);
-                return;
-            }
-
-            // Update charts with new data
-            const newLabels = data.feeds.map(feed => new Date(feed.reading_time).toLocaleTimeString());
-            const newVoltageData = data.feeds.map(feed => parseFloat(feed.voltage));
-            const newBatteryData = data.feeds.map(feed => parseFloat(feed.battery_percentage));
-
-            voltageChart.data.labels = newLabels;
-            voltageChart.data.datasets[0].data = newVoltageData;
-
-            batteryChart.data.labels = newLabels;
-            batteryChart.data.datasets[0].data = newBatteryData;
-
-            // Update the charts
-            voltageChart.update();
-            batteryChart.update();
-
-            console.log('Charts updated successfully');
-        } catch (error) {
-            console.error('Error fetching updated data:', error);
-        }
-    }
-
-    // Update charts every 2 minutes
-    setInterval(updateCharts, 120000);
-
-    // Initial update
-    updateCharts();
 });
 </script>
 
 <style>
     .chart-container {
         position: relative;
-        height: 450px;
+        height: 550px;
         width: 90%;
     }
 </style>

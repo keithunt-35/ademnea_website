@@ -15,11 +15,13 @@ class CreateBatteryReadingsTable extends Migration
     {
         Schema::create('battery_readings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hive_id')->constrained();
-            $table->float('voltage')->nullable();
-            $table->float('battery_percentage')->nullable();
-            $table->timestamp('measured_at')->nullable();
+            $table->unsignedBigInteger('hive_id');
+            $table->float('voltage');
+            $table->float('battery_percentage');
+            $table->timestamp('measured_at');
             $table->timestamps();
+
+            $table->foreign('hive_id')->references('id')->on('hives')->onDelete('cascade');
         });
     }
 

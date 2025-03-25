@@ -8,6 +8,7 @@ use App\Http\Controllers\HiveData\HiveDataController;
 use App\Exports\HiveTemperatureExport;
 use GuzzleHttp\Psr7\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\ThingSpeakController2;
 
 
 /*
@@ -60,6 +61,7 @@ Route::middleware('auth:web')->group(function () {
     Route::resource('admin/hive', 'App\Http\Controllers\Admin\HiveController');
     Route::resource('admin/hivedata', 'App\Http\Controllers\Admin\HiveDataController');
     Route::resource('admin/videodata', 'App\Http\Controllers\Admin\HiveVideoController');
+    
     Route::resource('admin/photodata', 'App\Http\Controllers\Admin\HivePhotoController');
     Route::resource('admin/audiodata', 'App\Http\Controllers\Admin\HiveAudioController');
     Route::resource('admin/temperaturedata', 'App\Http\Controllers\Admin\HiveTemperatureController');
@@ -178,3 +180,8 @@ Route::get('analytics/weight_analytics',[App\Http\Controllers\WeightAnalyticsCon
 Route::get('analytics/temperature_humidity',[App\Http\Controllers\TemperatureAnalyticsController::class,'index']);
 
 Route::get('website/gallery', [GalleryController::class, 'index']);
+
+Route::get('/thingspeak-data', [ThingSpeakController2::class,'fetchAndStoreData']);
+
+
+Route::get('/battery-readings/{hiveId}', [BatteryReadingController::class, 'showData']);
