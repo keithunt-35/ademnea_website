@@ -14,34 +14,33 @@ class ThingSpeakController extends Controller
 {
     //retrieve and display the data onto the view
     public function showMonitoring($hive_id)
-    {
-        $client = new Client();
-        $response = $client->get('https://api.thingspeak.com/channels/2715993/feeds.json', [
-            'query' => [
-                'api_key' => 'RYCJH8H1B9CNX8UV',
-                'results' => 12
-            ]
-        ]);
+{
+    $client = new Client();
+    $response = $client->get('https://api.thingspeak.com/channels/2715993/feeds.json', [
+        'query' => [
+            'api_key' => 'RYCJH8H1B9CNX8UV',
+            'results' => 12
+        ]
+    ]);
+
+    $thingspeakData = json_decode($response->getBody(), true);
     
-        $thingspeakData = json_decode($response->getBody(), true);
-        
-        // Process ThingSpeak data to match your chart's expected format
-        $processedData = collect($thingspeakData['feeds'])->map(function ($feed) {
-            return [
-                'reading_time' => $feed['created_at'], // or the correct timestamp field
-                'voltage' => $feed['field1'], // adjust field numbers as per your ThingSpeak
-                'battery_percentage' => $feed['field2'] // adjust field numbers
-            ];
-        });
-    
-        $hive = Hive::findOrFail($hive_id);
-    
-        return view('admin.Thingspeak.index', [
-            'hive' => $hive,
-            'battery_readings' => $processedData, // Now using ThingSpeak data
-            'hive_id' => $hive_id,
-        ]);
-    }
+    $battery_readings = collect($thingspeakData['feeds'])->map(function ($feed) {
+        return [
+            'reading_time' => $feed['created_at'],
+            'voltage' => $feed['field1'],
+            'battery_percentage' => $feed['field2']
+        ];
+    });
+
+    $hive = Hive::findOrFail($hive_id);
+
+    return view('admin.Thingspeak.index', [
+        'hive' => $hive,
+        'battery_readings' => $battery_readings,
+        'hive_id' => $hive_id,
+    ]);
+}
 
 //     //For fetching data from thingspeak and store it in the database.
 //     public function fetchData($hive_id)

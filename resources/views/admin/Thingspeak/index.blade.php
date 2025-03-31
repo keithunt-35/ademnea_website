@@ -4,13 +4,13 @@
 
 @include('datanavbar')
 
-<div class="flex flex-col space-y-60"> <!-- Increased from space-y-6 to space-y-12 -->
-    <div class="chart-container">
-        <h2 class="text-2xl font-semibold mb-4">VOLTAGE CHARTS</h2>
+<div class="flex flex-row space-x-8"> <!-- Changed to row with horizontal spacing -->
+    <div class="chart-container flex-1"> <!-- Each takes equal width -->
+        <h2 class="text-xl font-semibold mb-2">VOLTAGE (V)</h2> <!-- Smaller heading -->
         <canvas id="voltageChart"></canvas>
     </div>
-    <div class="chart-container">
-        <h2 class="text-2xl font-semibold mb-4">BATTERY(%) CHARTS</h2>
+    <div class="chart-container flex-1">
+        <h2 class="text-xl font-semibold mb-2">BATTERY (%)</h2> <!-- Smaller heading -->
         <canvas id="batteryChart"></canvas>
     </div>
 </div>
@@ -22,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const batteryCtx = document.getElementById('batteryChart').getContext('2d');
     const initialFeeds = {!! json_encode($battery_readings, JSON_HEX_TAG) !!};
 
-    const hiveId = {{ $hive->id }};
-
     console.log('Initial feeds:', initialFeeds);
 
     // Process data for charts
@@ -31,54 +29,55 @@ document.addEventListener('DOMContentLoaded', function() {
     const voltageData = initialFeeds.map(feed => parseFloat(feed.voltage));
     const batteryData = initialFeeds.map(feed => parseFloat(feed.battery_percentage));
 
-    // Create initial charts
-    const voltageChart = new Chart(voltageCtx, {
+    // Common chart options
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false, // Allows custom sizing
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false // We moved title to HTML heading
+            }
+        }
+    };
+
+    // Create charts
+    new Chart(voltageCtx, {
         type: 'line',
         data: {
             labels: timestamps,
             datasets: [{
-                label: 'Voltage (V)',
+                label: 'Voltage',
                 data: voltageData,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
             }]
         },
         options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Voltage Monitoring',
-                    font: {
-                        size: 20
-                    }
+            ...chartOptions,
+            scales: {
+                y: {
+                    beginAtZero: false
                 }
             }
         }
     });
 
-    const batteryChart = new Chart(batteryCtx, {
+    new Chart(batteryCtx, {
         type: 'line',
         data: {
             labels: timestamps,
             datasets: [{
-                label: 'Battery (%)',
+                label: 'Battery',
                 data: batteryData,
                 borderColor: 'rgb(255, 99, 132)',
                 tension: 0.1
             }]
         },
         options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Battery Level Monitoring',
-                    font: {
-                        size: 20
-                    }
-                }
-            },
+            ...chartOptions,
             scales: {
                 y: {
                     min: 0,
@@ -87,15 +86,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
 });
 </script>
 
 <style>
     .chart-container {
         position: relative;
-        height: 550px;
-        width: 90%;
+        height: 400px; /* Reduced height */
+        width: 100%; /* Takes full width of flex container */
+        padding: 1rem;
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .flex-row {
+            flex-direction: column;
+        }
+        .chart-container {
+            margin-bottom: 1rem;
+        }
     }
 </style>
 @endsection

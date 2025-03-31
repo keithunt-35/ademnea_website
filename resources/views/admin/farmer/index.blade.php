@@ -48,7 +48,7 @@
                 {{ $item->gender }}
                 </td>
                 <td class="px-6 py-4">
-                    {{ $item->user->email }}
+                {{ $item->user?->email ?? 'No email' }}
                 </td>
                 <td class="px-6 py-4">
                 {{ $item->telephone }}
@@ -311,7 +311,7 @@
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Email' }}</label>
-                        <input type="email" name="email" id="email"  value="{{ old('email',  $item->user->email) }}"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required="">
+                        <input type="email" name="email" id="email"  value="{{ old('email', $item->user?->email ?? '') }}"    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required="">
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="telephone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Telephone' }}</label>

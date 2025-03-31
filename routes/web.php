@@ -181,7 +181,7 @@ Route::get('analytics/temperature_humidity',[App\Http\Controllers\TemperatureAna
 
 Route::get('website/gallery', [GalleryController::class, 'index']);
 
-Route::get('/thingspeak-data', [ThingSpeakController2::class,'fetchAndStoreData']);
+// Route::get('/thingspeak-data', [ThingSpeakController2::class,'fetchAndStoreData']);
 
 
 Route::get('/battery-readings/{hiveId}', [BatteryReadingController::class, 'showData']);
