@@ -18,19 +18,28 @@ class HiveController extends Controller
      * @return \Illuminate\View\View
      */
     public function index(Request $request)
-    {        
-       // $perPage = 25;
-       // this is supposed to show only hives for the selected farm.
-
-       $farmId = $request->query('farm_id');
-
-       session(['farm_id' => $farmId]);
-      
-       $hive = Hive::where('farm_id', $farmId)->get();
-
-       $farms = Farm::all();
-        return view('admin.hives.index', compact('hive','farms'));
+    {
+        // Get the farm_id from the request query
+        $farmId = $request->query('farm_id');
+    
+        // If farm_id is not provided or is invalid, you can return a message or redirect to a default page
+        if (!$farmId || !Farm::find($farmId)) {
+            return redirect()->route('farms.index')->with('error', 'Farm not found or invalid farm ID.');
+        }
+    
+        // Store the farm_id in session
+        session(['farm_id' => $farmId]);
+    
+        // Get hives associated with the farm
+        $hive = Hive::where('farm_id', $farmId)->get();
+    
+        // Get all farms (optional if you need to show all farms in the view)
+        $farms = Farm::all();
+    
+        // Return the view with the hives and farms data
+        return view('admin.hives.index', compact('hive', 'farms'));
     }
+    
 
     /**
      * Show the form for creating a new resource.

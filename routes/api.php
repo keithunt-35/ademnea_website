@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Client;
+use App\Http\Controllers\ThingSpeakController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -44,16 +45,17 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\V1', 'prefix' => 'v1'], f
 
     //thingSpeak routes
     // Outside the middleware group
-    Route::get('/thingspeak-data', function (Request $request) {
-        $client = new Client();
-        $response = $client->get('https://api.thingspeak.com/channels/2802273/feeds.json', [
-            'query' => [
-                'api_key' => 'QE5R1U1BVOW8IU74',
-                'results' => 12
-            ]
-        ]);
-        return response()->json(json_decode($response->getBody(), true));
-    });
+    // Route::get('/thingspeak-data', function (Request $request) {
+    //     $client = new Client();
+    //     $response = $client->get('https://api.thingspeak.com/channels/2715993/feeds.json', [
+    //         'query' => [
+    //             'api_key' => 'RYCJH8H1B9CNX8UV',
+    //             'results' => 12
+    //         ]
+    //     ]);
+    //     return response()->json(json_decode($response->getBody(), true));
+    // });
+    // Route::get('/thingspeak-data', [ThingSpeakController::class, 'fetchAndStoreData']);
 
     /*Routes for fetching hive media data given a certain date range */
     Route::group(['middleware' => 'auth:sanctum'], function () {

@@ -72,71 +72,47 @@
     @include('website.header')
     <!-- End Header -->
 
-
     <main id="main">
-        <!-- ======= Scholarship Section ======= -->
-        <section id="scholarship" class="about pt-0">
-            <div class="container pt-5" style=" max-height: 400px;overflow-y: auto;">
-                            
-                {{-- <div class="h5 text-center container">
-        <h1>News about the project</h1>
-        
-    </div> --}}
-                {{-- @if ($newsletter->count())
-        <div class="row no-gutters">
-        @foreach ($newsletter as $workpackage)
-            <div class="col-lg-4 col-md-6 col-sm-12 card">
-                <div class="icon-box">
-                    <h4 class="title"><a href="{{ url('/article/' . $workpackage->id) }}">{!! $workpackage->title !!}</a></h4>
-                    <p class="description">{!! $workpackage->description !!} <a href="{{ url('/individual_newsletter/' . $workpackage->id) }}">More.......</a></p>
-                {{-- . $workpackage->id)--
-                </div>
-            </div>
-            @endforeach
-        @else        
-          <p>No Articles now</p>
-        @endif --}}
-                @if ($newsletter->count())
-                    <div class="container pt-5">
-                        <div class="h5 text-center container">
-                            <h1 style="color:white">News about the project</h1>
-                        </div>
-                        <div class="row">
-                            @foreach ($newsletter as $workpackage)
-                                <div class="col-lg-4 col-md-6 col-sm-12">
-                                    {{-- <div class="image">
-                                                <img src="C/Users/A/Desktop/my pic.jpg" alt="Image">
-                                              </div> --}}
-                                    <div class="card mb-4 custom-card"style="background-color: white; border-radius=30px;height:auto">
-                                        <div class="card-body" style="background-color:white;">
-                                            <h4 class="card-title"><a
-                                                    href="{{ url('/article/' . $workpackage->id) }}">{!! $workpackage->title !!}</a>
-                                            </h4>
-                                            <p class="card-text">
-                                                {!! $workpackage->description !!}</p>
-                                            <a href="{{ url('/individual_newsletter/' . $workpackage->id) }}"
-                                                class="btn btn-primary" style="background-color:  #5cb874">More...</a>
-                                        </div>
+    <!-- ======= Scholarship Section ======= -->
+    <section id="scholarship" class="about pt-0">
+        <div class="container pt-5" style="max-height: 400px; overflow-y: auto;">
+            {{-- Uncomment and adjust if you need the header section --}}
+            {{-- <div class="h5 text-center container">
+                <h1>News about the project</h1>
+            </div> --}}
+            
+            @if ($newsletter->count())
+                <div class="container pt-5">
+                    <div class="h5 text-center">
+                        <h1 style="color:white">News about the project</h1>
+                    </div>
+                    <div class="row">
+                        @foreach ($newsletter as $workpackage)
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="card mb-4 custom-card" style="background-color: white; border-radius: 30px; height: auto;">
+                                    <div class="card-body" style="background-color:white;">
+                                        <h4 class="card-title">
+                                            <a href="{{ url('/article/' . $workpackage->id) }}">{!! $workpackage->title !!}</a>
+                                        </h4>
+                                        <p class="card-text">
+                                            {!! $workpackage->description !!}
+                                        </p>
+                                        <a href="{{ url('/individual_newsletter/' . $workpackage->id) }}" class="btn btn-primary" style="background-color: #5cb874">More...</a>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
                     </div>
-                @else
-                    <p>No Articles now</p>
-                @endif
+                </div>
+            @else
+                <p>No Articles now</p>
+            @endif
 
-
-            </div>
-
-            </div>
-        </section>
-
-        <!-- End Scholarship Section -->
-
-
-
-    </main><!-- End #main -->
+        </div>
+    </section>
+    <!-- End Scholarship Section -->
+</main>
+<!-- End #main -->
 
     <!-- ======= Footer ======= -->
     @include('website.footer')

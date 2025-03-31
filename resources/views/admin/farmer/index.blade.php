@@ -2,7 +2,7 @@
 @section('content')
 
 
-<div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
+<div class="relative p-3 mt-2 overflow-x-auto shadow-md sm:rounded-lg">
 <button type="button" data-modal-target="addFarmer" data-modal-show="addFarmer" class="text-white ml-4 mt-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add New Farmer</button>
 
     <table id="myTable"class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -48,7 +48,7 @@
                 {{ $item->gender }}
                 </td>
                 <td class="px-6 py-4">
-                    {{ $item->user->email }}
+                {{ $item->user?->email ?? 'No email' }}
                 </td>
                 <td class="px-6 py-4">
                 {{ $item->telephone }}
@@ -57,9 +57,9 @@
                 {{ $item->address }}
                 </td>
                 <td class="px-6 py-4">
-                    <a href="#" type="button" data-modal-target="large-modal" data-modal-show="large-modal" class="font-medium text-green-600 dark:text-green-500 hover:underline">View</a>
-                    <a href="#" type="button" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
-                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" class="font-medium text-red-600 dark:text-green-500 hover:underline">Delete</a>
+                    <a href="#" type="button" data-modal-target="large-modal" data-modal-show="large-modal" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;"  class="">View</a>
+                    <a href="#" type="button" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" style="color: white; background-color: #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Edit</a>
+                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" style="color: white; background-color: #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Delete</a>
                 </td>
             </tr>
 
@@ -311,7 +311,7 @@
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Email' }}</label>
-                        <input type="email" name="email" id="email"  value="{{ old('email',  $item->user->email) }}"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required="">
+                        <input type="email" name="email" id="email"  value="{{ old('email', $item->user?->email ?? '') }}"    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required="">
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="telephone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Telephone' }}</label>

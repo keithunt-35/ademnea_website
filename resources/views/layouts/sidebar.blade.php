@@ -3,6 +3,14 @@
 <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-gray-800 border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
     <div class="h-full px-3 pb-4 overflow-y-auto bg-gray-800 dark:bg-gray-800">
        <ul class="space-y-2 font-medium">
+            <li> 
+             <a href="/admin/dashboard" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
+                 <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                     <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M8 8v1h4V8m4 7H4a1 1 0 0 1-1-1V5h14v9a1 1 0 0 1-1 1ZM2 1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z"/>
+                 </svg>
+                <span class="ml-3">Dashboard</span>
+             </a>
+            </li>
           <li>
              <a href="/admin/farm" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
                  <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -58,7 +66,8 @@
                    </svg>
                  <span class="ml-3">Publication</span>
              </a>
-          </li> <li>
+          </li> 
+          <li>
              <a href="/admin/gallery" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
                  <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
                      <path fill="currentColor" d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"/>
@@ -67,14 +76,16 @@
                    </svg>
                  <span class="ml-3">Events | Gallery</span>
              </a>
-          <!-- </li> <li>
+          </li> 
+          <!-- <li>
              <a href="/admin/scholarship" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
                  <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 18">
                      <path d="M8 18A18.55 18.55 0 0 1 0 3l8-3 8 3a18.549 18.549 0 0 1-8 15Z"/>
                    </svg>
                  <span class="ml-3">Scholarship</span>
              </a>
-          </li> <li> -->
+          </li>  -->
+          <li>
              <a href="/admin/research-profile" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
                  <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.656 12.115a3 3 0 0 1 5.682-.015M13 5h3m-3 3h3m-3 3h3M2 1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm6.5 4.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
