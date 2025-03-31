@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use GuzzleHttp\Client;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -41,10 +42,24 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\V1', 'prefix' => 'v1'], f
         Route::get('hives/{hive_id}/carbondioxide/{from_date}/{to_date}', 'HiveParameterDataController@getCarbondioxideForDateRange');
     });
 
+    //thingSpeak routes
+    // Outside the middleware group
+    Route::get('/thingspeak-data', function (Request $request) {
+        $client = new Client();
+        $response = $client->get('https://api.thingspeak.com/channels/2802273/feeds.json', [
+            'query' => [
+                'api_key' => 'QE5R1U1BVOW8IU74',
+                'results' => 12
+            ]
+        ]);
+        return response()->json(json_decode($response->getBody(), true));
+    });
+
     /*Routes for fetching hive media data given a certain date range */
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('hives/{hive_id}/images/{from_date}/{to_date}', 'HiveMediaDataController@getImagesForDateRange');
         Route::get('hives/{hive_id}/videos/{from_date}/{to_date}', 'HiveMediaDataController@getVideosForDateRange');
         Route::get('hives/{hive_id}/audios/{from_date}/{to_date}', 'HiveMediaDataController@getAudiosForDateRange');
     });
+
 });

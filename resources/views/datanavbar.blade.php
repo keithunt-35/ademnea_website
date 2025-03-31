@@ -38,12 +38,20 @@
                 <a href="{{ url('/hive_data/tempHumidity_data_default/' . $hive_id) }}"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">TemperatureHumidity</a>
             </li>
-            <li>
-                <a href="{{ url('/hive_data/hiveVibration_data_default/' . $hive_id) }}"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Hive Vibrations</a>
-                <!-- route('vibration.graph',['hive_id' => $hive_id])  -->
-            </li>
-            
+            @if(isset($hive_id))
+                <li>
+                    <a href="{{ url('/hive_data/hiveVibration_data_default/' . $hive_id) }}"
+                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                        Hive Vibrations
+                    </a>
+                </li>
+            @else
+                <li>
+                    <a href="#" class="block px-4 py-2 text-red-500">Hive ID Missing</a>
+                </li>
+            @endif
+
+
         </ul>
     </div>
 
@@ -124,11 +132,15 @@
                 <a href="/sensor-monitoring"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sensor Monitoring</a>
             </li>
-            <li>
-                <a href="{{ url('/admin/power-monitoring-default/' . $hive_id ) }}"
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Power Monitoring</a>
-            </li>
-            
+
+            @if(isset($hive) && isset($hive->id))
+                <a href="{{ route('thingspeak.monitoring', ['hive_id' => $hive->id]) }}"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Battery Monitoring</a>
+            @else
+                <a href="{{ route('thingspeak.monitoring', ['hive_id' => $hive_id ?? null]) }}"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Battery Monitoring</a>
+            @endif
+
         </ul>
     </div>
 
@@ -161,13 +173,6 @@
         </ul>
     </div>
 
-    
-    
+
+
 </div>
-
-
-
-
-
-
-

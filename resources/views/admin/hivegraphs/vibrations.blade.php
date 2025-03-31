@@ -69,156 +69,98 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const data = {!! $data !!};
-            const csvFilePath = '/hivevibration/vibration_2.csv';
-  
-            fetch(csvFilePath)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
+            const parsedData = {!! $data !!};  // Data passed from the controller
+
+            function parseDataAndPlot(data) {
+                const parsed = Papa.parse(data, { header: true }).data;
+
+                // Extract amplitude and frequency data for plotting
+                const frequencyX = parsed.map(row => parseFloat(row['Frequency_X']));
+                const amplitudeY = parsed.map(row => parseFloat(row['Amplitude_Y']));
+
+                const ctx1 = document.getElementById('amplitudeFrequencyChart').getContext('2d');
+                const amplitudeFrequencyChart = new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: frequencyX,
+                        datasets: [{
+                            label: 'Amplitude Y',
+                            data: amplitudeY,
+                            borderColor: 'green',
+                            fill: false,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Frequency'
+                                }
+                            },
+                            y: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Amplitude'
+                                }
+                            }
+                        }
                     }
-                    return response.text();
-                })
-                .then(csvData => {
-                    console.log('CSV data fetched successfully');
-                    const data = Papa.parse(csvData, { header: true }).data;
-                    console.log('Parsed CSV data:', data);
-  
-                    // Extract amplitude and frequency data for plotting
-                    const frequencyX = data.map(row => parseFloat(row['Frequency_X']));
-                    const amplitudeX = data.map(row => parseFloat(row['Amplitude_X']));
-                    const frequencyY = data.map(row => parseFloat(row['Frequency_Y']));
-                    const amplitudeY = data.map(row => parseFloat(row['Amplitude_Y']));
-                    const frequencyZ = data.map(row => parseFloat(row['Frequency_Z']));
-                    const amplitudeZ = data.map(row => parseFloat(row['Amplitude_Z']));
-  
-                    const ctx1 = document.getElementById('amplitudeFrequencyChart').getContext('2d');
-                    const amplitudeFrequencyChart = new Chart(ctx1, {
-                        type: 'line',
-                        data: {
-                            labels: frequencyX, // Assuming all frequency columns have the same labels
-                            datasets: [
-                                // {
-                                //     label: 'Amplitude X',
-                                //     data: amplitudeX,
-                                //     borderColor: 'red',
-                                //     fill: false,
-                                //     pointRadius: 0
-                                // },
-                                {
-                                    label: 'Amplitude Y',
-                                    data: amplitudeY,
-                                    borderColor: 'green',
-                                    fill: false,
-                                    pointRadius: 0
-                                },
-                                // {
-                                //     label: 'Amplitude Z',
-                                //     data: amplitudeZ,
-                                //     borderColor: 'blue',
-                                //     fill: false,
-                                //     pointRadius: 0
-                                // }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            title: {
+                });
+
+                // Create the second chart for Frequency Spectrum
+                const fftAmplitudeY = parsed.map(row => parseFloat(row['FFT_Amplitude_Y']));
+                const ctx2 = document.getElementById('frequencySpectrumChart').getContext('2d');
+                const frequencySpectrumChart = new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: frequencyX,
+                        datasets: [{
+                            label: 'FFT Amplitude Y',
+                            data: fftAmplitudeY,
+                            borderColor: 'green',
+                            fill: false,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
                                 display: true,
-                                text: 'Amplitude vs Frequency'
+                                title: {
+                                    display: true,
+                                    text: 'Frequency'
+                                }
                             },
-                            scales: {
-                                x: {
+                            y: {
+                                display: true,
+                                title: {
                                     display: true,
-                                    title: {
-                                        display: true,
-                                        text: 'Frequency'
-                                    }
-                                },
-                                y: {
-                                    display: true,
-                                    title: {
-                                        display: true,
-                                        text: 'Amplitude'
-                                    }
+                                    text: 'FFT Amplitude'
                                 }
                             }
                         }
-                    });
-  
-                    // Extract frequency and FFT amplitude data for plotting
-                    const frequency = data.map(row => parseFloat(row['Frequency_X']));  // Assuming the frequencies are the same for X, Y, and Z
-                    const fftAmplitudeX = data.map(row => parseFloat(row['FFT_Amplitude_X']));
-                    const fftAmplitudeY = data.map(row => parseFloat(row['FFT_Amplitude_Y']));
-                    const fftAmplitudeZ = data.map(row => parseFloat(row['FFT_Amplitude_Z']));
-  
-                    console.log('Frequency data:', frequency);
-                    console.log('FFT Amplitude X data:', fftAmplitudeX);
-                    console.log('FFT Amplitude Y data:', fftAmplitudeY);
-                    console.log('FFT Amplitude Z data:', fftAmplitudeZ);
-  
-                    const ctx2 = document.getElementById('frequencySpectrumChart').getContext('2d');
-                    const frequencySpectrumChart = new Chart(ctx2, {
-                        type: 'line',
-                        data: {
-                            labels: frequency, // Frequency values for the x-axis
-                            datasets: [
-                                // {
-                                //     label: 'FFT Amplitude X',
-                                //     data: fftAmplitudeX,
-                                //     borderColor: 'red',
-                                //     fill: false,
-                                //     pointRadius: 0
-                                // },
-                                {
-                                    label: 'FFT Amplitude Y',
-                                    data: fftAmplitudeY,
-                                    borderColor: 'green',
-                                    fill: false,
-                                    pointRadius: 0
-                                },
-                                // {
-                                //     label: 'FFT Amplitude Z',
-                                //     data: fftAmplitudeZ,
-                                //     borderColor: 'blue',
-                                //     fill: false,
-                                //     pointRadius: 0
-                                // }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            title: {
-                                display: true,
-                                text: 'Frequency Spectrum'
-                            },
-                            scales: {
-                                x: {
-                                    display: true,
-                                    title: {
-                                        display: true,
-                                        text: 'Frequency'
-                                    }
-                                },
-                                y: {
-                                    display: true,
-                                    title: {
-                                        display: true,
-                                        text: 'Amplitude'
-                                    }
-                                }
-                            }
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching or parsing the CSV file:', error));
+                    }
+                });
+            }
 
+            // Initial data fetch and plot
+            parseDataAndPlot(parsedData);
 
-                // Initial fetch and chart rendering
-            fetchAndUpdateCharts();
-
-// Set interval to automatically refresh data and update charts
-setInterval(fetchAndUpdateCharts, 60000); // Update every 60 seconds
+            // Automatically refresh the chart every 60 seconds
+            // setInterval(function() {
+            //     fetch(`/api/hivevibrations/${{{ $hive_id }}}`)  // Call the API to fetch updated data
+            //         // .then(response => response.json())
+            //         .then(data => {
+            //             parseDataAndPlot(data);  // Re-plot the chart with new data
+            //         })
+            //         .catch(error => console.error('Error fetching new data:', error));
+            // }, 60000); // 60 seconds interval
         });
     </script>
   </div>
