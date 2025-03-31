@@ -5,6 +5,7 @@
 .team .team-member .member-img {
   border-radius: 8px;
   overflow: hidden;
+  /* max-width: 300px; */
 }
 .team .team-member .social {
   position: absolute;
@@ -85,7 +86,7 @@
         <div class="row gy-5">
 
         @foreach($teams as $team)
-          <div class="col-xl-4 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
             <div class="team-member">
               <div class="member-img">
                 <img src="{{asset('images/' . $team->image_path)}}" class="img-fluid" alt="">
@@ -99,7 +100,21 @@
                 </div>
                 <h4>{{$team->name}}</h4>
                 <span>{{$team->title}}</span>
-                <p>{{$team->description}}</p>
+                 @php
+                    $words = explode(' ', $team->description);
+                    $shortDescription = implode(' ', array_slice($words, 0, 40)); // Show first 20 words
+                @endphp
+
+                <p>
+                    <span id="short-{{ $team->id }}">{{ $shortDescription }}...</span>
+                    <span id="full-{{ $team->id }}" style="display: none;">{{ $team->description }}</span>
+
+                    @if(count($words) > 40)
+                        <a href="javascript:void(0);" onclick="toggleDescription({{ $team->id }})" 
+                          class="text-blue-500" id="toggle-{{ $team->id }}">Read More</a>
+                    @endif
+                </p>
+
               </div>
             </div>
           </div><!-- End Team Member -->
@@ -110,6 +125,24 @@
         </div>
 
       </div>
+
+           <script>
+              function toggleDescription(id) {
+                  let shortDesc = document.getElementById('short-' + id);
+                  let fullDesc = document.getElementById('full-' + id);
+                  let toggleBtn = document.getElementById('toggle-' + id);
+
+                  if (shortDesc.style.display === 'none') {
+                      shortDesc.style.display = 'inline';
+                      fullDesc.style.display = 'none';
+                      toggleBtn.innerText = 'Read More';
+                  } else {
+                      shortDesc.style.display = 'none';
+                      fullDesc.style.display = 'inline';
+                      toggleBtn.innerText = 'Read Less';
+                  }
+              }
+          </script>
     </section><!-- End Team Section -->
 
 

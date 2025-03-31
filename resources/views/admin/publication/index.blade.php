@@ -2,7 +2,7 @@
 @section('content')
 
 
-<div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
+<div class="relative p-3 mt-2 overflow-x-auto shadow-md sm:rounded-lg">
 <button type="button" data-modal-target="addPublication" data-modal-show="addPublication" class="text-white ml-4 mt-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add New Publication</button>
     <table id="myTable"class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -47,13 +47,13 @@
                 </td>
                 <td class="px-6 py-4">
                     <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-target="{{ $item->title }}" data-modal-show="{{ $item->title }}" class="font-medium text-green-600 dark:text-green-500 hover:underline">View</a>
-                    <a href="#" type="button" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id}}" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
-                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" class="font-medium text-red-600 dark:text-green-500 hover:underline">Delete</a>
+                    <a href="#" type="button" data-modal-target="{{ $item->title }}" data-modal-show="{{ $item->title }}" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">View</a>
+                    <a href="#" type="button" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id}}" style="color: white; background-color:  #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Edit</a>
+                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" style="color: white; background-color:  #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Delete</a>
                                        
                 </td>
                 {{-- <td class="px-6 py-4">
-                    <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
+                    <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" style="color: white; background-color: #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Edit</a>
                 </td> --}}
             </tr>
             @endforeach
@@ -68,7 +68,7 @@
         <!-- Modal content -->
         <form action="{{ url('/admin/publication') }}" method="POST" class="relative bg-white rounded-lg shadow dark:bg-gray-700" accept-charset="UTF-8" enctype="multipart/form-data">
                          {{ csrf_field() }}
-
+                         @csrf
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -82,23 +82,23 @@
             <div class="p-6 space-y-6">
                 <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-3">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Name' }}</label>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                         <input  name="name" type="text" id="name"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" required="">
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Title' }}</label>
+                        <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
                         <input  name="title" type="text" id="title"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" required="">
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <label for="publisher" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Publisher' }}</label>
+                        <label for="publisher" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Publisher</label>
                         <input type="text"  name="publisher" id="publisher"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"  required="">
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <label for="year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Year of Publication' }}</label>
+                        <label for="year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Year of Publication</label>
                         <input type="text" name="year" id="datepicker"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required="">
                     </div>
                     <div class="col-span-6 sm:col-span-6">
-                        <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Attachment' }}</label>
+                        <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attachment</label>
                          <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"  name="attachment" id="attachment" type="file">
                          <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help"> (only pdf allowed)</p>
                          <script>
@@ -109,7 +109,7 @@
                     </div>
 
                     <div class="col-span-6 sm:col-span-6">
-                        <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Image' }}</label>
+                        <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image</label>
                          <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"  name="image" id="attachment" type="file">
                          <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help"> (only image allowed)</p>
                     </div>
@@ -164,7 +164,7 @@
                        </div>
                        <div class="col-span-6 sm:col-span-6">
                            <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Attachment' }}</label>
-                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" value="{{ old('attachment', $item->attachment) }}"  name="attachment' id="attachment" type="file">
+                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" value="{{ old('attachment', $item->attachment) }}"  name="attachment" id="attachment" type="file">
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help"> (only pdf allowed)</p>
                             <script>
                                 $(function(){

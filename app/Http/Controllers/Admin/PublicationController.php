@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use Illuminate\Http\Request;
 use Validator;
 use App\Models\Publication;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PublicationController extends Controller
@@ -52,42 +52,54 @@ class PublicationController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
-    {
-        
-        //picking the image of the publication.
-                //this code uploads the picture from the form.
-                $request->validate(['image' => 'required|image|mimes:png,jpg,jpeg|max:11000']);
-                $picname = $request->file('image')->getClientOriginalName();
-                $request->image->move(public_path('images/publications'), $picname);
 
-        //dd($request->all());
-     
-        $request->validate([
-            'attachment' => 'required|mimes:csv,pdf,doc,docx,xls,xlsx|max:11000',
-        ]);
-        $filename = $request->file('attachment')->getClientOriginalName();
-        $request->file('attachment')->move(public_path('documents/publications'), $filename);
+     public function store(Request $request)
+        {
+            // Validate the request
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'publisher' => 'required|string|max:255',
+                'year' => 'required|integer|min:1900|max:' . date('Y'),
+                'attachment' => 'nullable|mimes:pdf|max:11000', // PDF file max 11MB
+                'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:11000' // Image file max 11MB
+            ]);
+
+            // Handle file uploads
+            $attachmentPath = null;
+            if ($request->hasFile('attachment')) {
+                // Get the original name of the attachment file
+                $attachmentName = $request->file('attachment')->getClientOriginalName();
+                // Move the attachment to the 'public/documents/publications' directory
+                $request->file('attachment')->move(public_path('documents/publications'), $attachmentName);
+                $attachmentPath = 'documents/publications/' . $attachmentName;
+            }
+
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                // Generate a unique image name using time() and the name from the form
+                $newImageName = time() . '-' . $request->name . '.' . $request->image->extension();
+                // Move the image to the 'public/images/publications' directory
+                $request->image->move(public_path('images/publications'), $newImageName);
+                $imagePath = 'images/publications/' . $newImageName;
+            }
+
+            // Store the publication in the database with only the relative file paths
+            $publication = new Publication();
+            $publication->name = $request->name;
+            $publication->title = $request->title;
+            $publication->publisher = $request->publisher;
+            $publication->year = $request->year;
+            $publication->attachment = $attachmentPath; // Only the relative path is saved
+            $publication->image = $imagePath; // Only the relative path is saved
+            $publication->save();
+
+            // Redirect with success message
+            return redirect()->back()->with('success', 'Publication added successfully!');
+        }
 
 
-        DB::table('publications')->insert([
 
-            'name' => $request->name,
-            'title' => $request->title,
-            'publisher' => $request->publisher,
-            'year' => $request->year,
-            'attachment' => $filename,
-            'image' => $picname,
-            'created_at' => now(),
-            'updated_at' => now(),
-              
-        ]);
-
-         
-       // Publication::create($requestData);
-
-        return redirect('admin/publication')->with('flash_message', 'Publication added!');
-    }
 
     /**
      * Display the specified resource.
@@ -127,63 +139,39 @@ class PublicationController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-
-
-     //pick and save the file if available
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'publisher' => 'required|string|max:255',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
+            'attachment' => 'nullable|mimes:csv,pdf,doc,docx,xls,xlsx|max:11000',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg|max:11000'
+        ]);
+    
+        $publication = Publication::findOrFail($id);
+    
         if ($request->hasFile('attachment')) {
-         
-            $request->validate([
-                'attachment' => 'required|mimes:csv,pdf,doc,docx,xls,xlsx|max:11000',
-            ]);
             $filename = $request->file('attachment')->getClientOriginalName();
             $request->file('attachment')->move(public_path('documents/publications'), $filename);
-
-
-            DB::table('publications')
-            ->where('id', $id)
-            ->update([
-                'attachment' => $filename,
-                'updated_at' => now(),
-    
-            ]);
-   
+            $publication->attachment = $filename;
         }
-
-
-        //pick and save the image if available
+    
         if ($request->hasFile('image')) {
-
-            $request->validate(['image' => 'required|image|mimes:png,jpg,jpeg|max:11000']);
             $picname = $request->file('image')->getClientOriginalName();
             $request->image->move(public_path('images/publications'), $picname);
-
-            DB::table('publications')
-            ->where('id', $id)
-            ->update([
-                'image' => $picname,
-                'updated_at' => now(),
-    
-            ]);
-
+            $publication->image = $picname;
         }
-
-
-        DB::table('publications')
-        ->where('id', $id)
-        ->update([
-
-            'name' => $request->name,
-            'title' => $request->title,
-            'publisher' => $request->publisher,
-            'year' => $request->year,
-            'updated_at' => now(),
-
-        ]);
- 
-
+    
+        $publication->name = $request->name;
+        $publication->title = $request->title;
+        $publication->publisher = $request->publisher;
+        $publication->year = $request->year;
+        $publication->updated_at = now();
+        $publication->save();
+    
         return redirect('admin/publication')->with('flash_message', 'Publication updated!');
     }
+    
 
     /**
      * Remove the specified resource from storage.

@@ -2,7 +2,7 @@
 @section('content')
 
 
-<div class="relative p-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg">
+<div class="relative p-3 mt-2 overflow-x-auto shadow-md sm:rounded-lg">
 <button type="button" data-modal-target="addScholar" data-modal-show="addScholar" class="text-white ml-4 mt-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add New Research profile</button>
     <table id="myTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -46,13 +46,13 @@
                 </td>
                 <td class="px-6 py-4">
                     <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-target="{{ $item->description }}" data-modal-show="{{ $item->description }}" class="font-medium text-green-600 dark:text-green-500 hover:underline">View</a>
-                    <a href="#" type="button" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id}}" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
-                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" class="font-medium text-red-600 dark:text-green-500 hover:underline">Delete</a>
+                    <a href="#" type="button" data-modal-target="{{ $item->description }}" data-modal-show="{{ $item->description }}" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="font-medium text-green-600 dark:text-green-500 hover:underline">View</a>
+                    <a href="#" type="button" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id}}" style="color: white; background-color:  #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
+                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" style="color: white; background-color:#dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="font-medium text-red-600 dark:text-green-500 hover:underline">Delete</a>
                                        
                 </td>
                 {{-- <td class="px-6 py-4">
-                    <a href="#" data-modal-target="{{ $item->id }}" data-modal-toggle="{{ $item->id }}" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
+                    <a href="#" data-modal-target="{{ $item->id }}" data-modal-toggle="{{ $item->id }}" style="color: white; background-color:#ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
                 </td> --}}
             </tr>
             @endforeach 
