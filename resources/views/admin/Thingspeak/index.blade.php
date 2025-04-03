@@ -4,14 +4,24 @@
 
 @include('datanavbar')
 
-<div class="flex flex-row space-x-8"> <!-- Changed to row with horizontal spacing -->
-    <div class="chart-container flex-1"> <!-- Each takes equal width -->
-        <h2 class="text-xl font-semibold mb-2">VOLTAGE (V)</h2> <!-- Smaller heading -->
-        <canvas id="voltageChart"></canvas>
+<div class="flex flex-col space-y-4"> <!-- Changed to column layout for hierarchy -->
+    <!-- Hive ID Display -->
+    <div class="bg-white p-4 rounded-lg shadow">
+        <h2 class="text-2xl font-bold text-gray-800">
+            Hive ID: <span class="text-blue-600">{{ $hive_id }}</span>
+        </h2>
     </div>
-    <div class="chart-container flex-1">
-        <h2 class="text-xl font-semibold mb-2">BATTERY (%)</h2> <!-- Smaller heading -->
-        <canvas id="batteryChart"></canvas>
+
+    <!-- Charts Row -->
+    <div class="flex flex-row space-x-8">
+        <div class="chart-container flex-1">
+            <h2 class="text-xl font-semibold mb-2">VOLTAGE (V)</h2>
+            <canvas id="voltageChart"></canvas>
+        </div>
+        <div class="chart-container flex-1">
+            <h2 class="text-xl font-semibold mb-2">BATTERY (%)</h2>
+            <canvas id="batteryChart"></canvas>
+        </div>
     </div>
 </div>
 

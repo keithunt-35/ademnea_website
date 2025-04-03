@@ -131,7 +131,7 @@
 
         <div class="container" data-aos="fade-up">
 
-            <h2>AdeMNEA Publications</h2>
+            <h2>AdEMNEA Publications</h2>
         <br>
                 {{-- publication cards begin here --}}
                 @if($publication->count())

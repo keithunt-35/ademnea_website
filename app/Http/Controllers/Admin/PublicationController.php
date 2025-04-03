@@ -61,8 +61,8 @@ class PublicationController extends Controller
                 'title' => 'required|string|max:255',
                 'publisher' => 'required|string|max:255',
                 'year' => 'required|integer|min:1900|max:' . date('Y'),
-                'attachment' => 'nullable|mimes:pdf|max:11000', // PDF file max 11MB
-                'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:11000' // Image file max 11MB
+                'attachment' => 'nullable|mimes:pdf|max:51200', // PDF file max 50MB
+                'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:51200' // Image file max 50MB
             ]);
 
             // Handle file uploads
