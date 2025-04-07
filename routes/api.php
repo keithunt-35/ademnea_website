@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Client;
 use App\Http\Controllers\ThingSpeakController;
+use App\Http\Controllers\Api\V1\ImageController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -13,6 +14,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\V1', 'prefix' => 'v1'], f
 
     /*Routes for user authentication */
     Route::post('login', 'UserController@login');
+
+    // Route for
+    Route::get('/img', [ImageController::class, 'show']);
+
 
     /*Routes for farm related information */
     Route::middleware('auth:sanctum')->group(function () {
