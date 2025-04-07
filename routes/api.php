@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Client;
 use App\Http\Controllers\ThingSpeakController;
 use App\Http\Controllers\Api\V1\ImageController;
+use App\Http\Controllers\Api\V1\VideoController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -15,8 +16,12 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\V1', 'prefix' => 'v1'], f
     /*Routes for user authentication */
     Route::post('login', 'UserController@login');
 
-    // Route for
+    // Route for accessing images using the api
     Route::get('/img', [ImageController::class, 'show']);
+
+    // Route for accessing videos using the api
+    Route::get('/vids', [VideoController::class, 'show']);
+
 
 
     /*Routes for farm related information */
