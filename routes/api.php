@@ -22,6 +22,8 @@ Route::group(
 
         // Route for accessing videos using the api
         Route::get("/vids", [VideoController::class, "show"]);
+        //  route for returning the most recent videos only based on the date
+        Route::get("/vids/latest", [VideoController::class, "showLatest"]);
 
         /*Routes for farm related information */
         Route::middleware("auth:sanctum")->group(function () {

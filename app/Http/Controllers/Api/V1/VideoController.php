@@ -1,116 +1,162 @@
 <?php
-
 namespace App\Http\Controllers\Api\V1;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 class VideoController extends Controller
 {
-    //
+    protected $videoDirectory = "hivevideo";
+    // Show all videos
     public function show()
     {
-        $videoPath = public_path("hivevideo");
-
-        // Verify directory exists
-        if (!is_dir($videoPath)) {
-            return response()->json(
-                [
-                    "error" => "videos directory not found",
-                    "path" => $videoPath,
-                ],
-                404
-            );
-        }
-
-        // Get all video files
-        $videoFiles = array_filter(scandir($videoPath), function ($file) {
-            return preg_match('/\.(mp4)$/i', $file);
-        });
-
-        // Remove . and .. from directory listing
-        $videoFiles = array_diff($videoFiles, [".", ".."]);
-
-        if (empty($videoFiles)) {
-            return response()->json(
-                ["message" => "No videos found in directory"],
-                404
-            );
-        }
-
-        // Process videos
-        $videos = array_map(function ($file) use ($videoPath) {
-            $fullPath = $videoPath . "/" . $file;
-            return [
-                "name" => $file,
-                "url" => asset("hivevideo/" . $file),
-                "size" => filesize($fullPath),
-                "last_modified" => filemtime($fullPath),
-                "mime_type" => mime_content_type($fullPath),
-            ];
-        }, $videoFiles);
-
-        return response()->json([
-            "count" => count($videos),
-            "videos" => array_values($videos), // Reset array keys
-        ]);
+        return $this->getVideos();
     }
 
-    public function showLatest()
+    // Get all videos without filtering for date
+    protected function getVideos()
     {
-        $videoPath = public_path("hivevideo");
-        // Verify directory exists
-        if (!is_dir($videoPath)) {
+        try {
+            // Get video path
+            $videoPath = public_path($this->videoDirectory);
+            Log::info("Looking for videos in: " . $videoPath);
+            // Check if directory exists
+            if (!File::isDirectory($videoPath)) {
+                Log::error("Video directory not found: " . $videoPath);
+                return response()->json(
+                    [
+                        "error" => "Videos directory not found",
+                        "path" => $videoPath,
+                    ],
+                    404
+                );
+            }
+            // Get all MP4 files
+            $videoFiles = collect(File::files($videoPath))
+                ->filter(function ($file) {
+                    return File::extension($file) === "mp4";
+                })
+                ->values();
+            Log::info("Found " . count($videoFiles) . " video files");
+            if ($videoFiles->isEmpty()) {
+                Log::warning("No video files found in directory");
+                return response()->json(
+                    [
+                        "message" => "No videos found in directory",
+                    ],
+                    404
+                );
+            }
+            // Process videos with their modification times
+            $videos = $videoFiles
+                ->map(function ($file) {
+                    $fileName = $file->getFilename();
+                    $lastModified = $file->getMTime();
+                    return [
+                        "name" => $fileName,
+                        "url" => asset($this->videoDirectory . "/" . $fileName),
+                        "size" => $file->getSize(),
+                        "last_modified" => $lastModified,
+                        "mime_type" => File::mimeType($file),
+                        "date" => date("Y-m-d", $lastModified),
+                    ];
+                })
+                ->toArray();
+
+            // Group videos by date
+            $videosByDate = collect($videos)->groupBy("date")->toArray();
+
+            return response()->json([
+                "count" => count($videos),
+                "videos" => $videos,
+                "dates" => array_keys($videosByDate),
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error fetching videos: " . $e->getMessage());
+            Log::error($e->getTraceAsString());
             return response()->json(
                 [
-                    "error" => "videos directory not found",
-                    "path" => $videoPath,
+                    "error" => "Server error while fetching videos",
+                    "message" => $e->getMessage(),
                 ],
-                404
+                500
             );
         }
-        // Get all video files
-        $videoFiles = array_filter(scandir($videoPath), function ($file) {
-            return preg_match('/\.(mp4)$/i', $file);
-        });
-        // Remove . and .. from directory listing
-        $videoFiles = array_diff($videoFiles, [".", ".."]);
-        if (empty($videoFiles)) {
+    }
+
+    // Show only the most recent videos by date
+    public function showLatest()
+    {
+        try {
+            // Get video path
+            $videoPath = public_path($this->videoDirectory);
+            Log::info("Looking for videos in: " . $videoPath);
+            // Check if directory exists
+            if (!File::isDirectory($videoPath)) {
+                Log::error("Video directory not found: " . $videoPath);
+                return response()->json(
+                    [
+                        "error" => "Videos directory not found",
+                        "path" => $videoPath,
+                    ],
+                    404
+                );
+            }
+            // Get all MP4 files
+            $videoFiles = collect(File::files($videoPath))
+                ->filter(function ($file) {
+                    return File::extension($file) === "mp4";
+                })
+                ->values();
+            Log::info("Found " . count($videoFiles) . " video files");
+            if ($videoFiles->isEmpty()) {
+                Log::warning("No video files found in directory");
+                return response()->json(
+                    [
+                        "message" => "No videos found in directory",
+                    ],
+                    404
+                );
+            }
+            // Process videos with their modification times
+            $videos = $videoFiles
+                ->map(function ($file) {
+                    $fileName = $file->getFilename();
+                    $lastModified = $file->getMTime();
+                    return [
+                        "name" => $fileName,
+                        "url" => asset($this->videoDirectory . "/" . $fileName),
+                        "size" => $file->getSize(),
+                        "last_modified" => $lastModified,
+                        "mime_type" => File::mimeType($file),
+                        "date" => date("Y-m-d", $lastModified),
+                    ];
+                })
+                ->toArray();
+            // Find the most recent date
+            $mostRecentDate = collect($videos)->pluck("date")->max();
+            // Filter to only include videos from the most recent date
+            $latestVideos = collect($videos)
+                ->filter(function ($video) use ($mostRecentDate) {
+                    return $video["date"] === $mostRecentDate;
+                })
+                ->values()
+                ->toArray();
+            return response()->json([
+                "date" => $mostRecentDate,
+                "count" => count($latestVideos),
+                "videos" => $latestVideos,
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error fetching latest videos: " . $e->getMessage());
+            Log::error($e->getTraceAsString());
             return response()->json(
-                ["message" => "No videos found in directory"],
-                404
+                [
+                    "error" => "Server error while fetching videos",
+                    "message" => $e->getMessage(),
+                ],
+                500
             );
         }
-
-        // Process videos with their modification times
-        $videos = [];
-        foreach ($videoFiles as $file) {
-            $fullPath = $videoPath . "/" . $file;
-            $lastModified = filemtime($fullPath);
-            $videos[] = [
-                "name" => $file,
-                "url" => asset("hivevideo/" . $file),
-                "size" => filesize($fullPath),
-                "last_modified" => $lastModified,
-                "mime_type" => mime_content_type($fullPath),
-                "date" => date("Y-m-d", $lastModified),
-            ];
-        }
-
-        // Find the most recent date
-        $mostRecentDate = max(array_column($videos, "date"));
-
-        // Filter videos to only include those from the most recent date
-        $latestVideos = array_values(
-            array_filter($videos, function ($video) use ($mostRecentDate) {
-                return $video["date"] === $mostRecentDate;
-            })
-        );
-
-        return response()->json([
-            "date" => $mostRecentDate,
-            "count" => count($latestVideos),
-            "videos" => $latestVideos,
-        ]);
     }
 }
