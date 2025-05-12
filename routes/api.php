@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use App\Http\Controllers\ThingSpeakController;
 use App\Http\Controllers\Api\V1\ImageController;
@@ -121,6 +122,15 @@ Route::group(
                 "hives/{hive_id}/audios/{from_date}/{to_date}",
                 "HiveMediaDataController@getAudiosForDateRange"
             );
+        });
+
+        Route::post('/upload', function (Request $request) {
+            $filename = $request->header('File-Name', 'uploaded_file.bin');
+
+            // Store raw file data
+            Storage::disk('public')->put("esp/{$filename}", $request->getContent());
+
+            return response()->json(['message' => "File $filename uploaded successfully."], 200);
         });
     }
 );
