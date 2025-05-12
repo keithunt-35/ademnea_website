@@ -125,12 +125,16 @@ Route::group(
         });
 
         Route::post('/upload', function (Request $request) {
-            $filename = $request->header('File-Name', 'uploaded_file.bin');
+            try{$filename = $request->header('File-Name', 'uploaded_file.bin');
 
             // Store raw file data
             Storage::disk('public')->put("esp/{$filename}", $request->getContent());
 
-            return response()->json(['message' => "File $filename uploaded successfully."], 200);
+            return response()->json(['message' => "File $filename uploaded successfully."], 200);}
+             catch (\Exception $e) {
+                Log::error('Upload failed', ['error' => $e->getMessage()]);
+                return response()->json(['error' => 'Upload failed', 'details' => $e->getMessage()], 500);
+            }
         });
     }
 );
