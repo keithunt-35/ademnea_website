@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\HiveData;
 
 use Response;
 use Illuminate\Support\Facades\DB;

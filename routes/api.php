@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Client;
 use App\Http\Controllers\ThingSpeakController;
+use App\Http\Controllers\Admin\BeehiveInspectionController;
+use App\Http\Controllers\HiveData\HiveDataController;
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -65,3 +70,9 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\V1', 'prefix' => 'v1'], f
     });
 
 });
+
+
+    // Add your form submission endpoint
+    Route::post('/submit-inspection', [BeehiveInspectionController::class, 'storeInspection']);
+
+

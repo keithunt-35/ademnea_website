@@ -32,7 +32,7 @@
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
               
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {{ $item->id }}
+               {{ $loop->iteration }}
                 </th>
                 <td class="px-6 py-4">
                 {{ $item->name }}
@@ -52,7 +52,16 @@
                 <td class="px-6 py-4">
                     <a href="#" type="button" data-modal-target="{{ $item->name }}" data-modal-show="{{ $item->name }}" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;"  class="">View</a>
                     <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" style="color: white; background-color:  #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;"  class="">Edit</a>
-                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" style="color: white; background-color:  #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;"  class="">Delete</a>
+                   <form action="{{ url('admin/work-package/' . $item->id) }}" method="POST" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="submit"
+        onclick="return confirm('Are you sure you want to delete {{ $item->name }}?')"
+        style="color: white; background-color: #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px; border: none;">
+        Delete
+    </button>
+</form>
+
                 
                 </td>
             </tr>

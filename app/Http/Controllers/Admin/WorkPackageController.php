@@ -27,7 +27,7 @@ class WorkPackageController extends Controller
                 
                 ->latest()->paginate($perPage);
         } else {
-            $workpackage = WorkPackage::latest()->paginate($perPage);
+            $workpackage = WorkPackage::oldest()->paginate($perPage);
         }
 
         return view('admin.work-package.index', compact('workpackage'));
