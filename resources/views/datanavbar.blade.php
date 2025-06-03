@@ -174,5 +174,14 @@
     </div>
 
 
+    {{-- Data Analysis Button --}}
+    <div>
+    <a href="{{url('analytics/data_reports')}}" 
+           class="inline-block px-4 py-2.5 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm">
+            Data Reports
+        </a>
+    </div>
+
+
 
 </div>

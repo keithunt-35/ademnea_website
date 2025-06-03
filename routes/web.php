@@ -3,12 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-use App\Http\Controllers\HiveData\HiveDataController;
+use App\Http\Controllers\Admin\HiveDataController; 
 
 use App\Exports\HiveTemperatureExport;
 use GuzzleHttp\Psr7\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\ThingSpeakController2;
+use App\Http\Controllers\Admin\DataReportController;
+
 
 
 /*
@@ -80,25 +82,25 @@ Route::middleware('auth:web')->group(function () {
                 /* ------------HIVE DATA------------------*/
 
 /* ------------TEMPERATURE------------------*/
-Route::get('/hive_data/{id}', [App\Http\Controllers\HiveData\HiveDataController::class, 'temperatureDefault']);
-Route::get('hive_data/temperature_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getTemperatureData']);
-Route::get('/hive_data/temperature_data_default/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'temperatureDefault']);
+Route::get('/hive_data/{id}', [App\Http\Controllers\Admin\HiveDataController::class, 'temperatureDefault']);
+Route::get('hive_data/temperature_data/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'getTemperatureData']);
+Route::get('/hive_data/temperature_data_default/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'temperatureDefault']);
 
 /* ------------HUMIDITY------------------*/
-Route::get('/hive_data/humidity_data_default/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'humidityDefault']);
-Route::get('/hive_data/humidity_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getHumidityData']);
+Route::get('/hive_data/humidity_data_default/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'humidityDefault']);
+Route::get('/hive_data/humidity_data/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'getHumidityData']);
 
 /* ------------CARBONDIOXIDE------------------*/
-Route::get('/hive_data/carbondioxide_data_default/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'carbondioxide_default']);
-Route::get('/hive_data/carbondioxide_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getCarbondioxide_data']);
+Route::get('/hive_data/carbondioxide_data_default/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'carbondioxide_default']);
+Route::get('/hive_data/carbondioxide_data/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'getCarbondioxide_data']);
 
 /* ------------WEIGTHT------------------*/
-Route::get('/hive_data/weight_data_default/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'weightDefault']);
-Route::get('/hive_data/weight_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getWeightData']);
+Route::get('/hive_data/weight_data_default/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'weightDefault']);
+Route::get('/hive_data/weight_data/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'getWeightData']);
 
 /* ------------TEMPERATURE Vs HUMIDITY------------------*/
-Route::get('/hive_data/tempHumidity_data_default/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'tempHumidity_default']);
-Route::get('/hive_data/tempHumidity_data/{hive}', [App\Http\Controllers\HiveData\HiveDataController::class, 'getTempHumidity']);
+Route::get('/hive_data/tempHumidity_data_default/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'tempHumidity_default']);
+Route::get('/hive_data/tempHumidity_data/{hive}', [App\Http\Controllers\Admin\HiveDataController::class, 'getTempHumidity']);
 
 
 
@@ -177,6 +179,7 @@ Route::get('/admin/thingspeak-monitoring/{hive_id}', [App\Http\Controllers\Thing
 
 /*----------------------------------------analytics--------------------------------------------------*/
 Route::get('analytics/weight_analytics',[App\Http\Controllers\WeightAnalyticsController::class,'index']);
+Route::get('analytics/data_reports',[App\Http\Controllers\Admin\DataReportController::class,'index']);
 Route::get('analytics/temperature_humidity',[App\Http\Controllers\TemperatureAnalyticsController::class,'index']);
 
 Route::get('website/gallery', [GalleryController::class, 'index']);

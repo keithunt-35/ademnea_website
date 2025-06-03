@@ -45,43 +45,27 @@ class WebsiteController extends Controller
     );
     }
 
-    public function wp1(){
-        $workpackages = WorkPackage::where('name', 'wp1')->get();
+   public function wp1()
+        {
+            $workpackages = WorkPackage::where('name', 'like', '%Networks and Resilience%')->get();
+            return view('website.workpackages', ['workpackages' => $workpackages]);
+        }
 
-        return view('website.workpackages',
-        [
-            'workpackages'=>$workpackages          
-        ]
-    );
-    }
+        public function wp2()
+        {
+            $workpackages = WorkPackage::where('name', 'like', '%Sensors and signal processing%')->get();
+            return view('website.workpackages', ['workpackages' => $workpackages]);
+        }
 
-    public function wp2(){
-        $workpackages = WorkPackage::where('name', 'wp2')->get();
+        public function wp3()
+        {
+            $workpackages = WorkPackage::where('name', 'like', '%Data Analytics for Environment Monitoring%')->get();
+            return view('website.workpackages', ['workpackages' => $workpackages]);
+        }
 
-        return view('website.workpackages',
-        [
-            'workpackages'=>$workpackages          
-        ]
-    );
-    }
-
-    public function wp3(){
-        $workpackages = WorkPackage::where('name', 'wp3')->get();
-
-        return view('website.workpackages',
-        [
-            'workpackages'=>$workpackages          
-        ]
-    );
-    }
-
-    public function wp4(){
-        $workpackages = WorkPackage::where('name', 'wp4')->get();
-
-        return view('website.workpackages',
-        [
-            'workpackages'=>$workpackages          
-        ]
-    );
-    }
+        public function wp4()
+        {
+            $workpackages = WorkPackage::where('name', 'like', 'Project Management%')->get();
+            return view('website.workpackages', ['workpackages' => $workpackages]);
+        }
    }
