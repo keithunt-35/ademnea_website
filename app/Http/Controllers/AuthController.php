@@ -46,7 +46,7 @@ class AuthController extends Controller
             //     return redirect('all-systems');
             // }
 
-            return redirect('/admin/team');
+            return redirect('/admin/dashboard');
         } else {
             return redirect('/login');
         }
@@ -73,7 +73,7 @@ class AuthController extends Controller
             // if (Auth::user()->roles->pluck('name')[0]!='Admin') {
             //     return redirect('all-systems');
             // }
-            return redirect('/admin/team');
+            return redirect('/admin/dashboard');
         } else {
             return redirect('/login');
         }
