@@ -2,10 +2,17 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
+
 use App\Http\Controllers\ThingSpeakController;
 use App\Http\Controllers\Admin\BeehiveInspectionController;
+use App\Http\Controllers\Api\V1\ImageController;
+use App\Http\Controllers\Api\V1\VideoController;
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+// Authenticated user route
+Route::middleware("auth:sanctum")->get("/user", function (Request $request) {
     return $request->user();
 });
 
@@ -14,6 +21,11 @@ Route::prefix('v1')->namespace('App\Http\Controllers\Api\V1')->group(function ()
 
     // Public routes
     Route::post('login', 'UserController@login');
+
+    // Public media routes
+    Route::get("/img", [ImageController::class, "show"]);
+    Route::get("/vids", [VideoController::class, "show"]);
+    Route::get("/vids/latest", [VideoController::class, "showLatest"]);
 
     // Authenticated routes
     Route::middleware('auth:sanctum')->group(function () {
@@ -47,6 +59,21 @@ Route::prefix('v1')->namespace('App\Http\Controllers\Api\V1')->group(function ()
         Route::get('hives/{hive_id}/images/{from_date}/{to_date}', 'HiveMediaDataController@getImagesForDateRange');
         Route::get('hives/{hive_id}/videos/{from_date}/{to_date}', 'HiveMediaDataController@getVideosForDateRange');
         Route::get('hives/{hive_id}/audios/{from_date}/{to_date}', 'HiveMediaDataController@getAudiosForDateRange');
+    });
+
+    // Optional ThingSpeak route (you can uncomment if needed)
+    // Route::get('/thingspeak-data', [ThingSpeakController::class, 'fetchAndStoreData']);
+
+    // Raw file upload route (for ESP device, for example)
+    Route::post('/upload', function (Request $request) {
+        try {
+            $filename = $request->header('File-Name', 'uploaded_file.bin');
+            Storage::disk('public')->put("esp/{$filename}", $request->getContent());
+            return response()->json(['message' => "File $filename uploaded successfully."], 200);
+        } catch (\Exception $e) {
+            Log::error('Upload failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Upload failed', 'details' => $e->getMessage()], 500);
+        }
     });
 });
 
