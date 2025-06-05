@@ -27,6 +27,19 @@
         #collapseExample.collapsing {
         height: 3rem;
         }
+
+        <style>
+    .workpackage-item {
+        line-height: 1.4;
+    }
+    .description-content p {
+        margin-bottom: 0.5rem !important;
+        font-family: inherit !important;
+    }
+    .description-content span {
+        font-family: inherit !important;
+    }
+</style>
     </style>
     @include('website.links')
 
@@ -52,25 +65,24 @@
     <main id="main">
         <!-- ======= Scholarship Section ======= -->
              <section id="scholarship" class="about pt-0">
-                <div class="container card w-100">
-                @if($workpackages ->count())
-                    <div class="section-title">
-                        </div>
-                        @foreach($workpackages  as $workpackage)
-                        <div class="container">
-                        {{-- {!! $workpackage->instructions !!} --}}
-                        <b>Name:</b> {{$workpackage->name}} <br>
-                        <b>Partners:</b>{{$workpackage->partners}}<br>
-                        <b> Duration: </b>{{$workpackage->duration}}<br><br>
-                        <b>Description</b> <br> 
-                        {!! preg_replace('/\r\n|\r|\n/', '<br>', $workpackage->instructions) !!}
-
-                        </div>
-                        @endforeach
-                    @else
-                    <p>There are currently no work packages</p>
-                    @endif
-                </div>
+     <div class="container card w-100">
+    @if($workpackages->count())
+        <div class="section-title"></div>
+        @foreach($workpackages as $workpackage)
+        <div class="container workpackage-item mb-4 p-3 border-bottom">
+            <p class="mb-2"><b>Name:</b> {{ $workpackage->name }}</p>
+            <p class="mb-2"><b>Partners:</b> {{ $workpackage->partners }}</p>
+            <p class="mb-2"><b>Duration:</b> {{ $workpackage->duration }}</p>
+            <p class="mb-2"><b>Description:</b></p>
+            <div class="description-content">
+                {!! $workpackage->instructions !!}
+            </div>
+        </div>
+        @endforeach
+    @else
+        <p class="text-muted">There are currently no work packages</p>
+    @endif
+</div>
             
                 <div class="container pt-5">
                 <div class="h5 text-center">

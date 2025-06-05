@@ -51,15 +51,15 @@
                 </td>
                 <td class="px-6 py-4">
                     <a href="#" type="button" data-modal-target="{{ $item->name }}" data-modal-show="{{ $item->name }}" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;"  class="">View</a>
-                    <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" style="color: white; background-color:  #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;"  class="">Edit</a>
+               <a href="{{ url('/admin/work-package/' . $item->id . '/edit') }}" style="color: white; background-color: #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Edit</a>
                    <form action="{{ url('admin/work-package/' . $item->id) }}" method="POST" style="display:inline;">
-    @csrf
-    @method('DELETE')
-    <button type="submit"
-        onclick="return confirm('Are you sure you want to delete {{ $item->name }}?')"
-        style="color: white; background-color: #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px; border: none;">
-        Delete
-    </button>
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    onclick="return confirm('Are you sure you want to delete {{ $item->name }}?')"
+                    style="color: white; background-color: #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px; border: none;">
+                    Delete
+                </button>
 </form>
 
                 
