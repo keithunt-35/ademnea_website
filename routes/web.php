@@ -188,3 +188,6 @@ Route::get('website/gallery', [GalleryController::class, 'index']);
 
 
 Route::get('/battery-readings/{hiveId}', [BatteryReadingController::class, 'showData']);
+
+Route::get('/admin/work-package/{id}/edit', 'WorkPackageController@edit');
+Route::patch('/admin/work-package/{id}', 'WorkPackageController@update');
