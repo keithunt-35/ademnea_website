@@ -48,14 +48,20 @@ def main(co2_file, weight_file, temp_file, humidity_file, year, month, hive_id, 
         "Correlation Analysis": correlation_results
     }
 
-    # Collect plots
-    plots = {
-        "CO₂ Analysis": ["co2_monthly_trend.png", "co2_diurnal_variation.png"],
-        "Weight Analysis": ["weight_monthly_trend.png"],
-        "Temperature Analysis": ["temperature_trend.png"],
-        "Humidity Analysis": ["humidity_trend.png"],
-        "Correlation Analysis": ["combined_trends.png", "correlation_heatmap.png"]
-    }
+    # Collect plots only if the section result has valid data
+    plots = {}
+
+    if not co2_results.get("Error"):
+        plots["CO₂ Analysis"] = ["co2_monthly_trend.png", "co2_diurnal_variation.png"]
+    if not weight_results.get("Error"):
+        plots["Weight Analysis"] = ["weight_monthly_trend.png"]
+    if not temperature_results.get("Error"):
+        plots["Temperature Analysis"] = ["temperature_trend.png"]
+    if not humidity_results.get("Error"):
+        plots["Humidity Analysis"] = ["humidity_trend.png"]
+    if not correlation_results.get("Error"):
+        plots["Correlation Analysis"] = ["combined_trends.png", "correlation_heatmap.png"]
+
 
     # Generate PDF with output directory
     pdf_filename = f"{output_dir}/Monthly_Report_{hive_id}_{year}_{month:02d}.pdf"
