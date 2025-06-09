@@ -191,3 +191,9 @@ Route::get('/battery-readings/{hiveId}', [BatteryReadingController::class, 'show
 
 Route::get('/admin/work-package/{id}/edit', 'WorkPackageController@edit');
 Route::patch('/admin/work-package/{id}', 'WorkPackageController@update');
+
+
+Route::get('/analytics/data_reports', [DataReportController::class, 'index']);
+Route::post('/generate-local-report', [DataReportController::class, 'generateReport']);
+
+Route::post('/generate-local-report', [DataReportController::class, 'generateReport']);
