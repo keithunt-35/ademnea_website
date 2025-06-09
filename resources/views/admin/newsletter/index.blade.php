@@ -13,11 +13,11 @@
                 <th scope="col" class="px-6 py-3">
                     Title
                 </th>
-                <th scope="col" class="px-6 py-3">
-                    Article
+                 <th scope="col" class="px-6 py-3">
+                    Description
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Description
+                    Article
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Action
@@ -28,29 +28,29 @@
         @foreach($newsletter as $item)
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {{ $item->id }}
+                    {{ $loop->iteration }}
                 </th>
                 <td class="px-6 py-4">
-                {{ $item->title }}
+                    {{ $item->title }}
+                </td>
+                 <td class="px-6 py-4">  
+                    <p>{{ Str::words(strip_tags($item->description), 10, '...') }}</p>
                 </td>
                 <td class="px-6 py-4">
-                    <p>{!! $item->article !!}</p>
-               <!-- {{ $item->article }} -->
+                    <details>
+                        <summary>View article</summary>
+                        <p>{!! $item->article !!}</p>
+                    </details>
                 </td>
-                <td class="px-6 py-4">  
-                   <details >
-                    <summary> newsletter description </summary>
-                  <p>{!! $item->description !!}</p>
-                </details>    
-                </td>
+               
                 <td class="px-6 py-4">
-                    <a href="#" type="button" data-modal-target="{{ $item->title }}" data-modal-show="{{ $item->title }}" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">View</a>
-                    <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" style="color: white; background-color: #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Edit</a>
-                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" style="color: white; background-color:  #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Delete</a>
-
+                    <a href="#" type="button" data-modal-target="{{ $item->title }}" data-modal-show="{{ $item->title }}" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;">View</a>
+                    <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" style="color: white; background-color: #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;">Edit</a>
+                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" style="color: white; background-color:  #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;">Delete</a>
                 </td>
             </tr>
-            @endforeach 
+            @endforeach
+
         </tbody>
     </table>
 </div>
