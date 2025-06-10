@@ -3,8 +3,17 @@
 
 <div class="relative bg-white p-6 rounded-lg shadow-md">
 
+
+
     {{-- Include Data NavBar --}}
     @include('datanavbar')
+
+
+        <!-- User Instructions -->
+    <div class="bg-blue-100 border border-blue-300 text-blue-800 text-sm rounded-md px-4 py-3 mb-4">
+        <p><strong>Instructions:</strong> Select the <span class="font-semibold">month</span> and <span class="font-semibold">year</span> you want to generate a report for. Then click <span class="italic font-semibold">"Generate Report"</span> to download a detailed analysis of this hive's data.</p>
+        <p class="mt-1 text-xs text-gray-600">Note: If data is not available for the selected period, an empty report or a message will be shown.</p>
+    </div>
 
     <!-- Hive Heading -->
     <h3 class='mx-2 font-bold py-1 text-green-600'>
