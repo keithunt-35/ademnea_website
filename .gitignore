@@ -53,3 +53,4 @@ composer.lock
 *.pt
 
 database_backup.sql
+storage/scripts/venv/
