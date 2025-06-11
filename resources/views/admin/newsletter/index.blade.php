@@ -16,7 +16,7 @@
                  <th scope="col" class="px-6 py-3">
                     Description
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3" style="width: 40%;">
                     Article
                 </th>
                 <th scope="col" class="px-6 py-3">
@@ -36,7 +36,7 @@
                  <td class="px-6 py-4">  
                     <p>{{ Str::words(strip_tags($item->description), 10, '...') }}</p>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-6 py-4" style="width: 40%;">
                     <details>
                         <summary>View article</summary>
                         <p>{!! $item->article !!}</p>
