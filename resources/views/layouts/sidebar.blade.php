@@ -85,14 +85,26 @@
                  <span class="ml-3">Scholarship</span>
              </a>
           </li>  -->
-          <li>
+          <!-- <li>
              <a href="/admin/research-profile" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
                  <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.656 12.115a3 3 0 0 1 5.682-.015M13 5h3m-3 3h3m-3 3h3M2 1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm6.5 4.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
                    </svg>
                  <span class="ml-3">Research Profile</span>
              </a>
-          </li>
+          </li> -->
+
+            <li>
+                <a href="/admin/scholarship" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
+                    <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m0-6l-9-5m18 0l-9 5" />
+                    </svg>
+                    <span class="ml-3">Scholarships</span>
+                </a>
+            </li>
+
+
        </ul>
     </div>
  </aside>
