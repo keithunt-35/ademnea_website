@@ -14,10 +14,10 @@ class Scholarship extends Model
     protected $table = 'scholarships';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**
@@ -25,7 +25,10 @@ class Scholarship extends Model
      *
      * @var array
      */
-    protected $fillable = ['category', 'task', 'topic', 'deliverables', 'competence', 'instructions', 'positions', 'country'];
-
-    
+    protected $fillable = [
+        'title',
+        'description',
+        'instructions',
+        // add other columns here if still exist like task, topic, deliverables, competence, positions
+    ];
 }

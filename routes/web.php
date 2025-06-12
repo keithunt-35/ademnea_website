@@ -10,7 +10,8 @@ use GuzzleHttp\Psr7\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\ThingSpeakController2;
 use App\Http\Controllers\Admin\DataReportController;
-
+use App\Http\Controllers\Admin\ScholarshipsController;
+use App\Http\Controllers\ScholarshipDisplayController;
 
 
 /*
@@ -51,13 +52,18 @@ Route::middleware('auth:web')->group(function () {
     Route::resource('admin/blog', 'App\Http\Controllers\Admin\BlogController');
     Route::resource('admin/tasks', 'App\Http\Controllers\Admin\TaskController');
     Route::resource('admin/work-package', 'App\Http\Controllers\Admin\WorkPackageController');
-    Route::resource('admin/scholarship', 'App\Http\Controllers\Admin\ScholarshipsController');
+    // Route::resource('admin/scholarship', 'App\Http\Controllers\Admin\ScholarshipsController');
     Route::resource('admin/team', 'App\Http\Controllers\Admin\TeamController');
     Route::resource('admin/publication', 'App\Http\Controllers\Admin\PublicationController');
     Route::resource('admin/newsletter', 'App\Http\Controllers\Admin\NewsletterController');
     Route::resource('admin/research-profile', 'App\Http\Controllers\Admin\ResearchProfileController');
     Route::resource('admin/farm', 'App\Http\Controllers\Admin\FarmController');
     Route::resource('admin/farmer', 'App\Http\Controllers\Admin\FarmerController');
+
+    // Admin route for scholarship
+     Route::resource('admin/scholarship', 'App\Http\Controllers\Admin\ScholarshipsController');
+
+
     //added for dashboard_page
     Route::resource('admin/dashboard', 'App\Http\Controllers\Admin\DashboardController');
     Route::resource('admin/hive', 'App\Http\Controllers\Admin\HiveController');
@@ -119,13 +125,21 @@ Route::get('displaynewsletter', [App\Http\Controllers\DisplayNewsletterControlle
 Route::get('displaypublication', [App\Http\Controllers\DisplayPublicationController::class, 'displayPublication']);
 Route::get('/displayevent', [App\Http\Controllers\DisplayEventController::class, 'displayEvent']);
 
-Route::get('/mastersscholarship-uganda', [App\Http\Controllers\Admin\MastersController::class, 'uganda'])->name('mastersscholarship-uganda');
-Route::get('/mastersscholarship-sudan', [App\Http\Controllers\Admin\MastersController::class, 'sudan'])->name('mastersscholarship-sudan');
-Route::get('/mastersscholarship-tanzania', [App\Http\Controllers\Admin\MastersController::class, 'tanzania'])->name('mastersscholarship-tanzania');
+// Scholarships
+Route::get('/displayscholarships', [ScholarshipDisplayController::class, 'index'])->name('scholarships');
+Route::get('/scholarships/{id}', [ScholarshipsController::class, 'show'])->name('scholarships.show');
+Route::get('/scholarship/download-instructions/{id}', [ScholarshipDisplayController::class, 'downloadInstructionsPdf'])
+    ->name('scholarship.downloadInstructions');
 
-Route::get('/phdscholarship-uganda', [App\Http\Controllers\Admin\PhdController::class, 'uganda'])->name('phdscholarship-uganda');
-Route::get('/phdscholarship-sudan', [App\Http\Controllers\Admin\PhdController::class, 'sudan'])->name('phdscholarship-sudan');
-Route::get('/phdscholarship-tanzania', [App\Http\Controllers\Admin\PhdController::class, 'tanzania'])->name('phdscholarship-tanzania');
+
+
+// Route::get('/mastersscholarship-uganda', [App\Http\Controllers\Admin\MastersController::class, 'uganda'])->name('mastersscholarship-uganda');
+// Route::get('/mastersscholarship-sudan', [App\Http\Controllers\Admin\MastersController::class, 'sudan'])->name('mastersscholarship-sudan');
+// Route::get('/mastersscholarship-tanzania', [App\Http\Controllers\Admin\MastersController::class, 'tanzania'])->name('mastersscholarship-tanzania');
+
+// Route::get('/phdscholarship-uganda', [App\Http\Controllers\Admin\PhdController::class, 'uganda'])->name('phdscholarship-uganda');
+// Route::get('/phdscholarship-sudan', [App\Http\Controllers\Admin\PhdController::class, 'sudan'])->name('phdscholarship-sudan');
+// Route::get('/phdscholarship-tanzania', [App\Http\Controllers\Admin\PhdController::class, 'tanzania'])->name('phdscholarship-tanzania');
 
 Route::get('/mastersprofile-uganda', [App\Http\Controllers\WebsiteController::class, 'uganda'])->name('mastersprofile-uganda');
 Route::get('/mastersprofile-sudan', [App\Http\Controllers\WebsiteController::class, 'sudan'])->name('mastersprofile-sudan');

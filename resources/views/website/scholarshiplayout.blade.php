@@ -58,11 +58,59 @@
                     <div class="section-title">
                         <h2>call for scholarships</h2>
                     </div>
-                    @foreach ($scholarships as $scholarship)
-                        <div class="container">
-                            {!! $scholarship->description !!}
-                        </div>
-                    @endforeach
+                   
+                    @foreach($scholarships as $scholarship)
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card mb-4 custom-card" style="background-color: white; border-radius: 30px; height: auto;">
+            <div class="card-body" style="background-color:white;">
+                <h4 class="card-title">
+                    <a href="#">{{ $scholarship->title }}</a>
+                </h4>
+                <p class="card-text">
+                    {{ Str::limit(strip_tags($scholarship->description), 300) }}
+                </p>
+
+                <!-- Button to trigger modal -->
+                <button type="button" class="btn btn-primary" style="background-color: #5cb874" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#scholarshipModal{{ $scholarship->id }}">
+                    Read More
+                </button>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal -->
+<div class="modal fade" id="scholarshipModal{{ $scholarship->id }}" tabindex="-1" aria-labelledby="scholarshipModalLabel{{ $scholarship->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- Optional: Add a title here -->
+                <h5 class="modal-title fw-bold" id="scholarshipModalLabel{{ $scholarship->id }}">Instructions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add margin bottom for spacing -->
+                <div class="mb-3">
+                    {!! $scholarship->instructions !!}
+                </div>
+            </div>
+
+               <!-- Modal footer with Download button -->
+            <div class="modal-footer">
+                <a href="{{ route('scholarship.downloadInstructions', $scholarship->id) }}" class="btn btn-success" target="_blank">
+                    Download Instructions
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@endforeach
+
+
                 @else
                     <p>There are currently no scholarships</p>
                 @endif
@@ -70,8 +118,6 @@
         </section>
 
         <!-- End Scholarship Section -->
-
-
 
     </main><!-- End #main -->
 

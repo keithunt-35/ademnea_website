@@ -54,7 +54,7 @@
 
 
                 <!-- A tab for the scholarship -->
-                 <li><a  href="/displayevent">Scholarships</a></li>
+                 <li><a  href="/displayscholarships">Scholarships</a></li>
 
 
                 <li><a href="/displaypublication" class="nav-link scrollto"><span>Publications</span> </a>
