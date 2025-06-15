@@ -42,6 +42,8 @@ public/hivevideo/bees2.mp4
 composer.lock
 
 
+**/__pycache__/
+*.pyc
 
 
 *.jpg
