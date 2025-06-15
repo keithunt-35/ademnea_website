@@ -47,11 +47,11 @@ composer.lock
 
 
 *.jpg
-*.pdf
 *.txt
-*.png
+!MODULES/generated_report/*.pdf
+!MODULES/generated_report/*.png
 *.tmp
-*.csv
+!MODULES/csv_data/*.csv
 *.pt
 
 database_backup.sql

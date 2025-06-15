@@ -19,19 +19,18 @@ class NewsletterController extends Controller
      */
     public function index(Request $request)
     {
-        // $keyword = $request->get('search');
-        // $perPage = 25;
-
-        // if (!empty($keyword)) {
-        //     $newsletter = Newsletter::where('title', 'LIKE', "%$keyword%")
-        //         ->orWhere('description', 'LIKE', "%$keyword%")
-        //         ->orWhere('image', 'LIKE', "%$keyword%")
-        //         ->orWhere('attachment', 'LIKE', "%$keyword%")
-        //         ->all();
-        // } else {
-        //     $newsletter = Newsletter::all();
-        // }
-        $newsletter = Newsletter::all(); 
+        $perPage = 10;
+        $search = $request->input('search');
+        
+        $query = Newsletter::query();
+        
+        if ($search) {
+            $query->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        }
+        
+        $newsletter = $query->paginate($perPage);
+        
         return view('admin.newsletter.index', compact('newsletter'));
     }
 

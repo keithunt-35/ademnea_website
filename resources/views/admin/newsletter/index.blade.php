@@ -1,39 +1,65 @@
 @extends('layouts.app')
 @section('content')
 
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .pagination li {
+        margin: 0 0.25rem;
+    }
+    
+    .pagination a, .pagination span {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+    }
+    
+    .pagination a:hover {
+        background-color: #eee;
+    }
+    
+    .pagination .active span {
+        background-color: #4f46e5;
+        color: white;
+        border-color: #4f46e5;
+    }
+    
+    .pagination .disabled span {
+        color: #6b7280;
+        background-color: #f3f4f6;
+        border-color: #e5e7eb;
+    }
+</style>
+
 
 <div class="relative p-3 mt-2 overflow-x-auto shadow-md sm:rounded-lg">
-<button type="button" data-modal-target="addwork" data-modal-show="addwork" class="text-white ml-4 mt-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add New Newsletter</button>
-    <table id="myTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <button type="button" data-modal-target="addwork" data-modal-show="addwork" class="text-white ml-4 mt-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add New Newsletter</button>
+
+    
+    
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" class="px-6 py-3">
-                    #
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Title
-                </th>
-                 <th scope="col" class="px-6 py-3">
-                    Description
-                </th>
-                <th scope="col" class="px-6 py-3" style="width: 40%;">
-                    Article
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Action
-                </th>
+                <th scope="col" class="px-6 py-3">#</th>
+                <th scope="col" class="px-6 py-3">Title</th>
+                <th scope="col" class="px-6 py-3">Description</th>
+                <th scope="col" class="px-6 py-3" >Article</th>
+                <th scope="col" class="px-6 py-3">Action</th>
             </tr>
         </thead>
         <tbody>
-        @foreach($newsletter as $item)
+            @foreach($newsletter as $item)
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ $loop->iteration }}
-                </th>
                 <td class="px-6 py-4">
-                    {{ $item->title }}
+                    {{ ($newsletter->currentPage() - 1) * $newsletter->perPage() + $loop->iteration }}
                 </td>
-                 <td class="px-6 py-4">  
+                <td class="px-6 py-4">{{ $item->title }}</td>
+                <td class="px-6 py-4">
                     <p>{{ Str::words(strip_tags($item->description), 10, '...') }}</p>
                 </td>
                 <td class="px-6 py-4" style="width: 40%;">
@@ -42,17 +68,31 @@
                         <p>{!! $item->article !!}</p>
                     </details>
                 </td>
-               
-                <td class="px-6 py-4">
-                    <a href="#" type="button" data-modal-target="{{ $item->title }}" data-modal-show="{{ $item->title }}" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;">View</a>
-                    <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" style="color: white; background-color: #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;">Edit</a>
-                    <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" style="color: white; background-color:  #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;">Delete</a>
+               <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex space-x-2">
+                        <a href="#" type="button" data-modal-target="{{ $item->title }}" data-modal-show="{{ $item->title }}" 
+                        class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-green-700 rounded hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300">
+                            View
+                        </a>
+                        <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" 
+                        class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-yellow-500 rounded hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-yellow-300">
+                            Edit
+                        </a>
+                        <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" 
+                        class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300">
+                            Delete
+                        </a>
+                    </div>
                 </td>
             </tr>
             @endforeach
-
         </tbody>
     </table>
+    
+    <!-- Laravel Pagination Links -->
+    <div class="mt-4">
+        {{ $newsletter->links() }}
+    </div>
 </div>
 <!-- Add New Newsletter modal -->
 <div id="addwork" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -254,82 +294,3 @@
  @endsection
  
  
- <!-- added pagination and search-->
- @section('page_scripts')
- <!-- Include DataTables JS file -->
- <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
- <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
- 
- <script>
-   $(document).ready(function() {
-    $('#myTable').DataTable({
-       responsive: true
-    });
- });
- 
-       // Event listener for delete button
-       $(".delete-user-btn").on("click", function() {
-         var confirmDelete = confirm("Confirm delete?");
-         if (confirmDelete) {
-             var form = $(this).closest('form');
-             form.submit();
-         }
-     });
- 
-  // Event listener for back button click
-  $(".back-button").on("click", function() {
-         // Redirect to the team page
-         window.location.href = "{{ url('admin/newsletter') }}";
-     });
- 
-    // Event listener for back button click
- document.getElementById("back-button").addEventListener("click", function() {
-    // Redirect to the team page
-    window.location.href = "{{ url('admin/newsletter') }}"; // Replace with the actual URL of the team page
- });
-   // Handle form submission
-   $('#addTeamForm').on('submit', function(event) {
-         event.preventDefault(); // Prevent the form from submitting normally
- 
-         // Perform an AJAX request to save the data
-         $.ajax({
-             url: $(this).attr('action'), // Form action URL
-             method: $(this).attr('method'), // Form method (e.g., POST)
-             data: new FormData(this), // Form data
-             processData: false,
-             contentType: false,
-             success: function(response) {
-                 // Handle the successful response
-                 // Update the table with the new row
-                 var table = $('#myTable').DataTable(); // Use the updated ID for the table
-                 table.row.add([
-                     // Add the data to the new row in the table
-                     response.name,
-                     response.position,
-                     response.description,
-                     '<a href="#" type="button" data-modal-target="'+ response.id + '" data-modal-toggle="'+ response.id + '" class="font-medium text-green-600 dark:text-green-500 hover:underline">View</a>' +
-                     ' | <a href="#" type="button" data-modal-target="'+ response.id + '" data-modal-show="'+ response.id + '" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>' +
-                     ' | <a href="#" type="button" data-modal-target="'+ response.id + '" data-modal-toggle="'+ response.id + '" class="font-medium text-red-600 dark:text-blue-500 hover:underline">Delete</a>'
-                 ]).draw(false);
- 
-                 // Reset the form
-                 $('#addTeamForm')[0].reset();
- 
-                 // Close the modal or perform any other necessary actions
-                 // ...
- 
-                 // Display a success message
-                 $('#addTeamForm').append('<div class="text-green-600">Successfully added a new member.</div>');
- 
-                 // Remove the success message after a few seconds
-                 setTimeout(function() {
-                     $('.text-green-600').remove();
-                 }, 3000);
- 
-                 // Redirect to the team page
-                 window.location.href = "/admin/newletter";
-             }
-         });
-     });
- </script>
- @endsection
