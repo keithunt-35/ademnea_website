@@ -39,10 +39,10 @@ class DataReportController extends Controller
     $hive_id = $request->input('hive_id');
 
     // Define paths
-    $pythonBinPath = base_path('storage/scripts/venv/bin/python');
-    $pythonScriptPath = base_path('storage/scripts/main.py');
-    $outputDir = storage_path('app/public/reports');
-    $csvDir = storage_path('app/data'); // ✅ Corrected path
+    $pythonBinPath = base_path('MODULES/report_scripts/venv/bin/python');
+    $pythonScriptPath = base_path('MODULES/report_scripts/main.py');
+    $outputDir = base_path('MODULES/generated_report');
+    $csvDir = base_path('MODULES/csv_files');
 
     // Build CSV file paths
     $co2File = "{$csvDir}/hive_carbondioxide_{$hive_id}.csv";
