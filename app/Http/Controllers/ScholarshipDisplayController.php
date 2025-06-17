@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Scholarship;
 use PDF; 
@@ -23,15 +24,17 @@ class ScholarshipDisplayController extends Controller
 
 public function downloadInstructionsPdf($id)
 {
-    $scholarship = Scholarship::findOrFail($id);
+    // You can use the ID if each scholarship has its own PDF file (optional)
+    $filename = 'AdEMNEA Work Package 2 TASK 2.4 SCHOLARSHIP CALL.pdf';
 
-    // Ensure the view name matches your actual blade file name (no .blade.php)
-    $pdf = PDF::loadView('website.pdfgenerator', ['scholarship' => $scholarship]);
+    $path = storage_path('app/public/scholarship/' . $filename);
 
-   $filename = 'AdEMNEA_Scholarship-Instructions.pdf';
+    if (!file_exists($path)) {
+        abort(404, 'File not found');
+    }
 
-
-    return $pdf->download($filename);
+    return response()->download($path);
 }
+
 
 }
