@@ -27,7 +27,8 @@ public function downloadInstructionsPdf($id)
     // You can use the ID if each scholarship has its own PDF file (optional)
     $filename = 'AdEMNEA Work Package 2 TASK 2.4 SCHOLARSHIP CALL.pdf';
 
-    $path = storage_path('app/public/scholarship/' . $filename);
+    // Since the file is inside the public directory
+    $path = public_path('scholarship/' . $filename);
 
     if (!file_exists($path)) {
         abort(404, 'File not found');
@@ -35,6 +36,7 @@ public function downloadInstructionsPdf($id)
 
     return response()->download($path);
 }
+
 
 
 }
