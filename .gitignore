@@ -48,7 +48,7 @@ composer.lock
 
 *.jpg
 *.txt
-!MODULES/generated_report/*.pdf
+# !MODULES/generated_report/*.pdf
 !MODULES/generated_report/*.png
 *.tmp
 !MODULES/csv_data/*.csv
