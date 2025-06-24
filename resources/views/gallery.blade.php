@@ -134,112 +134,84 @@
 
 <div class="container" data-aos="fade-up">
 
-    <h2>AdeMNEA Gallery And Events</h2>
+    <h2>AdeMNEA Intern Presentation Gallery</h2>
 <br>
         {{-- event cards begin here --}}
  
- <div class="row">
-        @if($events->count())
- @foreach ($events as $event)
-              
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item">
-                        <div class="overflow-hidden">
-                          {{-- send this to backend for the gallery viewing--}}
-                            <a href="/gallery_view?id={{$event[0]->id}}" style=" 
-                                text-decoration: none !important;
-                                color: black;">
+        <div class="row">
+        @foreach($galleries as $index => $gallery)
+        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+          <div class="team-item border rounded p-3" style="border-color: #5cb874;">
+            <div class="overflow-hidden">
+              <img src="{{ asset('storage/' . $gallery->photos->first()->photo_path) }}" class="img-fluid rounded" alt="Gallery Image">
+            </div>
 
-                            @if (count($event) > 0)
+            <div class="text-center p-4">
+              <h5 class="mb-0">
+                <svg style="width: 1.5rem; height: 1.5rem; color:green;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                </svg>
+                {{ $gallery->venue }}
+              </h5>
 
-                            {{-- <img src="{{ asset('images/events/' . $photo->photo) }}" alt="Project Photo"> --}}
-                            
-                            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                       
-                                    @foreach ($event as $key => $photo)
-                                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                      <img src="{{ asset('images/events/' . $photo->photo_url) }}" class="card-img-top" alt="...">
-                                    </div>
-                                   @endforeach
+              <hr>
+                <h5 class="text-muted mb-2 text-start">{{ $gallery->title }}</h5>
 
-                                        </div>
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-                                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                          <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-                                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                          <span class="visually-hidden">Next</span>
-                                        </button>
-                                      </div>
+              <h5 class="mb-0">{{ $gallery->subtitle }}</h5>
+             <small class="text-start d-block">{{ $gallery->description }}</small>
 
-                         
-                            @else
-                            <p>No photos available for this event.</p>
-                            @endif
+             <p class="text-start"><strong>Date:</strong> {{ \Carbon\Carbon::parse($gallery->date)->format('F d, Y') }}</p>
+              <div class="text-start">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#albumModal{{ $index }}">
+                  View Album
+                </button>
+              </div>
 
-                            {{-- <img class="img-fluid" src="images/events/{{ $event->photo }}" alt=""> --}}
+            </div>
+          </div>
+        </div>
 
-                        </div>
-                        <div class="position-relative d-flex justify-content-center" style="margin-top: -19px;">
-                        </div>
-                        <div class="text-center p-4">
-                        <h5 class="mb-0">
+        <!-- Modal with Carousel -->
+        <div class="modal fade" id="albumModal{{ $index }}" tabindex="-1" aria-labelledby="albumModalLabel{{ $index }}" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered" style="max-width: 600px; width: 90%;">
+            <div class="modal-content">
+              <div class="modal-header flex-column align-items-start">
+                <h5 class="modal-title" id="albumModalLabel{{ $index }}">{{ $gallery->title }} Photos</h5>
+                <small class="text-muted">Date: {{ \Carbon\Carbon::parse($gallery->date)->format('F d, Y') }}</small>
+                <small class="text-muted">{{ $gallery->description }}</small>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
 
-                                <svg style="width: 1.5rem; height: 1.5rem; color:green;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                                  </svg>
-                              
-                            {{ $event[0]->venue }}</h5>
-                            <hr>
-                        <h5 class="mb-0">{{ $event[0]->title }}</h5>
+              <div class="modal-body">
+                <div id="carouselExample{{ $index }}" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                    @foreach($gallery->photos as $i => $photo)
+                      <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
+                       <img src="{{ asset('storage/' . $photo->photo_path) }}" class="d-block w-100" alt="Photo {{ $i + 1 }}" />
+                      </div>
+                    @endforeach
+                  </div>
 
-                            {{-- <small>{{ $event->description }}</small> --}}
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ $index }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
 
-                            <span class="collapsed-text">
-                                <!-- Display only one line of text -->
-                               {{ \Illuminate\Support\Str::words($event[0]->description, $words = 10, $end = '....') }}
-                             </span>
-            
-                            <a class="" data-bs-toggle="modal" data-bs-target="#{{ $event[0]->id }}" style="cursor:pointer;">
-                                More <i class="fas fa-chevron-down"></i>
-                            </a>
-
-                        <!-- Modal -->
-                <div class="modal fade" id="{{ $event[0]->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ $event[0]->title }}</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            {{-- {{ $team->bio }} --}}
-                       <small> {!! preg_replace('/\r\n|\r|\n/', '<br>', $event[0]->description) !!}</small>
-                        </div>
-                        <div class="modal-footer">
-                        <a href="http://{{$event[0]->article_link}}" style="cursor:pointer;" class="text-primary" >Click Here </a> to read the article
-                        </div>
-                    </div>
-                    </div>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ $index }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
                 </div>
-          {{-- end bio popup --}}
-
-                        </a>
-                        </div>
-                    </div>
-                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         @endforeach
-          @else
-          <p>No events yet</p>
-          @endif
 
-</div>
-</div>
- 
-</section>
+
+
+      </section>
   </main><!-- End #main -->
 
 

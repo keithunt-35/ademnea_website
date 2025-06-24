@@ -7,20 +7,24 @@ use App\Models\Team;
 use App\Models\ResearchProfile;
 use App\Models\Gallery;
 use App\Models\WorkPackage;
+use App\Models\Event;
 
 
 class WebsiteController extends Controller
 {
     public function index(){
-        $gallery = Gallery::get();
-        $teams = Team::get();
-        return view('website.layouts', [
-            'teams'=>$teams,
-            'gallery' => $gallery
-        ]
-    ); 
+        $gallery = Gallery::all();
+        $teams = Team::all();
+        $events = Event::latest()->get();
+        
 
+        return view('website.layouts', [
+            'teams' => $teams,
+            'gallery' => $gallery,
+            'events' => $events, // ✅ Now it's passed to the view!
+        ]);
     }
+
     public function sudan(){
         $profile = ResearchProfile::where('category', 'masters')->where('country', 'sudan')->get();
 

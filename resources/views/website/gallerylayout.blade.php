@@ -57,52 +57,47 @@
 
 
     <main id="main">
-        <!-- ======= Album Section ======= -->
-    <section id="gallery" class="gallery">
-    <div class="container">
-      <div class="section-title">
-        <h2>Gallery</h2>
-      </div>
-  <div class="container1">
-  @foreach($gallery as $item)
-  <div class="h4 text-center">
-     {{$item -> title}}
-  </div>
+                    <!-- ======= Album Section ======= -->
+      <section id="gallery" class="gallery">
+          <div class="container">
+                  <div class="section-title">
+                    <h2>Gallery</h2>
+                  </div>
+              <div class="container1">
+              @foreach($gallery as $item)
+              <div class="h4 text-center">
+                {{$item -> title}}
+              </div>
 
-  <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-inner" style="height: 500px;">
-    <div class="carousel-item active">
-      <img src="{{asset('image/' . explode('|', $item->image)[0])}}" class="d-block w-100" />
-    </div>
-    @foreach(explode("|", $item->image) as $image)
-    <div class="carousel-item">
-        <img src="{{asset('image/' . $image)}}" class="d-block w-100" />
-        </div>
-      @endforeach
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-    <div class="text-center">
-      {{$item -> description}}
-     </div>
-    <br>
-    <br>
-    @endforeach
-    </div>
-</div>
-</section>
-
-        <!-- End Scholarship Section -->
-
-
-
+              <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner" style="height: 500px;">
+                <div class="carousel-item active">
+                  <img src="{{asset('image/' . explode('|', $item->image)[0])}}" class="d-block w-100" />
+                </div>
+                @foreach(explode("|", $item->image) as $image)
+                <div class="carousel-item">
+                    <img src="{{asset('image/' . $image)}}" class="d-block w-100" />
+                    </div>
+                  @endforeach
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+              </div>
+                <div class="text-center">
+                  {{$item -> description}}
+                </div>
+                <br>
+                <br>
+                @endforeach
+                </div>
+            </div>
+      </section>
     </main><!-- End #main -->
 
     <!-- ======= Footer ======= -->
