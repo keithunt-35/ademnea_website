@@ -67,14 +67,27 @@
                  <span class="ml-3">Publication</span>
              </a>
           </li> 
-          <li>
-             <a href="/admin/gallery" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
+            <li>
+            <a href="/admin/gallery" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
+                <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="14" height="14" rx="2" ry="2" />
+                <line x1="7" y1="2" x2="7" y2="6" />
+                <line x1="13" y1="2" x2="13" y2="6" />
+                <line x1="3" y1="8" x2="17" y2="8" />
+                </svg>
+                <span class="ml-3">Events</span>
+            </a>
+            </li>
+
+
+             <li>
+             <a href="/admin/gallery_interns" class="flex items-center p-2 text-white rounded-lg dark:text-black hover:bg-green-800 dark:hover:bg-white">
                  <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
                      <path fill="currentColor" d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"/>
                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"/>
                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"/>
                    </svg>
-                 <span class="ml-3">Events | Gallery</span>
+                 <span class="ml-3">Gallery</span>
              </a>
           </li> 
           <!-- <li>

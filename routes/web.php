@@ -12,6 +12,9 @@ use App\Http\Controllers\ThingSpeakController2;
 use App\Http\Controllers\Admin\DataReportController;
 use App\Http\Controllers\Admin\ScholarshipsController;
 use App\Http\Controllers\ScholarshipDisplayController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\Admin\GalleryInternController;
 
 
 /*
@@ -123,7 +126,9 @@ Route::get('/individual_newsletter/{id}', [App\Http\Controllers\DisplayIndividua
 
 Route::get('displaynewsletter', [App\Http\Controllers\DisplayNewsletterController::class, 'displayNewsletter']);
 Route::get('displaypublication', [App\Http\Controllers\DisplayPublicationController::class, 'displayPublication']);
-Route::get('/displayevent', [App\Http\Controllers\DisplayEventController::class, 'displayEvent']);
+// Route::get('/displayevent', [App\Http\Controllers\DisplayEventController::class, 'displayEvent']);
+
+Route::get('/displayevent', [App\Http\Controllers\GalleryController::class, 'index']);
 
 // Scholarships
 Route::get('/displayscholarships', [ScholarshipDisplayController::class, 'index'])->name('scholarships');
@@ -211,3 +216,19 @@ Route::get('/analytics/data_reports', [DataReportController::class, 'index']);
 Route::post('/generate-local-report', [DataReportController::class, 'generateReport']);
 
 Route::post('/generate-local-report', [DataReportController::class, 'generateReport']);
+
+
+// gallery routes 
+// Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
+// Route::get('/gallery/{gallery}', [GalleryController::class, 'show'])->name('gallery.show');
+Route::get('/displaygallery', [GalleryController::class, 'index'])->name('gallery.display');
+// routes/web.php
+// Route::get('/displayevent', [GalleryController::class, 'index']);
+
+
+
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+
+// Gallery interns 
+Route::resource('admin/gallery_interns', \App\Http\Controllers\Admin\GalleryInternController::class);
