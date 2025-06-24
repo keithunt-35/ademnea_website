@@ -75,120 +75,128 @@
     </style>
  <!-- ======= Team Section ======= -->
  <section id="team" class="team">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2>Our Team</h2>
-          <p>AdEMNEA research team and their profiles</p>
-        </div>
-
-        @if($teams->count())
-        <div class="row gy-5">
-
-        @foreach($teams as $team)
-          <div class="col-xl-3 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
-            <div class="team-member">
-              <div class="member-img">
-                <img src="{{asset('images/' . $team->image_path)}}" class="img-fluid" alt="">
-              </div>
-              <div class="member-info">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-                <h4>{{$team->name}}</h4>
-                <span>{{$team->title}}</span>
-                 @php
-                    $words = explode(' ', $team->description);
-                    $shortDescription = implode(' ', array_slice($words, 0, 40)); // Show first 20 words
-                @endphp
-
-                <p>
-                    <span id="short-{{ $team->id }}">{{ $shortDescription }}...</span>
-                    <span id="full-{{ $team->id }}" style="display: none;">{{ $team->description }}</span>
-
-                    @if(count($words) > 40)
-                        <a href="javascript:void(0);" onclick="toggleDescription({{ $team->id }})" 
-                          class="text-blue-500" id="toggle-{{ $team->id }}">Read More</a>
-                    @endif
-                </p>
-
-              </div>
-            </div>
-          </div><!-- End Team Member -->
-          @endforeach
-            @else
-             <p>There are no teams</p>
-             @endif
-        </div>
-
-      </div>
-
-           <script>
-              function toggleDescription(id) {
-                  let shortDesc = document.getElementById('short-' + id);
-                  let fullDesc = document.getElementById('full-' + id);
-                  let toggleBtn = document.getElementById('toggle-' + id);
-
-                  if (shortDesc.style.display === 'none') {
-                      shortDesc.style.display = 'inline';
-                      fullDesc.style.display = 'none';
-                      toggleBtn.innerText = 'Read More';
-                  } else {
-                      shortDesc.style.display = 'none';
-                      fullDesc.style.display = 'inline';
-                      toggleBtn.innerText = 'Read Less';
-                  }
-              }
-          </script>
-    </section><!-- End Team Section -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <section id="team" class="team section-bg">
-    <div class="container">
-
-        <div class="section-title">
-            <h2>Team</h2>
-        </div>
-        @if($teams->count())
-        <div class="row">
-        @foreach($teams as $team)
-            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                <div class="member">
-                    <img src="{{asset('images/' . $team->image_path)}}" alt="">
-                    <h4>{{$team->name}}</h4>
-                    <span>{{$team->title}}</span>
-                    <p>{{$team->description}}</p>
-                    <div class="social">
-                        <a href=""><i class="bi bi-twitter"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                        <a href=""><i class="bi bi-linkedin"></i></a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-            @else
-             <p>There are no posts</p>
-             @endif
-        </div>
-
+  <div class="container" data-aos="fade-up">
+    <div class="section-title">
+      <h2>Our Team</h2>
+      <p>AdEMNEA core Research and Intern team and their profiles</p>
     </div>
-</section> -->
+
+<section id="team" class="team  py-0">
+  <div class="container" data-aos="fade-up">
+      <h2>Our Researchers</h2>
+      <p>AdEMNEA core research team and their profiles</p>
+  
+
+    @if($researchers->count())
+    <div class="row gy-5">
+      @foreach($researchers as $team)
+      <div class="col-xl-3 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
+        <div class="team-member">
+          <div class="member-img">
+            <img src="{{ asset('images/' . $team->image_path) }}" class="img-fluid" alt="">
+          </div>
+          <div class="member-info">
+            <div class="social">
+              <a href=""><i class="bi bi-twitter"></i></a>
+              <a href=""><i class="bi bi-facebook"></i></a>
+              <a href=""><i class="bi bi-instagram"></i></a>
+              <a href=""><i class="bi bi-linkedin"></i></a>
+            </div>
+            <h4>{{ $team->name }}</h4>
+            <span>{{ $team->title }}</span>
+            @php
+              $words = explode(' ', $team->description);
+              $shortDescription = implode(' ', array_slice($words, 0, 40));
+            @endphp
+            <p>
+              <span id="short-{{ $team->id }}">{{ $shortDescription }}...</span>
+              <span id="full-{{ $team->id }}" style="display: none;">{{ $team->description }}</span>
+              @if(count($words) > 40)
+              <a href="javascript:void(0);" onclick="toggleDescription({{ $team->id }})"
+                class="text-blue-500" id="toggle-{{ $team->id }}">Read More</a>
+              @endif
+            </p>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </div>
+    @else
+    <p>No researchers found.</p>
+    @endif
+  </div>
+</section>
+
+
+<section class="team">
+  <div class="container" data-aos="fade-up">
+      <h2>Our Interns</h2>
+      <p>Meet our AdEMNEA interns</p>
+
+    @if($interns->count())
+    <div class="row gy-5">
+      @foreach($interns as $team)
+      <div class="col-xl-3 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
+        <div class="team-member">
+          <div class="member-img">
+            <img src="{{ asset('images/' . $team->image_path) }}" class="img-fluid" alt="">
+          </div>
+          <div class="member-info">
+            <div class="social">
+              <a href=""><i class="bi bi-twitter"></i></a>
+              <a href=""><i class="bi bi-facebook"></i></a>
+              <a href=""><i class="bi bi-instagram"></i></a>
+              <a href=""><i class="bi bi-linkedin"></i></a>
+            </div>
+            <h4>{{ $team->name }}</h4>
+            <span>{{ $team->title }}</span>
+            @php
+              $words = explode(' ', $team->description);
+              $shortDescription = implode(' ', array_slice($words, 0, 40));
+            @endphp
+            <p>
+              <span id="short-{{ $team->id }}">{{ $shortDescription }}...</span>
+              <span id="full-{{ $team->id }}" style="display: none;">{{ $team->description }}</span>
+              @if(count($words) > 40)
+              <a href="javascript:void(0);" onclick="toggleDescription({{ $team->id }})"
+                class="text-blue-500" id="toggle-{{ $team->id }}">Read More</a>
+              @endif
+            </p>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </div>
+    @else
+    <p>No interns found.</p>
+    @endif
+  </div>
+</section>
+
+
+
+
+
+
+<script>
+  function toggleDescription(id) {
+    let shortDesc = document.getElementById('short-' + id);
+    let fullDesc = document.getElementById('full-' + id);
+    let toggleBtn = document.getElementById('toggle-' + id);
+
+    if (shortDesc.style.display === 'none') {
+      shortDesc.style.display = 'inline';
+      fullDesc.style.display = 'none';
+      toggleBtn.innerText = 'Read More';
+    } else {
+      shortDesc.style.display = 'none';
+      fullDesc.style.display = 'inline';
+      toggleBtn.innerText = 'Read Less';
+    }
+  }
+</script>
+
+
+
 
                      

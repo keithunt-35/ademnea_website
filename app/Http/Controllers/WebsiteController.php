@@ -14,12 +14,16 @@ class WebsiteController extends Controller
 {
     public function index(){
         $gallery = Gallery::all();
-        $teams = Team::all();
+        $researchers = Team::where('title', 'Researcher')->get();
+        $interns = Team::where('title', 'Intern')->get();
         $events = Event::latest()->get();
+
+
         
 
         return view('website.layouts', [
-            'teams' => $teams,
+            'researchers' => $researchers,
+            'interns' => $interns,
             'gallery' => $gallery,
             'events' => $events, // ✅ Now it's passed to the view!
         ]);
