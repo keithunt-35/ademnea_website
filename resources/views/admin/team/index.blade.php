@@ -241,6 +241,20 @@
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 
 <script>
+
+
+    // Delegate the click event to document for dynamically created buttons
+$(document).on('click', '[data-modal-show]', function(e) {
+    const targetId = $(this).data('modal-show');
+    $('#' + targetId).removeClass('hidden');
+});
+
+$(document).on('click', '[data-modal-hide]', function(e) {
+    const targetId = $(this).data('modal-hide');
+    $('#' + targetId).addClass('hidden');
+});
+
+
   $(document).ready(function() {
    $('#myTable').DataTable({
       responsive: true
