@@ -82,6 +82,10 @@
                 <a href="{{ url('/admin/weightdata') }}?hive_id={{$hive_id}}"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Weight</a>
             </li>
+            <li>
+                <a href="{{ url('/admin/vocdata') }}?hive_id={{$hive_id}}"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">VOC</a>
+            </li>
 
         </ul>
     </div>

@@ -15,6 +15,8 @@ use App\Http\Controllers\ScholarshipDisplayController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\Admin\GalleryInternController;
+use App\Http\Controllers\Admin\VOCController;
+
 
 
 /*
@@ -79,6 +81,11 @@ Route::middleware('auth:web')->group(function () {
     Route::resource('admin/humiditydata', 'App\Http\Controllers\Admin\HiveHumidityController');
     Route::resource('admin/weightdata', 'App\Http\Controllers\Admin\HiveWeightController');
     Route::resource('admin/carbondioxidedata', 'App\Http\Controllers\Admin\HiveCarbondioxideController');
+    // add for VOC here 
+    Route::resource('admin/vocdata', 'App\Http\Controllers\Admin\VOCController');
+
+    Route::get('/vocdata/export', [VOCController::class, 'export'])->name('voc.export');
+
 
 //gallery route for the admin side
     Route::get('/admin/gallery', 'App\Http\Controllers\Admin\GalleryController@index');
