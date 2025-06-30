@@ -28,7 +28,7 @@ class Farm extends Model
      *
      * @var array
      */
-    protected $fillable = ['ownerId', 'name', 'district','address','latitude','logtitude','description'];
+    protected $fillable = ['ownerId', 'name', 'district','address','latitude','longitude','description'];
 
     public function farmer()
     {
