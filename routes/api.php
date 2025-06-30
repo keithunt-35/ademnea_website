@@ -43,6 +43,9 @@ Route::prefix('v1')->group(function () {
         Route::get('farms/{farm_id}/temperature-stats', 'App\Http\Controllers\Api\V1\FarmController@getFarmTemperatureStats');
         Route::get('farms/{farm_id}/temperature-average', 'App\Http\Controllers\Api\V1\FarmController@getFarmAverageTemperature');
         Route::get('farms/{farm_id}/weight-average', 'App\Http\Controllers\Api\V1\FarmController@getFarmAverageWeight');
+        Route::post('farms', 'App\Http\Controllers\Api\V1\FarmController@storeFarm');
+        Route::put('farms/{id}', 'App\Http\Controllers\Api\V1\FarmController@updateFarm');
+        Route::delete('farms/{id}', 'App\Http\Controllers\Api\V1\FarmController@deleteFarm');
 
         // Hive routes
         Route::get('hives/{hive_id}/latest-weight', 'App\Http\Controllers\Api\V1\HiveController@getLatestWeight');
