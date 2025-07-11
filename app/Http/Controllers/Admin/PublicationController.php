@@ -54,49 +54,68 @@ class PublicationController extends Controller
      */
 
      public function store(Request $request)
-        {
-            // Validate the request
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'title' => 'required|string|max:255',
-                'publisher' => 'required|string|max:255',
-                'year' => 'required|integer|min:1900|max:' . date('Y'),
-                'attachment' => 'nullable|mimes:pdf|max:51200', // PDF file max 50MB
-                'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:51200' // Image file max 50MB
-            ]);
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'publisher' => 'required|string|max:255',
+            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'google_scholar_link' => 'nullable|url|max:500',
+            'attachment' => 'nullable|mimes:pdf|max:51200', // PDF file max 50MB
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:51200' // Image file max 50MB
+        ]);
 
-            // Handle file uploads
-            $attachmentPath = null;
-            if ($request->hasFile('attachment')) {
-                // Get the original name of the attachment file
-                $attachmentName = $request->file('attachment')->getClientOriginalName();
-                // Move the attachment to the 'public/documents/publications' directory
-                $request->file('attachment')->move(public_path('documents/publications'), $attachmentName);
-                $attachmentPath = 'documents/publications/' . $attachmentName;
+        // Handle file uploads
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            // Get the original name of the attachment file
+            $attachmentName = $request->file('attachment')->getClientOriginalName();
+            // Create the directory if it doesn't exist
+            if (!file_exists(public_path('documents/publications'))) {
+                mkdir(public_path('documents/publications'), 0777, true);
             }
+            // Move the attachment to the 'public/documents/publications' directory
+            $request->file('attachment')->move(public_path('documents/publications'), $attachmentName);
+            $attachmentPath = 'documents/publications/' . $attachmentName;
+        }
 
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                // Generate a unique image name using time() and the name from the form
-                $newImageName = time() . '-' . $request->name . '.' . $request->image->extension();
-                // Move the image to the 'public/images/publications' directory
-                $request->image->move(public_path('images/publications'), $newImageName);
-                $imagePath = 'images/publications/' . $newImageName;
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            // Create the directory if it doesn't exist
+            if (!file_exists(public_path('images/publications'))) {
+                mkdir(public_path('images/publications'), 0777, true);
             }
+            // Generate a unique image name using time() and the name from the form
+            $newImageName = time() . '-' . preg_replace('/[^A-Za-z0-9\-]/', '', $request->name) . '.' . $request->image->extension();
+            // Move the image to the 'public/images/publications' directory
+            $request->image->move(public_path('images/publications'), $newImageName);
+            $imagePath = 'images/publications/' . $newImageName;
+        }
 
+        try {
             // Store the publication in the database with only the relative file paths
             $publication = new Publication();
             $publication->name = $request->name;
             $publication->title = $request->title;
             $publication->publisher = $request->publisher;
             $publication->year = $request->year;
-            $publication->attachment = $attachmentPath; // Only the relative path is saved
-            $publication->image = $imagePath; // Only the relative path is saved
+            $publication->google_scholar_link = $request->google_scholar_link;
+            $publication->attachment = $attachmentPath;
+            $publication->image = $imagePath;
             $publication->save();
 
             // Redirect with success message
             return redirect()->back()->with('success', 'Publication added successfully!');
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error saving publication: ' . $e->getMessage());
+            // Redirect back with error message
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error saving publication. Please try again.');
         }
+    }
 
 
 
@@ -143,33 +162,50 @@ class PublicationController extends Controller
             'name' => 'required|string|max:255',
             'title' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
-            'year' => 'required|integer|min:1900|max:' . date('Y'),
-            'attachment' => 'nullable|mimes:csv,pdf,doc,docx,xls,xlsx|max:11000',
-            'image' => 'nullable|image|mimes:png,jpg,jpeg|max:11000'
+            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'google_scholar_link' => 'nullable|url|max:500',
+            'attachment' => 'nullable|mimes:pdf|max:51200',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:51200'
         ]);
     
         $publication = Publication::findOrFail($id);
     
         if ($request->hasFile('attachment')) {
+            // Create directory if it doesn't exist
+            if (!file_exists(public_path('documents/publications'))) {
+                mkdir(public_path('documents/publications'), 0777, true);
+            }
             $filename = $request->file('attachment')->getClientOriginalName();
             $request->file('attachment')->move(public_path('documents/publications'), $filename);
-            $publication->attachment = $filename;
+            $publication->attachment = 'documents/publications/' . $filename;
         }
     
         if ($request->hasFile('image')) {
-            $picname = $request->file('image')->getClientOriginalName();
-            $request->image->move(public_path('images/publications'), $picname);
-            $publication->image = $picname;
+            // Create directory if it doesn't exist
+            if (!file_exists(public_path('images/publications'))) {
+                mkdir(public_path('images/publications'), 0777, true);
+            }
+            $newImageName = time() . '-' . preg_replace('/[^A-Za-z0-9\-]/', '', $request->name) . '.' . $request->image->extension();
+            $request->image->move(public_path('images/publications'), $newImageName);
+            $publication->image = 'images/publications/' . $newImageName;
         }
     
         $publication->name = $request->name;
         $publication->title = $request->title;
         $publication->publisher = $request->publisher;
         $publication->year = $request->year;
+        $publication->google_scholar_link = $request->google_scholar_link;
         $publication->updated_at = now();
-        $publication->save();
-    
-        return redirect('admin/publication')->with('flash_message', 'Publication updated!');
+        
+        try {
+            $publication->save();
+            return redirect('admin/publication')->with('flash_message', 'Publication updated successfully!');
+        } catch (\Exception $e) {
+            \Log::error('Error updating publication: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating publication. Please try again.');
+        }
     }
     
 

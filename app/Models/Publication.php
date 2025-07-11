@@ -31,6 +31,7 @@ class Publication extends Model
         'publisher', 
         'year', 
         'attachment',
-        'image'];
+        'image',
+        'google_scholar_link'];
     
 }

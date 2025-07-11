@@ -20,7 +20,10 @@
                     Publisher
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Year of Publication<
+                    Year of Publication
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Google Scholar
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Actions
@@ -46,11 +49,16 @@
                 {{ $item->year }}
                 </td>
                 <td class="px-6 py-4">
-                    <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-target="{{ $item->title }}" data-modal-show="{{ $item->title }}" style="color: white; background-color:  #28a745; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">View</a>
+                    @if($item->google_scholar_link)
+                        <a href="{{ $item->google_scholar_link }}" target="_blank" class="text-blue-600 hover:underline">View</a>
+                    @else
+                        <span class="text-gray-500">Not available</span>
+                    @endif
+                </td>
+                <td class="px-6 py-4">
+                    <!-- Action buttons -->
                     <a href="#" type="button" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id}}" style="color: white; background-color:  #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Edit</a>
                     <a href="#" type="button" data-modal-target="popup-modal" data-modal-show="popup-modal" style="color: white; background-color:  #dc3545; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Delete</a>
-                                       
                 </td>
                 {{-- <td class="px-6 py-4">
                     <a href="#" data-modal-target="{{ $item->id }}" data-modal-show="{{ $item->id }}" style="color: white; background-color: #ffc107; width: auto; height: 30px; padding: 5px; border-radius: 5px;" class="">Edit</a>
@@ -95,7 +103,11 @@
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Year of Publication</label>
-                        <input type="text" name="year" id="datepicker"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required="">
+                        <input type="text" name="year" id="datepicker" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="google_scholar_link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google Scholar Link</label>
+                        <input type="url" name="google_scholar_link" id="google_scholar_link" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="https://scholar.google.com/...">
                     </div>
                     <div class="col-span-6 sm:col-span-6">
                         <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attachment</label>
@@ -160,7 +172,11 @@
                        </div>
                        <div class="col-span-6 sm:col-span-3">
                            <label for="year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Year of Publication' }}</label>
-                           <input type="text" name="year" id="datepicker" value="{{ old('year', $item->year) }}"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required="">
+                           <input type="text" name="year" id="datepicker" value="{{ old('year', $item->year) }}" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="" required>
+                       </div>
+                       <div class="col-span-6 sm:col-span-3">
+                           <label for="google_scholar_link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google Scholar Link</label>
+                           <input type="url" name="google_scholar_link" id="google_scholar_link" value="{{ old('google_scholar_link', $item->google_scholar_link) }}" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="https://scholar.google.com/...">
                        </div>
                        <div class="col-span-6 sm:col-span-6">
                            <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ 'Attachment' }}</label>

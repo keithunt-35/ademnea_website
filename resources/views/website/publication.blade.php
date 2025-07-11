@@ -126,40 +126,52 @@
 
 
   <main id="main">
-
-    <section id="team" class="team">
-
+    <section id="publications" class="publications">
         <div class="container" data-aos="fade-up">
+            <div class="section-title">
+                <h2>AdEMNEA Publications</h2>
+                <p>Our latest research publications and findings</p>
+            </div>
 
-            <h2>AdEMNEA Publications</h2>
-        <br>
-                {{-- publication cards begin here --}}
-                @if($publication->count())
-                <div class="row gy-5">
-
-                @foreach($publication as $item)
-                  <div class="col-xl-3 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="team-member">
-                      <div class="member-img">
-                        <!-- Use asset() to generate the correct path for the image -->
-                        <img src="{{ asset($item->image) }}" class="img-fluid" alt="image">
-                      </div>
-                      <div class="member-info">
-                        <h4>{{$item->name}}</h4>
-                        <span>{{$item->title}}</span>
-                        <p>{{$item->publisher}}</p>
-                        <p>{{$item->year}}</p>
-                        <!-- Use asset() for the download link as well -->
-                        <p><a href="{{ asset($item->attachment) }}" download><i class="fa fa-download"></i> Download</a></p>
-                      </div>
-                    </div>
-                  </div><!-- End publication -->
-                @endforeach
-
-                  @else
-                  <p>No publications yet</p>
-                  @endif
-
+            @if($publication->count())
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Year</th>
+                            <th style="width: 25%;">Title</th>
+                            <th style="width: 25%;">Authors</th>
+                            <th style="width: 25%;">Publisher</th>
+                            <th style="width: 10%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($publication->sortByDesc('year') as $item)
+                        <tr>
+                            <td>{{ $item->year }}</td>
+                            <td>{{ $item->title }}</td>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->publisher }}</td>
+                            <td>
+                                @if($item->google_scholar_link)
+                                    <a href="{{ $item->google_scholar_link }}" target="_blank" class="btn btn-sm btn-primary" title="View on Google Scholar">
+                                        <i class="bi bi-google"></i>
+                                    </a>
+                                @endif
+                                @if($item->attachment)
+                                    <a href="{{ asset($item->attachment) }}" class="btn btn-sm btn-success" title="Download" download>
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @else
+                <div class="alert alert-info">No publications available at the moment.</div>
+            @endif
         </div>
         
     </section>

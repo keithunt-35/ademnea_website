@@ -68,6 +68,25 @@
     {!! $errors->first('year', '<p class="help-block">:message</p>') !!}
 </div>
 
+<div class="form-group {{ $errors->has('google_scholar_link') ? 'has-error' : ''}}">
+    <label for="google_scholar_link" class="control-label">{{ 'Google Scholar Link' }}</label>
+    <input class="form-control" name="google_scholar_link" type="url" id="google_scholar_link" value="{{ isset($publication->google_scholar_link) ? $publication->google_scholar_link : '' }}" placeholder="https://scholar.google.com/...">
+    <small class="form-text text-muted">Optional: Link to the publication on Google Scholar</small>
+    {!! $errors->first('google_scholar_link', '<p class="help-block">:message</p>') !!}
+</div>
+
+<div class="form-group {{ $errors->has('image') ? 'has-error' : ''}}">
+    <label for="image" class="control-label">{{ 'Cover Image' }}</label>
+    @if(isset($publication->image) && $publication->image)
+        <div class="mb-2">
+            <img src="{{ asset($publication->image) }}" alt="Current cover" style="max-width: 200px; max-height: 200px;">
+        </div>
+    @endif
+    <input class="form-control-file" name="image" type="file" id="image" accept="image/*">
+    <small class="form-text text-muted">Optional: Upload a cover image for the publication</small>
+    {!! $errors->first('image', '<p class="help-block">:message</p>') !!}
+</div>
+
 <div class="form-group {{ $errors->has('attachment') ? 'has-error' : ''}}">
     <label for="attachment" class="control-label">{{ 'Attachment' }}(only pdf allowed)</label>
     <input class="form-control pdf_file" name="attachment" type="file" id="attachment" value="{{ isset($publication->attachment) ? $publication->attachment : ''}}" required>
