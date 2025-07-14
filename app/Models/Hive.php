@@ -68,4 +68,13 @@ class Hive extends Model
     {
         return $this->hasMany(HiveVideo::class);
     }
+
+
+    /**
+     * Get the inspections for the hive.
+     */
+    public function inspections()
+    {
+        return $this->hasMany(BeehiveInspection::class);
+    }
 }

@@ -77,6 +77,9 @@ Route::prefix('v1')->group(function () {
         Route::post('farms/{farm_id}/hives', 'App\Http\Controllers\Api\V1\HiveController@addHive');
         Route::delete('hives/{hive_id}', 'App\Http\Controllers\Api\V1\HiveController@deleteHive');
         Route::put('hives/{hive_id}', 'App\Http\Controllers\Api\V1\HiveController@updateHive');
+
+        Route::post('/hives/inspections', 'App\Http\Controllers\Api\V1\HiveController@storeInspection');
+
     });
 
     // Optional ThingSpeak route (you can uncomment if needed)

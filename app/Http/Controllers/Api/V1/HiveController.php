@@ -11,6 +11,9 @@ use App\Models\HiveWeight;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\Models\BeehiveInspection;
+
+use Illuminate\Support\Facades\Validator;
 
 class HiveController extends Controller
 {
@@ -394,6 +397,65 @@ public function updateHive(Request $request, $hive_id)
 
         return response()->json(['message' => 'Hive deleted successfully'], 200);
     }
+
+
+
+
+
+public function storeInspection(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'hiveId' => 'required|string',
+        'inspection_date' => 'required|date',
+        'inspector_name' => 'required|string',
+        'weather_conditions' => 'nullable|string',
+
+        'hive_type' => 'nullable|string',
+        'hive_condition' => 'nullable|string',
+        'queen_presence' => 'nullable|string',
+        'queen_cells' => 'nullable|string',
+        'brood_pattern' => 'nullable|string',
+        'eggs_larvae' => 'nullable|string',
+        'honey_stores' => 'nullable|string',
+        'pollen_stores' => 'nullable|string',
+
+        'bee_population' => 'nullable|string',
+        'aggressiveness' => 'nullable|string',
+        'diseases_observed' => 'nullable|string',
+        'diseases_specify' => 'nullable|string',
+        'pests_present' => 'nullable|string',
+
+        'frames_checked' => 'nullable|string',
+        'frames_replaced' => 'nullable|string',
+        'hive_cleaned' => 'nullable|string',
+        'supers_changed' => 'nullable|string',
+        'other_actions' => 'nullable|string',
+
+        'comments' => 'nullable|string',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation error',
+            'errors' => $validator->errors(),
+        ], 422);
+    }
+
+    try {
+        $inspection = BeehiveInspection::create($validator->validated());
+
+        return response()->json([
+            'message' => 'Inspection record created successfully.',
+            'data' => $inspection
+        ], 201);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong while saving inspection.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 
 
 }
