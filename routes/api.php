@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 
 use App\Http\Controllers\ThingSpeakController;
@@ -21,6 +22,15 @@ Route::prefix('v1')->group(function () {
 
     // Public routes
     Route::post('login', 'App\Http\Controllers\Api\V1\UserController@login');
+    Route::get('/check-db', function () {
+    return response()->json([
+        'env_database' => env('DB_DATABASE'),
+        'config_database' => config('database.connections.mysql.database'),
+        'current_connection' => DB::connection()->getDatabaseName(),
+        'farms_count' => \App\Models\Farm::count(),
+    ]);
+});
+
 
     // Public media routes
     Route::get("/img", [ImageController::class, "show"]);

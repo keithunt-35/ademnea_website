@@ -527,63 +527,80 @@ class FarmController extends Controller
             /**
              * Store a new farmer.
              */
-            public function storeFarm(Request $request)
-            {
-                $validated = $request->validate([
-                    'ownerId' => 'required|integer',
-                    'name' => 'required|string|max:255',
-                    'district' => 'nullable|string|max:255',
-                    'address' => 'nullable|string|max:255',
-                    'latitude' => 'nullable|numeric',
-                    'logtitude' => 'nullable|numeric',
-                    'description' => 'nullable|string',
-                    
-                ]);
+public function storeFarm(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'district' => 'nullable|string|max:255',
+        'address' => 'nullable|string|max:255',
+        'latitude' => 'nullable|numeric',
+        'longitude' => 'nullable|numeric',
+        'description' => 'nullable|string',
+    ]);
 
-                $farm = Farm::create($validated);
+    $farmer = $request->user()->farmer;
 
-                return response()->json($farm, 201);
-            }
+    if (!$farmer) {
+        return response()->json(['error' => 'Authenticated farmer not found'], 403);
+    }
+
+    $validated['ownerId'] = $farmer->id;
+
+    $farm = Farm::create($validated);
+
+    return response()->json($farm, 201);
+}
+ 
 
             /**
              * Update an existing farmer.
              */
-            public function updateFarm(Request $request, $id)
-            {
-                $farm = Farm::find($id);
-                if (!$farm) {
-                    return response()->json(['error' => 'Farm not found'], 404);
-                }
+           public function updateFarm(Request $request, $id)
+{
+    $farm = Farm::find($id);
+    if (!$farm) {
+        return response()->json(['error' => 'Farm not found'], 404);
+    }
 
-                $validated = $request->validate([
-                    'ownerId' => 'sometimes|integer',
-                    'name' => 'sometimes|string|max:255',
-                    'district' => 'sometimes|string|max:255',
-                    'address' => 'sometimes|string|max:255',
-                    'latitude' => 'sometimes|numeric',
-                    'logtitude' => 'sometimes|numeric',
-                    'description' => 'sometimes|string|nullable',
-                ]);
+    // Ensure only the owner can update the farm
+    $farmer = $request->user()->farmer;
+    if (!$farmer || $farm->ownerId !== $farmer->id) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
 
-                $farm->update($validated);
+    $validated = $request->validate([
+        'name' => 'sometimes|string|max:255',
+        'district' => 'sometimes|string|max:255',
+        'address' => 'sometimes|string|max:255',
+        'latitude' => 'sometimes|numeric',
+        'longitude' => 'sometimes|numeric',
+        'description' => 'sometimes|string|nullable',
+    ]);
 
-                return response()->json($farm);
-            }
+    $farm->update($validated);
+
+    return response()->json($farm);
+}
 
             /**
              * Delete a farmer.
              */
-            public function deleteFarm($id)
-            {
-                $farm = Farm::find($id);
-                if (!$farm) {
-                    return response()->json(['error' => 'Farm not found'], 404);
-                }
+public function deleteFarm(Request $request, $id)
+{
+    $farm = Farm::find($id);
+    if (!$farm) {
+        return response()->json(['error' => 'Farm not found'], 404);
+    }
 
-                $farm->delete();
+    $farmer = $request->user()->farmer;
+    if (!$farmer || $farm->ownerId !== $farmer->id) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
 
-                return response()->json(['message' => 'Farm deleted successfully']);
-            }
+    $farm->delete();
+
+    return response()->json(['message' => 'Farm deleted successfully']);
+}
 
 
 

@@ -264,9 +264,8 @@ class HiveController extends Controller
         if (!$hive) {
             return response()->json(['error' => 'Hive not found'], 404);
         }
-
-        // Placeholder logic, always returns true
-        $connectionStatus = true;
+        $connectionStatus = $hive->connected;
+       
 
         return response()->json(['Connected' => $connectionStatus]);
     }
@@ -277,22 +276,18 @@ class HiveController extends Controller
      * @param  int  $hive_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getHiveColonizationStatus($hive_id)
-    {
-        $hive = Hive::find($hive_id);
-    
-        if (!$hive) {
-            return response()->json(['error' => 'Hive not found'], 404);
-        }
-    
-        if ($hive_id !== 1) {
-            return response()->json(['Colonized' => false]);
-        }
-    
-        $colonizationStatus = true;
-    
-        return response()->json(['Colonized' => $colonizationStatus]);
+public function getHiveColonizationStatus($hive_id)
+{
+    $hive = Hive::find($hive_id);
+
+    if (!$hive) {
+        return response()->json(['error' => 'Hive not found'], 404);
     }
+
+    return response()->json(['Colonized' => $hive->colonized]);
+}
+
+
     /**
      * Get the current state of a hive.
      *
@@ -328,37 +323,63 @@ class HiveController extends Controller
     }
 
     // add hive, delete hive, update hive, hive management functions
-    public function addHive(Request $request, $farm_id)
-    {
-        $farm = Farm::find($farm_id);
+public function addHive(Request $request, $farm_id)
+{
+    $farm = Farm::find($farm_id);
 
-        if (!$farm) {
-            return response()->json(['error' => 'Farm not found'], 404);
-        }
-
-        // Get the currently authenticated user
-        $user = $request->user();
-
-        // Get the farmer associated with the user
-        if (!$user->farmer) {
-            return response()->json(['error' => 'User is not associated with a farmer'], 403);
-        }
-        
-        $farmer = $user->farmer;
-
-        // Check if the farmer is the owner of the farm
-        if ($farmer->id !== $farm->ownerId) {
-            return response()->json(['error' => 'Access denied'], 403);
-        }
-
-        $hive = new Hive();
-        $hive->longitude = $request->input('longitude');
-        $hive->latitude = $request->input('latitude');
-        $hive->farm_id = $farm_id;
-        $hive->save();
-
-        return response()->json(['message' => 'Hive added successfully', 'hive' => $hive], 201);
+    if (!$farm) {
+        return response()->json(['error' => 'Farm not found'], 404);
     }
+
+    $user = $request->user();
+    $farmer = $user->farmer;
+
+    if (!$farmer) {
+        return response()->json(['error' => 'User is not associated with a farmer'], 403);
+    }
+
+    if ($farmer->id !== $farm->ownerId) {
+        return response()->json(['error' => 'Access denied'], 403);
+    }
+
+    $validated = $request->validate([
+        'latitude' => 'required|numeric',
+        'longitude' => 'required|numeric',
+        'connected' => 'sometimes|boolean',
+        'colonized' => 'sometimes|boolean',
+    ]);
+
+    $hive = Hive::create([
+        'farm_id' => $farm->id,
+        'latitude' => $validated['latitude'],
+        'longitude' => $validated['longitude'],
+        'connected' => $validated['connected'] ?? true,     // default true
+        'colonized' => $validated['colonized'] ?? true,     // default true
+    ]);
+
+    return response()->json(['message' => 'Hive added successfully', 'hive' => $hive], 201);
+}
+
+public function updateHive(Request $request, $hive_id)
+{
+    $hive = $this->checkHiveOwnership($request, $hive_id);
+
+    if ($hive instanceof Response) {
+        return $hive;
+    }
+
+    $validated = $request->validate([
+        'latitude' => 'sometimes|numeric',
+        'longitude' => 'sometimes|numeric',
+        'connected' => 'sometimes|boolean',
+        'colonized' => 'sometimes|boolean',
+    ]);
+
+    $hive->update($validated);
+
+    return response()->json(['message' => 'Hive updated successfully', 'hive' => $hive], 200);
+}
+
 
     public function deleteHive(Request $request, $hive_id)
     {
@@ -374,19 +395,5 @@ class HiveController extends Controller
         return response()->json(['message' => 'Hive deleted successfully'], 200);
     }
 
-    public function updateHive(Request $request, $hive_id)
-    {
-        $hive = $this->checkHiveOwnership($request, $hive_id);
 
-        if ($hive instanceof Response) {
-            return $hive;
-        }
-
-        // Update the hive attributes
-        $hive->longitude = $request->input('longitude', $hive->longitude);
-        $hive->latitude = $request->input('latitude', $hive->latitude);
-        $hive->save();
-
-        return response()->json(['message' => 'Hive updated successfully', 'hive' => $hive], 200);
-    }
 }

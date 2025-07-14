@@ -28,7 +28,14 @@ class Hive extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'longitude', 'latitude','farm_id'];
+    protected $fillable = [
+    'latitude',
+    'longitude',
+    'farm_id',
+    'connected',
+    'colonized',
+];
+
 
     /**
      * Get the farm that owns the hive.
