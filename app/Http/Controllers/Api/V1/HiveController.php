@@ -11,6 +11,9 @@ use App\Models\HiveWeight;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\Models\BeehiveInspection;
+
+use Illuminate\Support\Facades\Validator;
 
 class HiveController extends Controller
 {
@@ -32,6 +35,10 @@ class HiveController extends Controller
         $user = $request->user();
 
         // Get the farmer associated with the user
+        if (!$user->farmer) {
+            return response()->json(['error' => 'User is not associated with a farmer'], 403);
+        }
+        
         $farmer = $user->farmer;
 
         // Check if the farmer is the owner of the farm
@@ -68,6 +75,11 @@ class HiveController extends Controller
         }
 
         $user = $request->user();
+        
+        if (!$user->farmer) {
+            return response()->json(['error' => 'User is not associated with a farmer'], 403);
+        }
+        
         $farmer = $user->farmer;
 
         if ($farmer->id !== $hive->farm->ownerId) {
@@ -255,9 +267,8 @@ class HiveController extends Controller
         if (!$hive) {
             return response()->json(['error' => 'Hive not found'], 404);
         }
-
-        // Placeholder logic, always returns true
-        $connectionStatus = true;
+        $connectionStatus = $hive->connected;
+       
 
         return response()->json(['Connected' => $connectionStatus]);
     }
@@ -268,22 +279,18 @@ class HiveController extends Controller
      * @param  int  $hive_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getHiveColonizationStatus($hive_id)
-    {
-        $hive = Hive::find($hive_id);
-    
-        if (!$hive) {
-            return response()->json(['error' => 'Hive not found'], 404);
-        }
-    
-        if ($hive_id !== 1) {
-            return response()->json(['Colonized' => false]);
-        }
-    
-        $colonizationStatus = true;
-    
-        return response()->json(['Colonized' => $colonizationStatus]);
+public function getHiveColonizationStatus($hive_id)
+{
+    $hive = Hive::find($hive_id);
+
+    if (!$hive) {
+        return response()->json(['error' => 'Hive not found'], 404);
     }
+
+    return response()->json(['Colonized' => $hive->colonized]);
+}
+
+
     /**
      * Get the current state of a hive.
      *
@@ -317,4 +324,138 @@ class HiveController extends Controller
 
         return response()->json($currentStatus);
     }
+
+    // add hive, delete hive, update hive, hive management functions
+public function addHive(Request $request, $farm_id)
+{
+    $farm = Farm::find($farm_id);
+
+    if (!$farm) {
+        return response()->json(['error' => 'Farm not found'], 404);
+    }
+
+    $user = $request->user();
+    $farmer = $user->farmer;
+
+    if (!$farmer) {
+        return response()->json(['error' => 'User is not associated with a farmer'], 403);
+    }
+
+    if ($farmer->id !== $farm->ownerId) {
+        return response()->json(['error' => 'Access denied'], 403);
+    }
+
+    $validated = $request->validate([
+        'latitude' => 'required|numeric',
+        'longitude' => 'required|numeric',
+        'connected' => 'sometimes|boolean',
+        'colonized' => 'sometimes|boolean',
+    ]);
+
+    $hive = Hive::create([
+        'farm_id' => $farm->id,
+        'latitude' => $validated['latitude'],
+        'longitude' => $validated['longitude'],
+        'connected' => $validated['connected'] ?? true,     // default true
+        'colonized' => $validated['colonized'] ?? true,     // default true
+    ]);
+
+    return response()->json(['message' => 'Hive added successfully', 'hive' => $hive], 201);
+}
+
+public function updateHive(Request $request, $hive_id)
+{
+    $hive = $this->checkHiveOwnership($request, $hive_id);
+
+    if ($hive instanceof Response) {
+        return $hive;
+    }
+
+    $validated = $request->validate([
+        'latitude' => 'sometimes|numeric',
+        'longitude' => 'sometimes|numeric',
+        'connected' => 'sometimes|boolean',
+        'colonized' => 'sometimes|boolean',
+    ]);
+
+    $hive->update($validated);
+
+    return response()->json(['message' => 'Hive updated successfully', 'hive' => $hive], 200);
+}
+
+
+    public function deleteHive(Request $request, $hive_id)
+    {
+        $hive = $this->checkHiveOwnership($request, $hive_id);
+
+        if ($hive instanceof Response) {
+            return $hive;
+        }
+
+        // Delete the hive
+        $hive->delete();
+
+        return response()->json(['message' => 'Hive deleted successfully'], 200);
+    }
+
+
+
+
+
+public function storeInspection(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'hiveId' => 'required|string',
+        'inspection_date' => 'required|date',
+        'inspector_name' => 'required|string',
+        'weather_conditions' => 'nullable|string',
+
+        'hive_type' => 'nullable|string',
+        'hive_condition' => 'nullable|string',
+        'queen_presence' => 'nullable|string',
+        'queen_cells' => 'nullable|string',
+        'brood_pattern' => 'nullable|string',
+        'eggs_larvae' => 'nullable|string',
+        'honey_stores' => 'nullable|string',
+        'pollen_stores' => 'nullable|string',
+
+        'bee_population' => 'nullable|string',
+        'aggressiveness' => 'nullable|string',
+        'diseases_observed' => 'nullable|string',
+        'diseases_specify' => 'nullable|string',
+        'pests_present' => 'nullable|string',
+
+        'frames_checked' => 'nullable|string',
+        'frames_replaced' => 'nullable|string',
+        'hive_cleaned' => 'nullable|string',
+        'supers_changed' => 'nullable|string',
+        'other_actions' => 'nullable|string',
+
+        'comments' => 'nullable|string',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation error',
+            'errors' => $validator->errors(),
+        ], 422);
+    }
+
+    try {
+        $inspection = BeehiveInspection::create($validator->validated());
+
+        return response()->json([
+            'message' => 'Inspection record created successfully.',
+            'data' => $inspection
+        ], 201);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong while saving inspection.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
+
 }

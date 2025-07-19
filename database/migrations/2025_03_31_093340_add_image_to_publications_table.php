@@ -14,7 +14,10 @@ class AddImageToPublicationsTable extends Migration
     public function up()
     {
         Schema::table('publications', function (Blueprint $table) {
-            $table->string('image')->nullable()->after('attachment');
+            // Only add the column if it doesn't already exist
+            if (!Schema::hasColumn('publications', 'image')) {
+                $table->string('image')->nullable()->after('attachment');
+            }
         });
     }
     

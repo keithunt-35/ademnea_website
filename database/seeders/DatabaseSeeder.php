@@ -13,14 +13,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-            'name' => 'Admin',
-            // 'firstName' => 'Allan',
-            'email' => 'admin@admin.com',
-            //'photo' => 'images/avatar/1.png',
-            // 'phoneNumber' => '0755555555',
-            'password'=>bcrypt("admin..123")
-        ]);
+        // Check if admin user already exists
+        $adminUser = User::where('email', 'admin@admin.com')->first();
+        
+        if (!$adminUser) {
+            $user = User::create([
+                'name' => 'Admin',
+                'email' => 'admin@admin.com',
+                'password'=>bcrypt("admin..123")
+            ]);
+            echo "✅ Created admin user: admin@admin.com\n";
+        } else {
+            echo "ℹ️  Admin user already exists: admin@admin.com\n";
+        }
 
         $this->call([
             FarmerSeeder::class,

@@ -14,38 +14,48 @@ class BeehiveInspection extends Model
     // The attributes that are mass assignable
 // In BeehiveInspection model
 protected $fillable = [
-    'beekeeper_name',
-    'date',
-    'apiary_location',
+    'hiveId',
+    'inspection_date',
+    'inspector_name',
     'weather_conditions',
-    'hive_id',
+
+    // Hive Info
     'hive_type',
     'hive_condition',
-    'presence_of_queen',
-    'queen_cells_present',
+    'queen_presence',
+    'queen_cells',
     'brood_pattern',
-    'eggs_and_larvae_present',
+    'eggs_larvae',
     'honey_stores',
     'pollen_stores',
+
+    // Colony Health
     'bee_population',
-    'aggressiveness_of_bees',
-    'diseases_or_pests_observed',
-    'disease_details',
-    'presence_of_beetles',
-    'presence_of_other_pests',
-    'other_pests_details',
+    'aggressiveness',
+    'diseases_observed',
+    'diseases_specify',
+    'pests_present',
+
+    // Maintenance
     'frames_checked',
-    'any_frames_replaced',
+    'frames_replaced',
     'hive_cleaned',
-    'supers_added_or_removed',
-    'any_other_actions_taken',
-    'comments_and_recommendations',
-    'inspected_by',
-    'signature',
+    'supers_changed',
+    'other_actions',
+
+    // Comments
+    'comments',
 ];
 
 
 
+
+
     // Optional: Define relationships, custom methods, etc.
+
+    public function hive()
+{
+    return $this->belongsTo(Hive::class);
+}
 }
 

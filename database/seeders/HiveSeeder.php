@@ -14,7 +14,23 @@ class HiveSeeder extends Seeder
      */
     public function run()
     {
-        Hive::factory()->count(5)->create(['farm_id' => 1]);
-        Hive::factory()->count(20)->create();
+        // Get all existing farm IDs
+        $farmIds = \App\Models\Farm::pluck('id')->toArray();
+        
+        if (empty($farmIds)) {
+            echo "⚠️  No farms found. Please run FarmSeeder first.\n";
+            return;
+        }
+        
+        echo "📊 Found " . count($farmIds) . " farms to add hives to.\n";
+        
+        // Add hives to each farm (2-5 hives per farm)
+        foreach ($farmIds as $farmId) {
+            $hiveCount = rand(2, 5);
+            Hive::factory()->count($hiveCount)->create(['farm_id' => $farmId]);
+        }
+        
+        $totalHives = \App\Models\Hive::count();
+        echo "✅ Created total of $totalHives hives across all farms\n";
     }
 }

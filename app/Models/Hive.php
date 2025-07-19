@@ -28,7 +28,14 @@ class Hive extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'longitude', 'latitude','farm_id'];
+    protected $fillable = [
+    'latitude',
+    'longitude',
+    'farm_id',
+    'connected',
+    'colonized',
+];
+
 
     /**
      * Get the farm that owns the hive.
@@ -60,5 +67,14 @@ class Hive extends Model
     public function videos()
     {
         return $this->hasMany(HiveVideo::class);
+    }
+
+
+    /**
+     * Get the inspections for the hive.
+     */
+    public function inspections()
+    {
+        return $this->hasMany(BeehiveInspection::class);
     }
 }
