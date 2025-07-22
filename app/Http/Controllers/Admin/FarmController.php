@@ -21,12 +21,15 @@ class FarmController extends Controller
     {        
         $perPage = 25;
        
-        $farmers = Farmer::all();
+        // Get all farmers with their user data for the dropdown
+        $farmers = Farmer::with('user')->get();
 
-        //return $farmers;
-        $farm = Farm::latest()->paginate($perPage);
+        // Get all farms with their owner data and paginate
+        $farm = Farm::with(['farmer.user'])
+                   ->latest()
+                   ->paginate($perPage);
 
-        return view('admin.farm.index', compact('farm','farmers'));
+        return view('admin.farm.index', compact('farm', 'farmers'));
     }
 
     /**
@@ -36,9 +39,10 @@ class FarmController extends Controller
      */
     public function create()
     {
-        $farmers = Farmer::all();
+        // Load farmers with their associated user data
+        $farmers = Farmer::with('user')->get();
 
-        return view('admin.farm.create',compact('farmers'));
+        return view('admin.farm.create', compact('farmers'));
     }
 
     /**
@@ -50,18 +54,35 @@ class FarmController extends Controller
      */
     public function store(Request $request)
     {
-      /*  $this->validate($request, [
-            'ownerid'=>'required|max:255',
-            'name'=>'required|max:255',
-            'district'=>'required',
-            'image'=>'required|mimes:jpg,png,jpeg|max:5048'
-        ]);*/
+        // Validate the request data
+        $validatedData = $request->validate([
+            'ownerId' => 'required|exists:farmers,id',
+            'name' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+            'address' => 'required|string|max:500',
+        ]);
 
-        $requestData = $request->all();
-              
-        Farm::create($requestData);
-
-        return redirect('admin/farm')->with('flash_message', 'Farm added!');
+        try {
+            // Create the farm
+            $farm = new Farm();
+            $farm->ownerId = $validatedData['ownerId'];
+            $farm->name = $validatedData['name'];
+            $farm->district = $validatedData['district'];
+            $farm->address = $validatedData['address'];
+            
+            $farm->save();
+            
+            return redirect('admin/farm')
+                ->with('success', 'Farm added successfully!');
+                
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error adding farm: ' . $e->getMessage());
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Error adding farm. Please try again.');
+        }
     }
 
     /**
@@ -73,9 +94,8 @@ class FarmController extends Controller
      */
     public function show($id)
     {
-       
-       
-        $farm = Farm::findOrFail($id);
+        // Load the farm with its owner and owner's user data
+        $farm = Farm::with(['farmer.user'])->findOrFail($id);
 
         return view('admin.farm.show', compact('farm'));
     }
@@ -87,13 +107,14 @@ class FarmController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function edit(Request $req, $id)
+    public function edit($id)
     {
-       // return $req->input();
+        // Load the farm with its owner data
+        $farm = Farm::with(['farmer'])->findOrFail($id);
+        // Get all farmers for the dropdown
+        $farmers = Farmer::with('user')->get();
 
-        $farm = Farm::findOrFail($id);
-
-        return view('admin.farm.edit', compact('farm'));
+        return view('admin.farm.edit', compact('farm', 'farmers'));
     }
 
     /**
@@ -106,13 +127,37 @@ class FarmController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-        $requestData = $request->all();
-        
-        $farm = Farm::findOrFail($id);
-        $farm->update($requestData);
+        // Validate the request data
+        $validatedData = $request->validate([
+            'ownerId' => 'required|exists:farmers,id',
+            'name' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+            'address' => 'required|string|max:500',
+        ]);
 
-        return redirect('admin/farm')->with('flash_message', 'Farm updated!');
+        try {
+            // Find the farm
+            $farm = Farm::findOrFail($id);
+            
+            // Update the farm
+            $farm->ownerId = $validatedData['ownerId'];
+            $farm->name = $validatedData['name'];
+            $farm->district = $validatedData['district'];
+            $farm->address = $validatedData['address'];
+            
+            $farm->save();
+            
+            return redirect('admin/farm')
+                ->with('success', 'Farm updated successfully!');
+                
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error updating farm: ' . $e->getMessage());
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Error updating farm. Please try again.');
+        }
     }
 
     /**
@@ -124,9 +169,23 @@ class FarmController extends Controller
      */
     public function destroy($id)
     {
-        Farm::destroy($id);
-
-        return redirect('admin/farm')->with('flash_message', 'Farm deleted!');
+        try {
+            // Find the farm
+            $farm = Farm::findOrFail($id);
+            
+            // Delete the farm
+            $farm->delete();
+            
+            return redirect('admin/farm')
+                ->with('success', 'Farm deleted successfully!');
+                
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error deleting farm: ' . $e->getMessage());
+            
+            return back()
+                ->with('error', 'Error deleting farm. Please try again.');
+        }
     }
 
 

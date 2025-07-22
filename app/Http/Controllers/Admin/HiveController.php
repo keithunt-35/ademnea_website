@@ -22,22 +22,22 @@ class HiveController extends Controller
         // Get the farm_id from the request query
         $farmId = $request->query('farm_id');
     
-        // If farm_id is not provided or is invalid, you can return a message or redirect to a default page
-        if (!$farmId || !Farm::find($farmId)) {
-            return redirect()->route('farms.index')->with('error', 'Farm not found or invalid farm ID.');
+        // If farm_id is not provided or is invalid, redirect to farms index with an error
+        if (!$farmId || !($farm = Farm::with('farmer.user')->find($farmId))) {
+            return redirect()->route('farms.index')
+                ->with('error', 'Farm not found or invalid farm ID.');
         }
     
         // Store the farm_id in session
         session(['farm_id' => $farmId]);
     
-        // Get hives associated with the farm
-        $hive = Hive::where('farm_id', $farmId)->get();
+        // Get hives associated with the farm with pagination
+        $hives = Hive::where('farm_id', $farmId)
+                    ->latest()
+                    ->paginate(10);
     
-        // Get all farms (optional if you need to show all farms in the view)
-        $farms = Farm::all();
-    
-        // Return the view with the hives and farms data
-        return view('admin.hives.index', compact('hive', 'farms'));
+        // Return the view with the hives and farm data
+        return view('admin.hives.index', compact('hives', 'farm'));
     }
     
 
@@ -48,8 +48,19 @@ class HiveController extends Controller
      */
     public function create()
     {
-
-        return view('admin.hives.create');
+        // Get the farm_id from the session
+        $farmId = session('farm_id');
+        
+        // If no farm_id in session, redirect back with error
+        if (!$farmId) {
+            return redirect()->route('farms.index')
+                ->with('error', 'Please select a farm first.');
+        }
+        
+        // Get the farm with its owner data
+        $farm = Farm::with('farmer.user')->findOrFail($farmId);
+        
+        return view('admin.hives.create', compact('farm'));
     }
 
     /**
@@ -61,15 +72,41 @@ class HiveController extends Controller
      */
     public function store(Request $request)
     {
-        $requestData = $request->all();
+        // Validate the request data
+        $validatedData = $request->validate([
+            'farm_id' => 'required|exists:farms,id',
+            'name' => 'required|string|max:255',
+            'hive_type' => 'required|string|max:100',
+            'status' => 'required|string|in:active,inactive,maintenance',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'notes' => 'nullable|string|max:1000',
+        ]);
 
-        $farm = $request->input("farm_id");
-              
-        Hive::create($requestData);
-
-       // hive?farm_id=2
-
-        return redirect('admin/hive?farm_id='.$farm)->with('flash_message', 'Hive added!');
+        try {
+            // Create the hive
+            $hive = new Hive();
+            $hive->farm_id = $validatedData['farm_id'];
+            $hive->name = $validatedData['name'];
+            $hive->hive_type = $validatedData['hive_type'];
+            $hive->status = $validatedData['status'];
+            $hive->latitude = $validatedData['latitude'] ?? null;
+            $hive->longitude = $validatedData['longitude'] ?? null;
+            $hive->notes = $validatedData['notes'] ?? null;
+            
+            $hive->save();
+            
+            return redirect('admin/hive?farm_id=' . $validatedData['farm_id'])
+                ->with('success', 'Hive added successfully!');
+                
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error adding hive: ' . $e->getMessage());
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Error adding hive. Please try again.');
+        }
     }
 
     /**
@@ -81,10 +118,13 @@ class HiveController extends Controller
      */
     public function show($id)
     {
-       
-        $hive = Hive::findOrFail($id);
-
-        return view('admin.hives.show', compact('hive'));
+        // Load the hive with its farm and farm's owner data
+        $hive = Hive::with(['farm.farmer.user'])->findOrFail($id);
+        
+        // Get the farm_id for the back link
+        $farmId = $hive->farm_id;
+        
+        return view('admin.hives.show', compact('hive', 'farmId'));
     }
 
     /**
@@ -96,9 +136,13 @@ class HiveController extends Controller
      */
     public function edit($id)
     {
-        $hive = Hive::findOrFail($id);
-
-        return view('admin.hives.edit', compact('hive'));
+        // Load the hive with its farm data
+        $hive = Hive::with(['farm.farmer.user'])->findOrFail($id);
+        
+        // Get the farm for the form
+        $farm = $hive->farm;
+        
+        return view('admin.hives.edit', compact('hive', 'farm'));
     }
 
     /**
@@ -109,21 +153,43 @@ class HiveController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-       // return $request->input();
-       $latitude = $request->input('latitude');
-       $longitude = $request->input('longitude');
-       $hive_id = $request->input('hive_id');
-
-      DB::table('hives')
-        ->where('id',$hive_id)
-        ->update([
-            'latitude' => $latitude,
-            'longitude' => $longitude,
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'hive_type' => 'required|string|max:100',
+            'status' => 'required|string|in:active,inactive,maintenance',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
-        return redirect('admin/hive')->with('flash_message', 'Farm updated!');
+        try {
+            // Find the hive
+            $hive = Hive::findOrFail($id);
+            
+            // Update the hive
+            $hive->name = $validatedData['name'];
+            $hive->hive_type = $validatedData['hive_type'];
+            $hive->status = $validatedData['status'];
+            $hive->latitude = $validatedData['latitude'] ?? null;
+            $hive->longitude = $validatedData['longitude'] ?? null;
+            $hive->notes = $validatedData['notes'] ?? null;
+            
+            $hive->save();
+            
+            return redirect('admin/hive?farm_id=' . $hive->farm_id)
+                ->with('success', 'Hive updated successfully!');
+                
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error updating hive: ' . $e->getMessage());
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Error updating hive. Please try again.');
+        }
     }
 
     /**
@@ -135,8 +201,23 @@ class HiveController extends Controller
      */
     public function destroy($id)
     {
-        Hive::destroy($id);
-
-        return redirect('admin/hive')->with('flash_message', 'Farm deleted!');
+        try {
+            // Find the hive
+            $hive = Hive::findOrFail($id);
+            $farmId = $hive->farm_id;
+            
+            // Delete the hive
+            $hive->delete();
+            
+            return redirect('admin/hive?farm_id=' . $farmId)
+                ->with('success', 'Hive deleted successfully!');
+                
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error deleting hive: ' . $e->getMessage());
+            
+            return back()
+                ->with('error', 'Error deleting hive. Please try again.');
+        }
     }
 }

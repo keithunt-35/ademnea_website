@@ -26,27 +26,58 @@ class FarmerController extends Controller
 
     public function store(Request $request)
     {
-        $requestData = $request->all();
-
-        // Create a new user
-        $user = User::create([
-            'name' => $requestData['fname'] . ' ' . $requestData['lname'],
-            'email' => $requestData['email'],
-            'password' => Hash::make($requestData['password']),
-            'role' => 'farmer',
+        // Validate the request data
+        $validatedData = $request->validate([
+            'fname' => 'required|string|max:255',
+            'lname' => 'required|string|max:255',
+            'gender' => 'required|string|in:Male,Female,Other',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'telephone' => 'required|string|max:15',
+            'address' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
+            'district' => 'required|string|max:255',
         ]);
 
-        // Create a new farmer associated with the user
-        $farmer = Farmer::create([
-            'user_id' => $user->id,
-            'fname' => $requestData['fname'],
-            'lname' => $requestData['lname'],
-            'gender' => $requestData['gender'],
-            'address' => $requestData['address'],
-            'telephone' => $requestData['telephone'],
-        ]);
+        try {
+            // Start a database transaction
+            DB::beginTransaction();
 
-        return redirect('admin/farmer')->with('flash_message', 'Farmer added!');
+            // Create a new user
+            $user = User::create([
+                'name' => $validatedData['fname'] . ' ' . $validatedData['lname'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
+                'role' => 'farmer',
+            ]);
+
+            // Create a new farmer associated with the user
+            $farmer = new Farmer([
+                'fname' => $validatedData['fname'],
+                'lname' => $validatedData['lname'],
+                'gender' => $validatedData['gender'],
+                'address' => $validatedData['address'],
+                'telephone' => $validatedData['telephone'],
+                'district' => $validatedData['district'],
+            ]);
+
+            // Associate the farmer with the user
+            $user->farmer()->save($farmer);
+
+            // Commit the transaction
+            DB::commit();
+
+            return redirect('admin/farmer')
+                ->with('success', 'Farmer added successfully!');
+
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of error
+            DB::rollBack();
+            \Log::error('Error creating farmer: ' . $e->getMessage());
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Error creating farmer. Please try again.');
+        }
     }
 
     public function show($id)

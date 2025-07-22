@@ -53,22 +53,51 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name'=>'required|max:255',
-            'title'=>'required|max:255',
-            'description'=>'required',
-            'image'=>'required|mimes:jpg,png,jpeg|max:5048'
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:5048',
         ]);
 
-        $newImageName = time() . '-' . $request->name . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $newImageName);
-        $requestData = $request->all();
-        $requestData['image_path'] = $newImageName;
-
-        
-        Team::create($requestData);
-
-        return redirect('admin/team')->with('flash_message', 'Team added!');
+        try {
+            // Handle file upload
+            if ($request->hasFile('image')) {
+                // Get the file from the request
+                $image = $request->file('image');
+                
+                // Generate a unique filename
+                $imageName = time() . '_' . preg_replace('/\s+/', '_', $validatedData['name']) . '.' . $image->getClientOriginalExtension();
+                
+                // Move the file to the public/images directory
+                $image->move(public_path('images'), $imageName);
+                
+                // Create the team member
+                $team = new Team();
+                $team->name = $validatedData['name'];
+                $team->title = $validatedData['title'];
+                $team->description = $validatedData['description'];
+                $team->image_path = 'images/' . $imageName; // Store relative path
+                
+                $team->save();
+                
+                return redirect('admin/team')
+                    ->with('success', 'Team member added successfully!');
+            }
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Failed to upload image. Please try again.');
+                
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error adding team member: ' . $e->getMessage());
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Error adding team member. Please try again.');
+        }
     }
 
     /**

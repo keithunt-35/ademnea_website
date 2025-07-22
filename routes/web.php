@@ -71,28 +71,24 @@ Route::middleware('auth:web')->group(function () {
 
     //added for dashboard_page
     Route::resource('admin/dashboard', 'App\Http\Controllers\Admin\DashboardController');
+    // Hive related resources
     Route::resource('admin/hive', 'App\Http\Controllers\Admin\HiveController');
     Route::resource('admin/hivedata', 'App\Http\Controllers\Admin\HiveDataController');
     Route::resource('admin/videodata', 'App\Http\Controllers\Admin\HiveVideoController');
-    
     Route::resource('admin/photodata', 'App\Http\Controllers\Admin\HivePhotoController');
     Route::resource('admin/audiodata', 'App\Http\Controllers\Admin\HiveAudioController');
     Route::resource('admin/temperaturedata', 'App\Http\Controllers\Admin\HiveTemperatureController');
     Route::resource('admin/humiditydata', 'App\Http\Controllers\Admin\HiveHumidityController');
     Route::resource('admin/weightdata', 'App\Http\Controllers\Admin\HiveWeightController');
     Route::resource('admin/carbondioxidedata', 'App\Http\Controllers\Admin\HiveCarbondioxideController');
-    // add for VOC here 
+    
+    // VOC (Volatile Organic Compounds) routes
     Route::resource('admin/vocdata', 'App\Http\Controllers\Admin\VOCController');
-
     Route::get('/vocdata/export', [VOCController::class, 'export'])->name('voc.export');
 
-
-//gallery route for the admin side
+    // Gallery routes
     Route::get('/admin/gallery', 'App\Http\Controllers\Admin\GalleryController@index');
-    Route::post('/admin/event','App\Http\Controllers\Admin\GalleryController@update');
-
- //hive controllers
-    Route::post('/edithive','App\Http\Controllers\Admin\HiveController@update');
+    Route::post('/admin/event', 'App\Http\Controllers\Admin\GalleryController@update');
 });
 
                 /* ------------HIVE DATA------------------*/
